@@ -1,0 +1,11 @@
+#MODEL	OCOPOMO	Energy	KOSICE	ver	0	0	0	1									
+#config	Tolerant	0															
+#config	LOG.LEVEL	1															
+#config	Vertical	100															
+#config	Horizontal	100															
+#config	Radius	6															
+#config	GENERIC.LEAKS	0.02															
+#1	#2	#3	#4	#5	#6	#7	#8	#9	#10	#11	#12	#13	#14	#15	#16	#17	
+#*mattnode	Nazwa	Wizualizacja	Waga	Kolor 	X	Y	Z	Szerokosc	Wysokosc	Random	wolne	wolne	wolne	wolne	wolne	itd. Czyli komentarz	
+mattnode	Osiedle1	Square	2	0xFFFFFF	450	10	1	10	11	3						Odbiorcy ciep³a	
+mattnode	Osiedle2	Square	2	0x00FFFF	450	20	1	10	11	3						Odbiorcy ciep³a	

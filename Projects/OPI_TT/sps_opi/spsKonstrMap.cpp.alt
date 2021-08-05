@@ -1,0 +1,57 @@
+// Transfer technologii 2011
+////////////////////////////////////////////////////////////////////////////////////
+// Metody klasy bazowej ElementModelu  slu¿ace rejestracji wirtualnych konstruktorów
+// za pomoc¹ klasy <map> z STL. Sensowne gdy du¿o typów, no i w "Borlandzie" 
+// przy pierwszym zapisie  daje protection fault!!! 
+////////////////////////////////////////////////////////////////////////////////////
+#include "opiModel.h"
+#include <string>
+#include <map>
+using namespace std;
+
+// case-independent (ci) string less_than
+// returns true if s1 < s2
+// http://www.gammon.com.au/forum/?id=2902
+struct ci_less : binary_function<string, string, bool>
+  {
+  // case-independent (ci) compare_less binary function
+  struct nocase_compare : public binary_function<unsigned char,unsigned char,bool>
+	{
+	bool operator() (const unsigned char& c1, const unsigned char& c2) const
+	  { return tolower (c1) < tolower (c2); }
+	};
+  bool operator() (const string & s1, const string & s2) const
+	{
+
+	return lexicographical_compare
+		  (s1.begin (), s1.end (),   // source range
+		   s2.begin (), s2.end (),   // dest range
+				nocase_compare ());  // comparison
+	}
+  }; // end of ci_less
+
+
+map<string, ElementModelu::WirtualnyKonstruktor* , ci_less/*less<string*/> > Mapa;
+
+void ElementModelu::WirtualnyKonstruktor::Zarejestruj(const char* NazwaKlasy,WirtualnyKonstruktor* Ten)
+//Obiekt musi istnieæ puki jest potrzebny
+{
+   Mapa[NazwaKlasy]=Ten;
+}
+
+void ElementModelu::WirtualnyKonstruktor::Wyrejestruj(const char* NazwaKlasy,WirtualnyKonstruktor* Ten)
+//A potem mo¿na wyrejestrowaæ
+{
+	if(Mapa[NazwaKlasy]==Ten) Mapa[NazwaKlasy]=NULL;
+}
+
+ElementModelu::WirtualnyKonstruktor* ElementModelu::WirtualnyKonstruktor::DajWirtualnyKonstruktor(const char* NazwaKlasy)
+//A to daje zarejestrowany obiekt gdy potrzebny
+{
+	map<string, ElementModelu::WirtualnyKonstruktor* , ci_less/*less<string*/ >::const_iterator i;
+	i = Mapa.find(NazwaKlasy);    // WirtualnyKonstruktor* Pom=
+	if (i == Mapa.end ())
+		return NULL; //Nie ma
+		else
+		return i->second;
+}

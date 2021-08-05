@@ -1,0 +1,278 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{6CE26D5A-A2E9-4DF4-A904-E1E48FE694A6}</ProjectGuid>
+			<ProjectVersion>12.0</ProjectVersion>
+			<Config Condition="'$(Config)'==''">Debug</Config>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_1)'!=''">
+			<Cfg_1>true</Cfg_1>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_2)'!=''">
+			<Cfg_2>true</Cfg_2>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Base)'!=''">
+			<Defines>POLISH_VERSION;MS_WINDOWS;$(Defines)</Defines>
+			<BRCC_EnableMultiByte>true</BRCC_EnableMultiByte>
+			<NoVCL>true</NoVCL>
+			<LinkPackageStatics>rtl.lib</LinkPackageStatics>
+			<PackageImports>vcl.bpi;rtl.bpi;bcbie.bpi;vclx.bpi;vclactnband.bpi;xmlrtl.bpi;bcbsmp.bpi;vclimg.bpi;dbrtl.bpi;vcldb.bpi;vcldbx.bpi;bdertl.bpi;vcltouch.bpi;dsnap.bpi;dsnapcon.bpi;TeeUI.bpi;TeeDB.bpi;Tee.bpi;vclib.bpi;ibxpress.bpi;adortl.bpi;IndyCore.bpi;IndySystem.bpi;IndyProtocols.bpi;inet.bpi;intrawebdb_100_140.bpi;Intraweb_100_140.bpi;VclSmp.bpi;vclie.bpi;inetdb.bpi;webdsnap.bpi;websnap.bpi;inetdbbde.bpi;inetdbxpress.bpi;soaprtl.bpi;vclribbon.bpi;DbxCommonDriver.bpi;DbxClientDriver.bpi;DBXInterBaseDriver.bpi;DBXMySQLDriver.bpi;dbexpress.bpi;dbxcds.bpi</PackageImports>
+			<BCC_IncludePath>S:\SYMULACJE\opi\;S:\WBRTM;$(CG_BOOST_ROOT)\boost\tr1\tr1;$(BDS)\include;$(BDS)\include\dinkumware;$(BDS)\include\vcl;$(CG_BOOST_ROOT);$(BCC_IncludePath)</BCC_IncludePath>
+			<ProjectType>CppConsoleApplication</ProjectType>
+			<OutputExt>exe</OutputExt>
+			<AllPackageLibs>rtl.lib</AllPackageLibs>
+			<DCC_CBuilderOutput>JPHNE</DCC_CBuilderOutput>
+			<DynamicRTL>true</DynamicRTL>
+			<IncludePath>S:\WBRTM\BASE\;opiTsrc\;S:\WBRTM\EXCEPT\;S:\WBRTM\PTRS\;S:\WBRTM\SYMSHELL\;res\;S:\WBRTM\SYMSHELL\src\BGraphix\;S:\WBRTM\SYMSHELL\src\;S:\WBRTM\SYMSHELL\src\Windows\;S:\WBRTM\MISCCLASSES\;S:\SYMULACJE\opi\;$(CG_BOOST_ROOT)\boost\tr1\tr1;$(BDS)\include;$(BDS)\include\dinkumware;$(BDS)\include\vcl;$(CG_BOOST_ROOT);$(IncludePath)</IncludePath>
+			<ILINK_LibraryPath>S:\WBRTM\BASE\;opiTsrc\;S:\WBRTM\EXCEPT\;S:\WBRTM\PTRS\;S:\WBRTM\SYMSHELL\;res\;S:\WBRTM\SYMSHELL\src\BGraphix\;S:\WBRTM\SYMSHELL\src\;S:\WBRTM\SYMSHELL\src\Windows\;S:\WBRTM\MISCCLASSES\;S:\WBRTM\bin\;S:\SYMULACJE\opi\;$(BDS)\lib;$(BDS)\lib\obj;$(BDS)\lib\psdk;$(ILINK_LibraryPath)</ILINK_LibraryPath>
+			<BCC_wpar>false</BCC_wpar>
+			<BCC_OptimizeForSpeed>true</BCC_OptimizeForSpeed>
+			<BCC_ExtendedErrorInfo>true</BCC_ExtendedErrorInfo>
+			<ILINK_TranslatedLibraryPath>$(BDS)\lib\$(LANGDIR)</ILINK_TranslatedLibraryPath>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_1)'!=''">
+			<BCC_OptimizeForSpeed>false</BCC_OptimizeForSpeed>
+			<BCC_DisableOptimizations>true</BCC_DisableOptimizations>
+			<DCC_Optimize>false</DCC_Optimize>
+			<DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
+			<Defines>_DEBUG;$(Defines)</Defines>
+			<BCC_InlineFunctionExpansion>false</BCC_InlineFunctionExpansion>
+			<IntermediateOutputDir>Debug</IntermediateOutputDir>
+			<BCC_UseRegisterVariables>None</BCC_UseRegisterVariables>
+			<DCC_Define>DEBUG</DCC_Define>
+			<BCC_DebugLineNumbers>true</BCC_DebugLineNumbers>
+			<TASM_DisplaySourceLines>true</TASM_DisplaySourceLines>
+			<BCC_StackFrames>true</BCC_StackFrames>
+			<ILINK_LibraryPath>$(BDS)\lib\debug;$(ILINK_LibraryPath)</ILINK_LibraryPath>
+			<ILINK_FullDebugInfo>true</ILINK_FullDebugInfo>
+			<TASM_Debugging>Full</TASM_Debugging>
+			<BCC_SourceDebuggingOn>true</BCC_SourceDebuggingOn>
+			<ILINK_TranslatedLibraryPath>$(BDS)\lib\$(LANGDIR)\debug;$(ILINK_TranslatedLibraryPath)</ILINK_TranslatedLibraryPath>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_2)'!=''">
+			<Defines>NDEBUG;$(Defines)</Defines>
+			<IntermediateOutputDir>Release</IntermediateOutputDir>
+			<ILINK_LibraryPath>$(BDS)\lib\release;$(ILINK_LibraryPath)</ILINK_LibraryPath>
+			<TASM_Debugging>None</TASM_Debugging>
+			<ILINK_TranslatedLibraryPath>$(BDS)\lib\$(LANGDIR)\release;$(ILINK_TranslatedLibraryPath)</ILINK_TranslatedLibraryPath>
+		</PropertyGroup>
+		<ItemGroup>
+			<CppCompile Include="spsSwiatWizual.cpp">
+				<BuildOrder>8</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="opiTsrc\opiGlobals.cpp">
+				<BuildOrder>6</BuildOrder>
+			</CppCompile>
+			<ResourceCompile Include="res\menuetc.rc">
+				<Form>menuetc.res</Form>
+				<BuildOrder>28</BuildOrder>
+			</ResourceCompile>
+			<CppCompile Include="spsMatrixNode.cpp">
+				<DependentOn>spsMatrixNode.h</DependentOn>
+				<BuildOrder>21</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="opiTsrc\opiKlasyWersja.cpp">
+				<BuildOrder>27</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="spsElement.cpp">
+				<BuildOrder>16</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="S:\WBRTM\MISCCLASSES\Wieloboki.cpp">
+				<BuildOrder>3</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="opiTsrc\opiNazwaPliku.cpp">
+				<BuildOrder>14</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="spsKonstrLst.cpp">
+				<BuildOrder>17</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="spsSwiatProc.cpp">
+				<BuildOrder>26</BuildOrder>
+			</CppCompile>
+			<ResFiles Include="opiTransfer.res">
+				<BuildOrder>2</BuildOrder>
+			</ResFiles>
+			<CppCompile Include="S:\WBRTM\PTRS\wb_pchar_verboten.cpp">
+				<BuildOrder>39</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="S:\WBRTM\PTRS\wb_pchar.cpp">
+				<BuildOrder>38</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="S:\WBRTM\PTRS\wb_pchario.cpp">
+				<BuildOrder>40</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="S:\WBRTM\BASE\ViewHtmlStr.cpp">
+				<BuildOrder>43</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="S:\WBRTM\EXCEPT\ioexcep.cpp">
+				<BuildOrder>41</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="S:\WBRTM\MISCCLASSES\Smartlog.cpp">
+				<BuildOrder>37</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="opiTsrc\opiKlasySpoleczne.cpp">
+				<BuildOrder>32</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="spsGenProc.cpp">
+				<DependentOn>spsGenProc.h</DependentOn>
+				<BuildOrder>27</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="opiTsrc\opiKlasyRynkowe.cpp">
+				<BuildOrder>33</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="opiTsrc\opiKlasyTransferu.cpp">
+				<BuildOrder>35</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="opiTsrc\opiKlasyJednNaukowych.cpp">
+				<BuildOrder>34</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="opiTsrc\opiStats.cpp">
+				<BuildOrder>9</BuildOrder>
+			</CppCompile>
+			<None Include="res\opiresource.h">
+				<BuildOrder>29</BuildOrder>
+			</None>
+			<CppCompile Include="spsSwiatInit.cpp">
+				<BuildOrder>7</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="spsSwiatBaza.cpp">
+				<BuildOrder>6</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="spsParaLink.cpp">
+				<DependentOn>spsParaLink.h</DependentOn>
+				<BuildOrder>20</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="S:\WBRTM\SYMSHELL\src\BGraphix\sshutils.cpp">
+				<BuildOrder>23</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="spsGenInfo.cpp">
+				<DependentOn>spsGenInfo.h</DependentOn>
+				<BuildOrder>15</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="S:\WBRTM\SYMSHELL\src\BGraphix\strtorgb.cpp">
+				<BuildOrder>24</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="spsGenNode.cpp">
+				<BuildOrder>12</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="opiTsrc\opiMain.cpp">
+				<BuildOrder>5</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="S:\WBRTM\SYMSHELL\src\errorent.c">
+				<BuildOrder>22</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="opiTsrc\opiKlasyGeneryczne.cpp">
+				<BuildOrder>19</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="S:\WBRTM\MISCCLASSES\TabelaTabDeli.cpp">
+				<BuildOrder>11</BuildOrder>
+			</CppCompile>
+			<None Include="S:\WBRTM\SYMSHELL\sshmenuf.h">
+				<BuildOrder>30</BuildOrder>
+			</None>
+			<CppCompile Include="S:\WBRTM\SYMSHELL\src\Windows\symshwin.c">
+				<BuildOrder>21</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="spsGenLink.cpp">
+				<DependentOn>spsGenLink.h</DependentOn>
+				<BuildOrder>26</BuildOrder>
+			</CppCompile>
+			<None Include="spsModel.h">
+				<BuildOrder>5</BuildOrder>
+			</None>
+			<CppCompile Include="opiTsrc\opiKlasyZespolRoboczy.cpp">
+				<BuildOrder>36</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="S:\WBRTM\SYMSHELL\src\Windows\sshmenufwin.c">
+				<BuildOrder>31</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="spsMatNodeFiles.cpp">
+				<BuildOrder>25</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="spsSwiatKrokSymul.cpp">
+				<BuildOrder>10</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="opiTsrc\opiKlasyAdmNaukowej.cpp">
+				<BuildOrder>43</BuildOrder>
+			</CppCompile>
+			<BuildConfiguration Include="Base">
+				<Key>Base</Key>
+			</BuildConfiguration>
+			<BuildConfiguration Include="Release">
+				<Key>Cfg_2</Key>
+				<CfgParent>Base</CfgParent>
+			</BuildConfiguration>
+			<BuildConfiguration Include="Debug">
+				<Key>Cfg_1</Key>
+				<CfgParent>Base</CfgParent>
+			</BuildConfiguration>
+		</ItemGroup>
+		<Import Project="$(BDS)\Bin\CodeGear.Cpp.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Cpp.Targets')"/>
+		<ProjectExtensions>
+			<Borland.Personality>CPlusPlusBuilder.Personality.12</Borland.Personality>
+			<Borland.ProjectType>CppConsoleApplication</Borland.ProjectType>
+			<BorlandProject>
+				<CPlusPlusBuilder.Personality>
+					<VersionInfo>
+						<VersionInfo Name="IncludeVerInfo">True</VersionInfo>
+						<VersionInfo Name="AutoIncBuild">True</VersionInfo>
+						<VersionInfo Name="MajorVer">1</VersionInfo>
+						<VersionInfo Name="MinorVer">0</VersionInfo>
+						<VersionInfo Name="Release">0</VersionInfo>
+						<VersionInfo Name="Build">12</VersionInfo>
+						<VersionInfo Name="Debug">True</VersionInfo>
+						<VersionInfo Name="PreRelease">False</VersionInfo>
+						<VersionInfo Name="Special">False</VersionInfo>
+						<VersionInfo Name="Private">False</VersionInfo>
+						<VersionInfo Name="DLL">False</VersionInfo>
+						<VersionInfo Name="Locale">1045</VersionInfo>
+						<VersionInfo Name="CodePage">1250</VersionInfo>
+					</VersionInfo>
+					<VersionInfoKeys>
+						<VersionInfoKeys Name="CompanyName"/>
+						<VersionInfoKeys Name="FileDescription"/>
+						<VersionInfoKeys Name="FileVersion">1.0.0.12</VersionInfoKeys>
+						<VersionInfoKeys Name="InternalName"/>
+						<VersionInfoKeys Name="LegalCopyright"/>
+						<VersionInfoKeys Name="LegalTrademarks"/>
+						<VersionInfoKeys Name="OriginalFilename"/>
+						<VersionInfoKeys Name="ProductName"/>
+						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="Comments"/>
+					</VersionInfoKeys>
+					<Debugging>
+						<Debugging Name="DebugSourceDirs"/>
+					</Debugging>
+					<Parameters>
+						<Parameters Name="RunParams"/>
+						<Parameters Name="Launcher"/>
+						<Parameters Name="UseLauncher">False</Parameters>
+						<Parameters Name="DebugCWD">D:\users\borkowsk\DYSTRYBUCJA_opiTT</Parameters>
+						<Parameters Name="HostApplication"/>
+						<Parameters Name="RemoteHost"/>
+						<Parameters Name="RemotePath"/>
+						<Parameters Name="RemoteParams"/>
+						<Parameters Name="RemoteLauncher"/>
+						<Parameters Name="UseRemoteLauncher">False</Parameters>
+						<Parameters Name="RemoteCWD"/>
+						<Parameters Name="RemoteDebug">False</Parameters>
+						<Parameters Name="Debug Symbols Search Path"/>
+						<Parameters Name="LoadAllSymbols">True</Parameters>
+						<Parameters Name="LoadUnspecifiedSymbols">False</Parameters>
+					</Parameters>
+					<ProjectProperties>
+						<ProjectProperties Name="AutoShowDeps">True</ProjectProperties>
+						<ProjectProperties Name="ManagePaths">True</ProjectProperties>
+						<ProjectProperties Name="VerifyPackages">True</ProjectProperties>
+					</ProjectProperties>
+				</CPlusPlusBuilder.Personality>
+			</BorlandProject>
+			<ProjectFileVersion>12</ProjectFileVersion>
+		</ProjectExtensions>
+	</Project>

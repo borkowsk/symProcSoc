@@ -1,0 +1,21 @@
+ToDo:
+1. Do wyników wyrzuciæ œredni¹ probiznesowoœæ RU i œrednia pronaukowoœæ Firm
+2. Aktywnoœæ wêz³a ma wp³ywaæ tylko na proces spo³eczny -> czyli jest to aktywnoœæ spo³eczna
+3. Innowacyjnoœæ wp³ywa tylko na TTSearch i research process
+4. Aktywnoœæ w procesie socjalizacji ma dzieliæ aktywnoœæ na dwie czêœci: aktywnoœæ podtrzymywania kontaktów i aktywnoœæ nawi¹zywania nowych kontaktów.
+5. Ustawiamy centralnoœæ na poziomie 1 w Business nodach i na Research nodach. 
+6. Czasoch³onnoœæ - do sprawdzenia jak to dok³adnie dzia³a w modelu.
+
+??? 7. Eksperckoœæ ma wp³ywaæ tylko na wagê wêz³a, a nie ³¹czyæ siê z efektywnoœci¹. 
+
+Pytania:
+1. Co dok³adnie wp³ywa na wagê wêz³a UOTT?
+
+
+Odpowiedzi:
+- Prolegalnoœæ wpywa tylko na aktywnoœæ w godzinach pracy/generowanie nowych pomys³ów - wszyscy maj¹ "1".
+- Probiznesowoœæ wp³ywa na to jak ustalasz cel projektu naukowego.
+- pronaukowoœæ=proakademickoœæ
+- proinnowacyjnoœæ w firmach nie wp³ywa
+- finanse zaplanowane nie maj¹ wp³ywu
+- eksperskoœæ wp³ywa na wagê wêz³a
