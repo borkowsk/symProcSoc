@@ -90,7 +90,7 @@ void  GenerycznePowiazanie::PodajPozycje(double D,bool KierunekZwykly,double& X,
   }
 
 
-  GenerycznePowiazanie::GenerycznePowiazanie() :  Waga(0)
+  GenerycznePowiazanie::GenerycznePowiazanie() :  Waga(1)
   // Domyslny konstruktor ustawiaj¹cy pusty link
   {
 	  Col.ARGB = 0;
@@ -116,8 +116,7 @@ void  GenerycznePowiazanie::PodajPozycje(double D,bool KierunekZwykly,double& X,
 	//unsigned long strtoul(const char *s, char **endptr,int base);
 	//int atoi(const char *s);
 	//double atof(const char *s);
-	Waga=atof(Dane[3].c_str());
-	if(Waga<=0)
+	if(Dane.KonwertujDo(3,Waga)!=-1)//	Waga=atof(Dane[3].c_str());
 		{ Blad=3; return false;}
 
 	char* endptr=NULL;

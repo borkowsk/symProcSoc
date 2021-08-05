@@ -13,14 +13,16 @@
 
 class GenerycznyProces:public Proces
 {
+	static KonstruktorElementowModelu<GenerycznyProces> WirtualnyKonstruktor;
   public:
 	GenerycznyProces();//Konstruktor musi tylko zapewniæ sensowne powstanie
+	GenerycznyProces(const GenerycznyProces* Wzor);
 	GenerycznyProces(const char* Nazwa,float KoniecznaPraca,float DoDeadlinu);//I do tworzenia normalnie
-	static KonstruktorElementowModelu<GenerycznyProces> WirtualnyKonstruktor;
-	ElementModelu::WirtualnyKonstruktor* VKonstruktor() { return &WirtualnyKonstruktor;}
+	virtual ElementModelu::WirtualnyKonstruktor* VKonstruktor() { return &WirtualnyKonstruktor;}
 	virtual ~GenerycznyProces();//Destruktor wirtualny, bo bêd¹ metody wirtualne
 	virtual bool Poprawny(); //true jeœli jest dobrze zdefiniowany (wci¹¿ istnieje procesor)
 	virtual double  Waznosc() { return Prior; }  //Po prostu priorytet innymi s³owy
+	virtual const char* Nazwa();
   //Metoda pobiera wszystkie potrzebne dane z listy stringów. Jak blad to podaje ktora pozycja listy
 	virtual bool ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad);
   //REYSOWANIE ITP.

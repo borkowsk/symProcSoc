@@ -15,6 +15,9 @@
 #include "spsMatrixNode.h"
 #include "INCLUDE/platform.hpp"
 #include "SYMSHELL/sshutils.hpp"
+#include "INCLUDE/wb_ptr.hpp"
+#include "INCLUDE/wb_smartlog.h"
+using namespace wbrtm;
 
 #include <stdlib.h>
 #include <iostream>
@@ -53,6 +56,62 @@ DziedzKol& WezelMacierzowy::operator() (unsigned x,unsigned y)
 		cerr<<_LPL("Niepoprawny dostep do ","Invalid index to ")<<Nazwa()<<" x:"<<x<<" y:"<<y<<endl;
 		exit(-1);
 	}
+}
+
+DziedzinaWKolorze WezelMacierzowy::_ZnajdzNajpodobniejszy(DziedzinaWKolorze D,
+															unsigned& Indeks,
+														   double& WzglednePobienstwo,
+															unsigned IleProb)
+//Funkcja przeszukiwania "bazy danych". Mo¿e losowo, albo liniowo,
+//ale potomne mog¹ zaiplementowac coœ lepszego
+{
+	//static
+	Indeks=Swiat::INVINDEX; //Jakby nie znalza³
+	WzglednePobienstwo=0;//Podobienstwo mniejsze ni¿ 0 byæ nie mo¿e
+	DziedzinaWKolorze Wynik;//Na rezultat
+	double IleBitowWzorca=D.IleBitow();  //Zeby tego ci¹gle nie powtarzaæ, ale czy potrzebne
+	unsigned ile=Szerokosc*Wysokosc;
+	if(IleProb>ile) //Liniowo
+	{
+	   for(unsigned i=0;i<ile;i++)
+	   {
+		  DziedzinaWKolorze Roznica;
+		  Roznica=D.ARGB ^ Tablica[i].ARGB;
+		  double Podob=Roznica.IleBitow();
+		  Podob=32-Podob;
+		  Podob/=32;
+		  if(Podob>WzglednePobienstwo)
+		  {
+			 Wynik=Tablica[i];
+			 WzglednePobienstwo=Podob;
+			 Indeks=i;
+		  }
+	   }
+	}
+	else //Losowo
+	{
+	   for(unsigned a=0;a<ile;a++)
+	   {
+		  unsigned i=RANDOM(ile);                			   	  assert(i<ile);
+		  DziedzinaWKolorze Roznica;
+		  Roznica=D.ARGB ^ Tablica[i].ARGB;
+		  double Podob=Roznica.IleBitow();
+		  Podob=32-Podob;
+		  Podob/=32;
+		  if(Podob>WzglednePobienstwo)
+		  {
+			 Wynik=Tablica[i];
+			 WzglednePobienstwo=Podob;
+			 Indeks=i;
+		  }
+	   }
+	}
+	//Coœ siê znanalz³o
+	if(IleBitowWzorca<=1)
+			{
+		   //	clog<<"?";//DEBUG
+			}
+	return Wynik;
 }
 
 //Metoda pobiera wszystkie potrzebne dane z listy stringów. Jak blad to podaje ktora pozycja
@@ -96,7 +155,10 @@ bool WezelMacierzowy::ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned
 	//Wczytujemy pozosta³e pola (???) G³ownie chodzi o tworzenie wielok¹ta
 	//Drobna sztuczka - na chwilê zmniejszamy wagê, ¿eby by³ mniejszy
 	double ZapamietajW=Waga;
-	Dane.PrzypiszZ(3, double(Waga/std::max(Szerokosc,Wysokosc))  );
+	double JakaWagaJednostki=double( Waga/std::max(Szerokosc,Wysokosc) );
+	if(JakaWagaJednostki<0.1)
+			JakaWagaJednostki=0.1; //Awaryjny rozmiar jednostki jak za ma³a
+	Dane.PrzypiszZ(3, JakaWagaJednostki );
 	if(!_PrzeniesDaneNaPola(Blad))
 			return false;
 	Dane.PrzypiszZ(3, ZapamietajW );
@@ -162,6 +224,45 @@ bool WezelMacierzowy::Trafiony(float sX,float sY)
 		return false;
 }
 
+
+bool WezelMacierzowy::_OdpowiedzLosowymBitem(Komunikat* Pyt,unsigned Ktory,bool AND_OR)
+//...Element bêd¹cy podstaw¹ mo¿e byæ wskazany lub losowy
+{
+	wb_ptr<Komunikat> Klon( Pyt->Klonuj() ); //Jak siê z jakiœ powodów nie uda wyslaæ to przygotowywany komunikat znika dziêki wb_ptr
+	if(Klon->Zwrotnie())//O ile uda sie adresowanie zwrotne
+		{
+			DziedzKol Pom=Pyt->PodajDziedzine();//Jaka jest dziedzina komunikatu
+			unsigned i=Ktory;
+			if(i==Swiat::INVINDEX)
+						RANDOM(Szerokosc*Wysokosc); //Jakiœ losowy element
+			if(AND_OR)
+				Pom.ARGB=Tablica[i].ARGB & Pom.ARGB;// Czêœæ wspólna pytania i odpowiedzi
+			else
+				Pom.ARGB=Tablica[i].ARGB | Pom.ARGB;// Suma logiczna pytania i odpowiedzi
+			Klon->UstawDziedzine(Pom);
+			return Swiat::WstawInfo(Klon.give())!=Swiat::INVINDEX;//Wstawi³ klon komunikatu - trac¹c z "zarz¹du"
+		}
+	return false;
+}
+
+bool WezelMacierzowy::_OdpowiedzNajpodobniejszym(Komunikat* Pyt,unsigned IleProb)
+//MOZE BYÆ KOSZTOWNA! Jak nie podano liczby prób to przegl¹da ca³¹ zawartoœæ!!!
+{
+										  //	assert("NIE ZAIMPLEMENTOWANE!!!");
+	DziedzinaWKolorze D;
+	unsigned Indeks; double WzglednePobienstwo;
+	D=_ZnajdzNajpodobniejszy(Pyt->PodajDziedzine(),Indeks,WzglednePobienstwo,IleProb);//unsigned IleProb)<==oznacza przeszukanie liniowe
+	Komunikat* ODP=Pyt->Klonuj();
+	string Pom=Pyt->Rodzaj()+".ODP";
+	ODP->UstawRodzaj(Pom.c_str());
+	ODP->UstawDziedzine(D);
+	if(ODP->Zwrotnie()
+		&& Swiat::WstawInfo(ODP)!=Swiat::INVINDEX)
+			 return true;
+		else
+		TLOG(1, <<"Nie uda³o siê wys³aæ odpowiedzi na komunikat rodzaju \""<<Pyt->Rodzaj()<<"\" D:"<<hex<<Pyt->PodajDziedzine().ARGB<<" Do "<<Pyt->Nadawca()  )
+	return false;
+}
 
 /********************************************************************/
 /*			          SPS  version 2011                             */

@@ -14,13 +14,28 @@
 #include <cassert>
 #define _USE_MATH_DEFINES /*For MSVC*/
 #include <cmath>
-
+#include <iostream>
 using namespace std;
+
+#include "INCLUDE/wb_smartlog.h"
+using namespace wbrtm;
+
 //---------------------------------------------------------------------------
 PowiazaniePaboliczne::KonstruktorElementowModelu<PowiazaniePaboliczne>
 						PowiazaniePaboliczne::WirtualnyKonstruktor("ParaLink");
 PowiazaniePaboliczneSkierowane::KonstruktorElementowModelu<PowiazaniePaboliczneSkierowane>
 			PowiazaniePaboliczneSkierowane::WirtualnyKonstruktor("DirParaLink");
+
+
+bool PowiazaniePaboliczne::Poprawny()
+{
+	if(fabs(parametr)>10)
+			{
+				TLOG(0, <<"PowiazaniePaboliczne::Parametr="<<parametr<<" ZA DU¯Y???" )
+				return false;
+			}
+	return GenerycznePowiazanie::Poprawny();
+}
 
 PowiazaniePaboliczne::~PowiazaniePaboliczne()
 {
@@ -89,6 +104,12 @@ void PowiazaniePaboliczne::_PoliczParametryLuku()//Liczy parametry ³uku dla dane
 	   //alfa=atan2( (Xb-Xa),(Yb-Ya) );// nie dzia³a ?????
 	   //!!!! atan2( Y , X ) - funkcja wymaga najpierw Y, potem X!!!!!!!!!!!!!
 	   //Procedura do korekty, ale na razie dzia³a, choæ nie wiem dlaczego!
+											if((Xb-Xa)==0 && (Ya-Yb)==0)
+											{
+												clog<<"Zbyt krotki link? X1:"<<Xa<<" Y1"<<Ya<<endl;
+												Promien=0;krokow=0; return;
+											}
+
 	   alfa=atan2( (Xb-Xa),(Ya-Yb) )-M_PI/2;//?????  TAK DZIA£A!  WHY????
 	  /* if(alfa<0)
 		{

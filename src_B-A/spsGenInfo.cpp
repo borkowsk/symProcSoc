@@ -30,6 +30,18 @@ using namespace std;
 
 GeneryczneInfo::KonstruktorElementowModelu<GeneryczneInfo> GeneryczneInfo::WirtualnyKonstruktor("GenInfo");
 
+const string& GeneryczneInfo::Rodzaj()
+{
+   static const string _What("???");//Rodzaj nieodokreœlonego komunikatu. Klasy potomne i tak przes³aniaj¹ tê funkcje
+	return _What;
+}
+
+bool  GeneryczneInfo::UstawRodzaj(const char* )
+//A jak typ nie udostêpnia zmiany to zwraca false
+{
+    return false;
+}
+
 bool GeneryczneInfo::Poprawny()
 //true jeœli kanal jest dobrze zdefiniowany (wci¹¿ istnieje link, nadawca i odbiorca)
 {
@@ -222,7 +234,13 @@ float  GeneryczneInfo::JakDostawa()
 	  if(zaaw<=1.00000)
 		return zaaw;
 		else
-	  	return 1.001;//¯eby siê nie pokazywa³ bardzo za celem jak siê przeterminuje
+		return 1.001;//¯eby siê nie pokazywa³ bardzo za celem jak siê przeterminuje
+}
+
+float  GeneryczneInfo::JakiTermin()
+//W ile kroków powinien zostaæ dostarczony?
+{                     	assert(0<Predkosc && Predkosc<=1);
+	return 1.0/Predkosc;
 }
 
 void GeneryczneInfo::ChwilaDlaCiebie()

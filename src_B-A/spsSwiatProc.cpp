@@ -102,27 +102,60 @@ Proces*		Swiat::Proc(unsigned Ktory,unsigned KtoryWezel/*=-1*/)
 	}
 }
 
-unsigned     Swiat::NajpilniejszyProc(unsigned KtoryWezel,unsigned* IleRealnie)
+int sort_function_procesy(const void *a, const void *b)
+{
+   Proces* Ap=*(Proces**)a;
+   Proces* Bp=*(Proces**)b;
+   double Zb=Ap?Ap->Priorytet():-1000000;//W kolejnosci odwrotnej!
+   double Za=Bp?Bp->Priorytet():-1000000;//A nieistniejace na koniec!!!
+   if(Za>Zb) return 1;
+   else if(Za==Zb) return 0;
+		else return -1;
+}
+
+unsigned     Swiat::NajpilniejszyProc(unsigned KtoryWezel,unsigned* IleRealnie,bool Posortuj)
 //Daje indeks procesu o najwy¿szym priorytecie
 {
-	double PriorMax=-DBL_MAX;
-	unsigned Ktory=-1;
-	unsigned Licznik=0;
-	for(unsigned i=0;i<Procesy[KtoryWezel].Tab.get_size();i++)
+	if(!Posortuj)
 	{
-		Proces* Pr=Procesy[KtoryWezel].Tab[i];
-		if(Pr==NULL) continue;
-		Licznik++;
-		double Priorytet=Pr->Priorytet();
-		if(Priorytet>PriorMax)
+		double PriorMax=-DBL_MAX;
+		unsigned Ktory=Swiat::INVINDEX;
+		unsigned Licznik=0;
+		for(unsigned i=0;i<Procesy[KtoryWezel].Tab.get_size();i++)
 		{
-		   PriorMax=Priorytet;
-		   Ktory=i;
-        }
+			Proces* Pr=Procesy[KtoryWezel].Tab[i];
+			if(Pr==NULL) continue;
+			Licznik++;
+			double Priorytet=Pr->Priorytet();
+			if(Priorytet>PriorMax)
+			{
+				PriorMax=Priorytet;
+				Ktory=i;
+			}
+		}
+		if(IleRealnie!=NULL)  //Gdy odbiorca jest zainteresowany?
+			*IleRealnie=Licznik; //to mo¿e dostaæ te¿ liczbê realnie dzia³ajacych procesów
+		return Ktory; //Mo¿e zwrócic -1 jak nie ma procesów!!!
 	}
-	if(IleRealnie!=NULL)  //Gdy odbiorca jest zainteresowany?
-	  *IleRealnie=Licznik; //to mo¿e dostaæ te¿ liczbê realnie dzia³ajacych procesów
-	return Ktory; //Mo¿e zwrócic -1 jak nie ma procesów!!!
+	else //if(Posortuj) //Jak sortowanie to najpilniejszy znajdzie siê na pocz¹tku
+	{
+
+		qsort(Procesy[KtoryWezel].Tab.get_ptr_val(),Procesy[KtoryWezel].Tab.get_size(),sizeof(Proces*),sort_function_procesy);
+
+		unsigned Licznik=0;
+		for(unsigned i=0;i<Procesy[KtoryWezel].Tab.get_size();i++)
+		  if(Procesy[KtoryWezel].Tab[i]!=NULL)
+					Licznik++;
+		if(IleRealnie!=NULL)  //Gdy odbiorca jest zainteresowany?
+			*IleRealnie=Licznik; //to mo¿e dostaæ te¿ liczbê realnie dzia³ajacych procesów
+		if(Licznik>0)
+		{
+			Proces* Pr=Procesy[KtoryWezel].Tab[0];      assert(Pr!=NULL);
+			double Prior=Pr->Priorytet(); //Debug
+			return 0; //Jak sortowanie to najpilniejszy znajdzie siê na pocz¹tku
+		}
+		else return Swiat::INVINDEX; //Nie ma nic
+	}
 }
 
 void 	 Swiat::UsunProc(unsigned Ktory,unsigned KtoryWezel/*=-1*/)

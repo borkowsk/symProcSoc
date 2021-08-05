@@ -100,16 +100,20 @@ class Powiazanie:public ElementModelu
 							   //Mo¿e uwzglêdniaæ te¿ specyfikê komunikatu
 };
 
+//class string;//U¿ywany tylko jako rezultat metod pure-virtual
 class Komunikat:public ElementModelu
 {
   public:
 	virtual ~Komunikat(){}//Destruktor wirtualny, bo bêd¹ metody wirtualne
+	virtual const std::string& Rodzaj()=0;  //Jak nic nie ma to zwraca "???"
+	virtual bool  UstawRodzaj(const char* )=0;//A jak typ nie udostêpnia zmiany to zwraca false
 	virtual bool Poprawny()=0; //true jeœli jest dobrze zdefiniowany (wci¹¿ istnieje link, nadawca i odbiorca etc...)
 	virtual void Narysuj()=0;
 	virtual void Wymazuj()=0;
 	virtual void ChwilaDlaCiebie(){}; //Daje mu szanse na endogenne zmiany stanów
   //Specyficzne dla Komunikatu (Message)
 	virtual float  JakDostawa()=0;//0 po starcie, jak 1 to ju¿ dotar³=0
+	virtual float  JakiTermin()=0;//W ile kroków powinien zostaæ dostarczony?
 	virtual unsigned Kanal()=0; //Po ktorym po³¹czeniu czyli linku
 	virtual bool 	 KierunekZgodny()=0;//Czy idzie zgodnie z nominalnym kierunkiem linku czy pod pr¹d
 	virtual unsigned Nadawca()=0; //Od kogo ...
@@ -129,12 +133,13 @@ class Komunikat:public ElementModelu
 
 class Swiat//:public ElementModelu - PO CO?
 {
-
 	//!!!
 	//Wszystkie dane s¹ w jednej kopii poza deklaracj¹ klasy !!!
 	//!!!
 	Swiat();         //Konstruktor  prywatny - bo tylko jeden Œwiat
 	public:
+	static double SkalujX(); //Bardzo czêsto uzywane
+	static double SkalujY(); //Mo¿e inliny kiedyœ zrobie?
 	//Staramy sie miec tylko jeden Swiat :-)
 	static Swiat Ten; //!!!
 	static const unsigned INVINDEX=unsigned(-1); //Marker wadliwych indeksów
@@ -155,6 +160,7 @@ class Swiat//:public ElementModelu - PO CO?
 
 	//Poniewa¿ dane s¹ w jednej to wszystkie inne "metody" mog¹ byæ "static"
 	///////////////////////////////////////////////////////////////////////////
+	static bool ForceTolerant;//Przy wczytywaniu danych tylko ostrzega o niepoprawnych linkach
 	static bool Inicjalizacja(const char* PlikWejsciowy,const char DelimiterDanych);   //Wczytanie i/lub wylosowanie struktury modelu
 	static bool Krok_modelu();     //Wykonanie kroku modelu - mo¿e byæ wizualizacja w trakcie
 	static bool Wizualizacja_po_kroku(); //Wykonanie pe³nej wizualizacji modelu w danej chwili
@@ -176,7 +182,7 @@ class Swiat//:public ElementModelu - PO CO?
 
 	//Pomocnicze funkcje wyszukiwawcze
 	static unsigned 	ZnajdzIndeksWezla(const char* Nazwa); //Zwraca INVINDEX) jak nie znajdzie
-	static unsigned     NajpilniejszyProc(unsigned KtoryWezel,unsigned* IleRealnie=NULL);//Daje indeks procesu o najwy¿szym priorytecie
+	static unsigned     NajpilniejszyProc(unsigned KtoryWezel,unsigned* IleRealnie=NULL,bool Posortuj=false);//Daje indeks procesu o najwy¿szym priorytecie
 															//Mo¿e zwrócic -1 jak nie ma procesów, a opcjonalnie ich liczbê na *IleRealnie
 	//Aktualne rozmiary tablic - ale w ich obrêbie mog¹ byæ puste sloty
 	static unsigned IleWezlow();
@@ -224,10 +230,11 @@ class Swiat//:public ElementModelu - PO CO?
 	static unsigned UsunInfo(Komunikat* Jaki);
 	static unsigned UsunProc(Proces* Jaki,unsigned KtoryWezel=INVINDEX);
 
+	static bool _UstalLiczbeInfo(unsigned IleMax);  //W celu zmiany w konfiguruj
 	private:  //Zmiany rozmiarów struktur potrzebne s¹ tylko wewnêtrznie (na razie?)
-	static bool _UstalLiczbeWezlow(unsigned IleMax);
 	static bool _UstalLiczbeLaczy(unsigned IleMax);
-	static bool _UstalLiczbeInfo(unsigned IleMax);
+	static bool _UstalLiczbeWezlow(unsigned IleMax);
+
 	static bool _UstalPoczLiczbeProc(unsigned IleMaxDlaWezla);
 };
 

@@ -36,8 +36,8 @@ unsigned Swiat::OpisWezlow=1;
 unsigned Swiat::OpisLinkow=-1;
 
 //Skale - przez ile mno¿yæ X i Y zeby wype³niæ ca³y ekran?
-double SkalaX=1.0;
-double SkalaY=1.0;
+static double SkalaX=1.0;
+static double SkalaY=1.0;
 
 //Wizualizacyjne
 void _wizualizuj_komunikat_kropka(Komunikat* Inf);  //Pomocnicza - uproszczona wizualizacja komunikatu
@@ -107,6 +107,7 @@ ElementModelu* Swiat::Inspekcja(int x,int y,bool Wizual)
 
 	if(Wizual)  //TERAZ W£AŒCIWA PRACA ...
 	{
+		Szukany->AktualizujListeDanych();//Musimy mieæ pewnoœæ ¿e na liscie s¹ w³aœciwe wartoœci
 		ssh_color back=255+127+RANDOM(127);
 	   //	circle(SkalaX*Szukany->X(),SkalaY*Szukany->Y(),/*min(SkalaX,SkalaY)**/Szukany->R(0),254);
 	   print_width(SkalaX*Szukany->X()-100,SkalaY*Szukany->Y()-char_height('X'),200,0,back,
@@ -142,6 +143,8 @@ bool Swiat::Wizualizacja_po_kroku()
 	SkalaY=double(screen_height());
 	SkalaX/=hor;
 	SkalaY/=ver;
+	if(SkalaX<=0.000001 ||  SkalaY<=0.000001)
+					return true; //Nic nie wyjdzie z tej wizualizacji ale musi zwróciæ true bo siê przerwie!
 
 	//REJESTRACJA i RYSOWANIE LINKÓW
 	if(!StrukturaSwiataNieZmieniona)//Przygotowanie posortowanej listy jak siê coœ zmieni³o
@@ -257,39 +260,7 @@ bool Swiat::Wizualizacja_po_kroku()
 	return true;//Udalo siê jak zwykle :-)
 }
 
-void GenerycznyProces::Narysuj()
-{
-	WezelSieci* Mw=Swiat::Wezel(Procesor());
-	if(Mw==NULL)
-		cerr<<endl<<"Proces na nieistniej¹cym wezle"<<endl;
-	unsigned ile=Swiat::IleProcesow(Procesor());
 
-	double R=Mw->R(1.5*M_PI);
-	double Y=Mw->Y()-0.1*R+this->MojID();//Indeks procesu na wêŸle
-	double X1=Mw->X()-R;
-	double X2=X1+2*R;
-
-	double Zaaw=this->JakZaawansowany();
-
-	//Pasek podkreœlenia projektu bliskiego zakonczenia
-	if(Zaaw>0.99)
-	{
-		set_pen_rgb(255,200,0,SkalaY,SSH_LINE_SOLID);  //Kolor przerobionego
-		line_d(SkalaX*X1,SkalaY*Y+1,SkalaX*X2,SkalaY*Y+1);//Dodatkowe podkreœlenie
-	}
-
-	//DziedzKol Pom=Mw->PodajDziedzine();//Pom.R<<=1;Pom.G<<=1;Pom.B<<=1;
-	//set_pen_rgb(Pom.R,Pom.G,Pom.B,SkalaY-1,SSH_LINE_SOLID);  //Kolor postêpu na wêz³a
-
-	//Pasek t³a
-	set_pen_rgb(Col.R/2,Col.G/2,Col.B/2,SkalaY,SSH_LINE_SOLID);  //Przyciemniony kolor projektu
-	line_d(SkalaX*X1,SkalaY*Y,SkalaX*X2,SkalaY*Y);
-
-	//Pasek zaawansowania
-	X2=X1+2*R*Zaaw;
-	set_pen_rgb(Col.R,Col.G,Col.B,SkalaY-1,SSH_LINE_SOLID);  //Normalny kolor projektu
-	line_d(SkalaX*X1,SkalaY*Y,SkalaX*X2,SkalaY*Y);
-}
 
 void GenerycznyWezelSieci::Narysuj()
 {
@@ -374,7 +345,13 @@ void GenerycznePowiazanie::Narysuj()
 
 	if(this->Kierunkowy()) //Jak kierunkowy to trzeba dodaæ strza³kê
 	{
-	   double Rad=atan2(SkalaY*Koniec->Y()-SkalaY*Start->Y(),SkalaX*Koniec->X()-SkalaX*Start->X())+M_PI/2.0;  //Nie dzia³a bez korekty
+	   double dX=SkalaX*Koniec->X()-SkalaX*Start->X();
+	   double dY=SkalaY*Koniec->Y()-SkalaY*Start->Y();
+				if(dY==0 && dX==0) //Zlosliwa sytuacja
+				{
+					clog<<"?"; goto ERROR;
+				}
+	   double Rad=atan2(dY,dX)+M_PI/2.0;  //Te¿ nie dzia³a bez korekty
 	   Wielobok Arr=Wielobok::Namiot();//	(3,grubosc*1.5);
 	   Arr.Centruj();
 	   double MaX,MiX,MaY,MiY,cR,Skala;
@@ -385,6 +362,15 @@ void GenerycznePowiazanie::Narysuj()
 	   Arr.Rysuj((SkalaX*Koniec->X()+SkalaX*Start->X())/2.0,
 				 (SkalaY*Koniec->Y()+SkalaY*Start->Y())/2.0,
 				 R*0.75,G*0.75,B*0.75);
+	}
+
+	return;
+	ERROR:
+	{
+		WezelSieci* W1=Swiat::Wezel(this->Poczatek());
+		WezelSieci* W2=Swiat::Wezel(this->Koniec());
+		clog<<"\nWadliwe powiazanie proste miedzy  ";
+		clog<<W1->Nazwa()<<" a "<<W2->Nazwa()<<endl;
 	}
 }
 
@@ -443,7 +429,13 @@ void PowiazaniePaboliczne::Narysuj()
 	{
 	   PodajPozycje(0.5,true,Xp,Yp,NULL); //Polozenie srodka strzalki
 	   PodajPozycje(0.66,true,Xk,Yk,NULL);//Do obliczenia kierunku
-	   double Rad=atan2(SkalaY*Yk-SkalaY*Yp,SkalaX*Xk-SkalaX*Xp)+M_PI/2.0;  //Nie dzia³a bez korekty
+	   double dX=SkalaX*Xk-SkalaX*Xp;//SkalaX*Koniec->X()-SkalaX*Start->X();
+	   double dY=SkalaY*Yk-SkalaY*Yp;//SkalaY*Koniec->Y()-SkalaY*Start->Y();
+				if(dY==0 && dX==0) //Zlosliwa sytuacja
+				{
+					clog<<"?"; goto ERROR;
+				}
+	   double Rad=atan2(dY,dX)+M_PI/2.0;  //Nie dzia³a bez korekty
 	   Wielobok Arr=Wielobok::Namiot();//	(3,grubosc*1.5);
 	   Arr.Centruj();
 	   double MaX,MiX,MaY,MiY,cR,Skala;
@@ -454,6 +446,15 @@ void PowiazaniePaboliczne::Narysuj()
 	   Arr.Rysuj(SkalaX*Xp,
 				 SkalaY*Yp,
 				 R*0.85,G*0.85,B*0.85);
+	}
+
+	return;
+	ERROR:
+	{
+		WezelSieci* W1=Swiat::Wezel(this->Poczatek());
+		WezelSieci* W2=Swiat::Wezel(this->Koniec());
+		clog<<"\nWadliwe powiazanie paraboliczne miedzy ";
+		clog<<W1->Nazwa()<<" a "<<W2->Nazwa()<<endl;
 	}
 }
 
@@ -548,6 +549,7 @@ void GeneryczneInfo::Wymazuj()
 	fill_circle_d(SkalaX*X,SkalaY*Y,Rad);
 }
 
+
 void PowiazaniePaboliczne::Wymazuj()
 {
    //NumerKoloruTla
@@ -592,6 +594,44 @@ bool testy_graficzne()
  return true;
 }
 
+
+void GenerycznyProces::Narysuj()
+{
+	WezelSieci* Mw=Swiat::Wezel(Procesor());
+	if(Mw==NULL)
+		cerr<<endl<<"Proces na nieistniej¹cym wezle"<<endl;
+	unsigned ile=Swiat::IleProcesow(Procesor());
+
+	double R=Mw->R(1.5*M_PI);
+	double Y=Mw->Y()-0.1*R+this->MojID();//Indeks procesu na wêŸle
+	double X1=Mw->X()-R;
+	double X2=X1+2*R;
+
+	double Zaaw=this->JakZaawansowany();
+
+	//Pasek podkreœlenia projektu bliskiego zakonczenia
+	if(Zaaw>0.99)
+	{
+		set_pen_rgb(255,200,0,SkalaY,SSH_LINE_SOLID);  //Kolor przerobionego
+		line_d(SkalaX*X1,SkalaY*Y+1,SkalaX*X2,SkalaY*Y+1);//Dodatkowe podkreœlenie
+	}
+
+	//DziedzKol Pom=Mw->PodajDziedzine();//Pom.R<<=1;Pom.G<<=1;Pom.B<<=1;
+	//set_pen_rgb(Pom.R,Pom.G,Pom.B,SkalaY-1,SSH_LINE_SOLID);  //Kolor postêpu na wêz³a
+
+	//Pasek t³a
+	set_pen_rgb(Col.R/2,Col.G/2,Col.B/2,SkalaY,SSH_LINE_SOLID);  //Przyciemniony kolor projektu
+	line_d(SkalaX*X1,SkalaY*Y,SkalaX*X2,SkalaY*Y);
+
+	//Pasek zaawansowania
+	X2=X1+2*R*Zaaw;
+	set_pen_rgb(Col.R,Col.G,Col.B,SkalaY-1,SSH_LINE_SOLID);  //Normalny kolor projektu
+	line_d(SkalaX*X1,SkalaY*Y,SkalaX*X2,SkalaY*Y);
+}
+
+//Bardzo intensywnie uzywane  - Mo¿e inliny kiedyœ zrobie?)
+double Swiat::SkalujX() { return SkalaX; }
+double Swiat::SkalujY() { return SkalaY; }
 
 /********************************************************************/
 /*			          SPS  version 2011                             */
