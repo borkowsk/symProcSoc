@@ -26,8 +26,6 @@ union DziedzinaWKolorze
 	};
 	float F; //Jakby kto chcia³ widzieæ to jako Float
 	bool operator == (const DziedzinaWKolorze& s) { return this->ARGB==s.ARGB;}
-	void operator = (unsigned ARGB) { this->ARGB=ARGB;} // explicit
-	unsigned IleBitow(); //Zwraca liczbê bitów 1 w tych danych
 };
 typedef DziedzinaWKolorze DziedzKol;
 
@@ -177,8 +175,8 @@ class ElementModelu
 	//Dla usprawnienia klasa potomna mo¿e zwracaæ adres swojego wirtualnego konstruktora
 	//albo NULL oznaczaj¹cy ¿e trzeba go szukaæ wg. zarejestrowanej nazwy
 	//lub ¿e go nie ma ... (co mo¿e stanowiæ problem)
-	virtual WirtualnyKonstruktor* VKonstruktor();
-	virtual unsigned              VWidocznosc(); //Bazuj¹ca na FLAGS informacja o widocznosci
+	virtual WirtualnyKonstruktor* VKonstruktor() { return NULL; }
+ 	virtual unsigned              VWidocznosc(); //Bazuj¹ca na FLAGS informacja o widocznosci
 };
 
 /********************************************************************/

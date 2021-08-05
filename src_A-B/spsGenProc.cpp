@@ -29,18 +29,8 @@ protected:
 	GenerycznyProces::KonstruktorElementowModelu<GenerycznyProces> GenerycznyProces::WirtualnyKonstruktor("GenProc");
 
 GenerycznyProces::GenerycznyProces():Prior(1),WymaganaIloscPracy(1),PracaDotychczasowa(0),TmpPorcjaPracy(1)
-//Konstruktor musi zapewniæ ¿eby proces z raz dosta³ czas i mog³ siê zmienic
+//Konstruktor musi zapewniæ ¿eby proices z raz dosta³ czas i mog³ siê zmienic
 {_IleKrokowDoKonca=1;}
-
-GenerycznyProces::GenerycznyProces(const GenerycznyProces* Wzor):
-				   WymaganaIloscPracy(Wzor->WymaganaIloscPracy),
-				   Prior(Wzor->Prior),PracaDotychczasowa(0),TmpPorcjaPracy(Wzor->TmpPorcjaPracy)
-{
-	if(TmpPorcjaPracy>0)
-		_IleKrokowDoKonca=WymaganaIloscPracy/TmpPorcjaPracy; //Raczej trzeba to zmienieæ  potem
-	 Dane.InicjujZDanych(Wzor->Dane);
-	 Col=(Wzor->Col); //!!! DZIEDZINA!
-}
 
 GenerycznyProces::GenerycznyProces(const char* Nazwa,float KoniecznaPraca,float DoDeadlinu):
 				   WymaganaIloscPracy(KoniecznaPraca),
@@ -52,14 +42,6 @@ GenerycznyProces::GenerycznyProces(const char* Nazwa,float KoniecznaPraca,float 
 	Dane[1]=Nazwa;
 }
 
-const char* GenerycznyProces::Nazwa()
-{
-	if(Dane.Ile()>2)
-		return Dane[1].c_str();
-		else
-		return "<???>";
-}
-
 GenerycznyProces::~GenerycznyProces()
 //Destruktor wirtualny
 {
@@ -69,26 +51,28 @@ double   GenerycznyProces::Priorytet()
 //Im wy¿szy tym proces wiêcej dziala
 {
 	double IleDoZrobienia=WymaganaIloscPracy-PracaDotychczasowa;
-
-	if(TmpPorcjaPracy<=0.25)//Cwierc czy po³ dnia pracy osoby to minimum
-					TmpPorcjaPracy=0.25;
-
+	if(TmpPorcjaPracy<=0)
+					TmpPorcjaPracy=1;
 	double NaIleKrokow=IleDoZrobienia/TmpPorcjaPracy;
 
 	double NewPrior=-1;
-	if(_IleKrokowDoKonca<=0)
-	{        //A ten jest ju¿ po terminie
-		NewPrior=IleDoZrobienia; //NaIleKrokow???
-			//Chcia³by wiêcej ni¿ mo¿na
+	if(_IleKrokowDoKonca<=0)  //A ten jest ju¿ po terminie
+	{
+		NewPrior=NaIleKrokow;
+	}
+	else
+	if(NaIleKrokow<_IleKrokowDoKonca) //Ten proces móg³by poczekaæ
+	{
+		//NewPrior=0;//0.5;//Ale mo¿e coœ?
+		NewPrior=NaIleKrokow/_IleKrokowDoKonca;
 	}
 	else
 	{
 		NewPrior=NaIleKrokow/_IleKrokowDoKonca; //A ten rozs¹dnie planowany
-			//Ile czasu pracy chcia³by na dziœ
 	}
 
-	Prior=NewPrior;
-
+	//if(NewPrior>Prior)
+		Prior=NewPrior;
 	return Prior;
 }
 

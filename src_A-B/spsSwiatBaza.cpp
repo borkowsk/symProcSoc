@@ -18,13 +18,9 @@
 #include <cassert>
 #include <iostream>
 using namespace std;
-#include "INCLUDE/wb_smartlog.h"
-using namespace wbrtm;
 
 Swiat Swiat::Ten; //!!!  //Staramy sie miec tylko jeden Swiat :-)
 //Poniewa¿ dane s¹ w jednej to wszystkie inne "metody" mog¹ byæ "static"
-
-static const int LOGBASE=5; //Na jakim poziomie logowania domyœlnie zapisywaæ zdarzenia wewn¹trz prywatnych struktur danych
 
 ///////////////////////////////////////////////////////////////////////////
 //      ZARZ¥DZANIE STRUKTURAMI DANYCH   Swiata
@@ -53,7 +49,6 @@ static unsigned _WolneInformacje=0;
 // czyli np. "usmierconego" slotu w tablicy
 WezelSieci* Swiat::Wezel(unsigned Ktory)
 {            						assert(_Wezly!=NULL);
-									assert(Ktory!=Swiat::INVINDEX);
 	if(Ktory<_UzyteWezly)
 		return _Wezly[Ktory];
 		else
@@ -62,7 +57,6 @@ WezelSieci* Swiat::Wezel(unsigned Ktory)
 
 Powiazanie* Swiat::Lacze(unsigned Ktory)
 {            						assert(_Polaczenia!=NULL);
-									assert(Ktory!=Swiat::INVINDEX);
 	if(Ktory<_UzytePolaczenia)
 		return _Polaczenia[Ktory];
 		else
@@ -71,7 +65,6 @@ Powiazanie* Swiat::Lacze(unsigned Ktory)
 
 Komunikat* Swiat::Info(unsigned Ktory)
 {            						assert(_Informacje!=NULL);
-									assert(Ktory!=Swiat::INVINDEX);
 	if(Ktory<_UzyteInformacje)
 		return _Informacje[Ktory];
 		else
@@ -127,7 +120,6 @@ unsigned Swiat::IleMoznaInformacji()
 // - wstawiane elementy musz¹ byæ alokowane na stercie (przez "new")
 unsigned Swiat::WstawWezel(WezelSieci* Co,unsigned propozycja/*=-1*/)
 {
-									  if(!Co)  TLOG(0, << "Wezel == NULL!!!" )
 												assert(Co!=NULL); //Nie wolno tak kasowaæ!!!
 	if(! (propozycja<_UzyteWezly
 		&& _Wezly[propozycja]!=NULL) )  //Szukamy tylko jesli propozycja nie ma sensu
@@ -209,19 +201,20 @@ unsigned Swiat::WstawLacze(Powiazanie* Co,unsigned propozycja/*=-1*/)
 unsigned Swiat::WstawInfo(Komunikat* Co,unsigned propozycja/*=-1*/)
 {
 													assert(Co!=NULL); //Nie wolno tak kasowaæ!!!
+
 	//Musi sprawdziæ czy komunikat jest OK. Nieco redundantne
 	//bo nawet jeœli ju¿ takie sprawdzenie wykona³ kod zlecaj¹cy
 	unsigned Kanal=Co->Kanal();
 	if(Kanal==INVINDEX)
-		  {	goto ERROR2; } //Jakby niezainicjowany - bez informacji na log/cerr
+			goto ERROR;  //Jakby niezainicjowany
 	if(Kanal>=_UzytePolaczenia)
-		  {	goto ERROR;  }//Nie ma takiego po³aczenia/kana³u/
+			goto ERROR;  //Nie ma takiego po³aczenia/kana³u/
 	if(_Polaczenia[Kanal]==NULL)
-		  {	goto ERROR; }//Kana³ znikna³
+			goto ERROR; //Kana³ znikna³
 	if(!(_Polaczenia[Kanal]->Akceptacja(Co)))
-		   {  goto ERROR; }//Kana³ nie przyjmuje komunikatu
+			goto ERROR; //Kana³ nie przyjmuje komunikatu
 	if(	!Co->Poprawny() )
-		   {  goto ERROR; }//Jednak wadliwie skonstruowany
+			goto ERROR; //Jednak wadliwie skonstruowany
 	//Teraz mo¿e ju¿ szukaæ miejsca w tablicach
 	if(! (propozycja<_UzyteInformacje
 		&& _Informacje[propozycja]!=NULL) )  //Szukamy tylko jesli propozycja nie ma sensu
@@ -254,22 +247,10 @@ unsigned Swiat::WstawInfo(Komunikat* Co,unsigned propozycja/*=-1*/)
 	}
 	else
 	{
-		TLOG(1, <<_LPL("BRAK MIEJSCA NA KOMUNIKAT!","NO SPACE IN MESSG POOL") )
 	ERROR:
-   /*	{
-		clog<<endl<<_LPL("Nieudane wprowadzenie komunikatu!","Can't insert a message.")
-				<<Co->WartoscPola(0)<<","<<Co->WartoscPola(1)<<" "<<Co->WartoscPola(2)<<endl;
-		clog<<"\tlink: "<<Co->Kanal();
-		Powiazanie* Kan=Swiat::Lacze(Co->Kanal());
-		if(Kan)
-		{
-		WezelSieci* Start=Wezel(Kan->Poczatek());
-		WezelSieci* End=Wezel(Kan->Koniec());
-		clog<<" "<<(Start?Start->Nazwa():"???")<<(Kan->Kierunkowy()?"--->":"<-->")<<(End?End->Nazwa():"??? ");
-		}
-		clog<<endl;
-	}  */
-	ERROR2:
+		cerr<<endl<<_LPL("Nieudane wprowadzenie komunikatu!","Can't insert a message.");
+		cerr<<" link: "<<Co->Kanal();
+		cerr<<endl;
 		delete Co;//Usuwa ze sterty, bo przecie¿ oddano mu ju¿ w zarz¹d!!!
 		return -1; //Znaczy b³¹d!!!
 	}
@@ -282,8 +263,7 @@ unsigned Swiat::WstawInfo(Komunikat* Co,unsigned propozycja/*=-1*/)
 
 // Tansze funkcje usuwaj¹ce wg. indeksu (lub uchwytu, zale¿nie od implementacji
 void Swiat::UsunWezel(unsigned Numer)
-{                           TLOG(0, << "Jeszcze nie zaiplementowane" )
-							assert("Jeszcze nie zaiplementowane"==NULL);
+{                               assert("Jeszcze nie zaiplementowane"==NULL);
 	Swiat::UwagaZmienionoStrukture();
 }
 
@@ -293,6 +273,8 @@ void Swiat::UsunLacze(unsigned Numer)
 				return ; //Nic nie robimy
 	else
 	{
+	   cout<<_LPL("Usuniete powiazanie","Deleted connection")<<unsigned(_Polaczenia[Numer]->Poczatek())
+	   			<<(_Polaczenia[Numer]->Kierunkowy()?"-->":"<-->")<<unsigned(_Polaczenia[Numer]->Koniec())<<endl;
 	   delete _Polaczenia[Numer];
 	   _Polaczenia[Numer]=NULL;
 	   _WolnePolaczenia++; //Jest jeden wolny slot wiêcej
@@ -359,7 +341,7 @@ Swiat::Swiat()
 #ifndef NDEBUG
 	//Konstruktor globalnej zmiennej nie bardzo mo¿e pisaæ przez cout bo cout mo¿e
 	//nie byæ jeszcze zaincjowane!
- //	fprintf(stderr,"%s\n","DEBUG: Inicjalizacja struktur danych");
+	fprintf(stderr,"%s\n","DEBUG: Inicjalizacja struktur danych");
 #endif
 }
 
@@ -392,10 +374,7 @@ bool Swiat::_UstalLiczbeLaczy(unsigned IleMax)
 bool Swiat::_UstalLiczbeInfo(unsigned IleMax)
 //W tym modelu mo¿na wywo³ac tylko raz!!!
 {
-	if(_UzyteInformacje!=0)
-			return false; //Ju¿ nie mo¿na!!!
-	if(_Informacje!=NULL)
-			delete [] _Informacje;
+											assert(_Informacje==NULL);
 	_Informacje=new ptrKomunikat[IleMax];
 	_InformacjeMax=IleMax;
 	_UzyteInformacje=0;
@@ -410,7 +389,7 @@ Swiat::~Swiat()
 //Lepiej jak "œwiat" zostanie oddany w ca³oœci systemowi na koniec programu
 {
 #ifndef NDEBUG
- //	fprintf(stderr,"%s\n","DEBUG: Destrukcja struktur danych");
+	fprintf(stderr,"%s\n","DEBUG: Destrukcja struktur danych");
 	cout<<endl;
 #endif
 }

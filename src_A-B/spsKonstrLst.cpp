@@ -25,7 +25,7 @@ struct WezelListy
 WezelListy* Head=NULL;
 bool	ListaNazwTypowAktualna=false;
 
-#define SAFE_LIST_CONSTRUCTION
+//#define SAFE_LIST_CONSTRUCTION
 #ifdef SAFE_LIST_CONSTRUCTION
 //GENEROWANIE LISTY ZA POMOC¥ MOJE KLASY wb_pchar - dziala zawsze ...
 #include"INCLUDE/wb_ptr.hpp" 
@@ -83,7 +83,7 @@ static const char*  dummy()
 	{
 	   if(Top->Konst!=NULL)
 	   {
-		  ListaNazwTypow<<Top->Nazwa<<";";
+		  ListaNazwTypow<<Top->Nazwa<<"; ";
 	   }
 	   Top=Top->Nastepny;//Szuka dalej
 	}

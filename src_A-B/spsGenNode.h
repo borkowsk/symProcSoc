@@ -48,14 +48,8 @@ class GenerycznyWezelSieci:public WezelSieci
 	float			_Z;
 	float			Waga;
 	Wielobok* 		Ksztalt;
-	//Metody pomocnicze dla klas domyœlnej akcji ChwilaDlaCiebie() i dla klas potomnych
-	virtual void _RuszProcesPriorytetowy();//Posuniêcie do przodu najpilniejszego z procesów
-	virtual void _RuszKazdyProces();//Wywoluje ka¿demu procesowi ChwilaDlaCiebie()
-	void          ZarzadcaProcesowPrymitywny() { _RuszKazdyProces(); }
 	virtual bool _PrzeniesDaneNaPola(unsigned& Blad);//Interpretuje pola od 1 do 7 w ZrobWgListy
 	virtual bool _KomunikatDoProcesow(Komunikat* Co);//Obrobienie komunikatu przez pierwszy chêtny proces
-	virtual void _KomunikatPrzekazLosowo(Komunikat* Co,double P);//Przekazuje komunikat losowo i z prawdopodobieñstwem P namna¿a
-							//Dosyæ to kosztowna funkcja, zw³aszcza puki 'Swiat' nie ma cachowania linków wez³a
 };
 
 

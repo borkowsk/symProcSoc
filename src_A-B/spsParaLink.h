@@ -35,7 +35,6 @@ class PowiazaniePaboliczne:public GenerycznePowiazanie
 	protected:
 	void _PoliczParametryLuku();//Liczy parametry ³uku dla danej wartosci parametru
 	float parametr;//Wartoœæ decyduj¹ca o sposobie zagiêcia
-	virtual bool Poprawny();
 	private:
 	//Pomocnicze pola zawieraj¹ce niezbêdne parametry ³uku
 	double Xa,Ya,Xb,Yb,Promien,alfa,cos_alfa,sin_alfa;

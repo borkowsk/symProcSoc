@@ -17,7 +17,6 @@
 #include "INCLUDE/platform.hpp"
 #include "MISCCLASSES/Wieloboki.hpp"
 #include "MISCCLASSES/TabelaTabDeli.h"
-#include "INCLUDE/wb_smartlog.h"
 
 #include <iostream>
 #include <cassert>
@@ -27,22 +26,15 @@ using namespace std;
 static TabelaTabDelimited DaneStruktury;//Dane struktury
 										//istniej¹ ca³y czas, choæ bezpoœrednio
 										//nie s¹ dostêpne
-bool Swiat::ForceTolerant=0;
+
 
 bool Swiat::Inicjalizacja(const char* PlikWejsciowy,const char DelimiterDanych)
 // Wczytanie (i/lub wylosowanie ???) struktury modelu
 {   //WCZYTANIE  Z PLIKU
 	DaneStruktury.Opisowo=VerboseInput; //Testownie danych struktury przy wczytywaniu i wypis na ekran
-	TheApplicationLog.SetName("_LastExpDetailedLog.log");
-
 	bool Udane=DaneStruktury.WczytajZPliku(PlikWejsciowy,DelimiterDanych);//char PlikWejsciowy[] - Wejœciowy plik struktury (dat)
 																//char DelimiterDanych - Jaki znak s³u¿y do rozdzielania danych w pliku DAT (mo¿e byæ \t : ; , | \ / itp
-	TLOG(0, <<"START "<<PlikWejsciowy )
-	TLOG(0, <<"============================================================================================="   )
-	if(!Udane) {cerr<<endl<<_LPL("Nieudane wczytywanie z pliku","Failed to read the file")<<" "<<PlikWejsciowy<<endl;
-				TLOG(0, <<_LPL("Nieudane wczytywanie z pliku","Failed to read the file")<<" "<<PlikWejsciowy )
-				return false;}
-
+	if(!Udane) {cerr<<endl<<_LPL("Nieudane wczytywanie z pliku","Failed to read the file")<<" "<<PlikWejsciowy<<endl; return false;}
 	unsigned Wierszy=DaneStruktury.IleWierszy();  //Liczba wierszy bêdzie jeszcze wiele razy potrzebna
 	unsigned Kolumn=DaneStruktury.IleKolumn();	  //Liczba kolumn te¿ pewnie kilka razy...
 	//SPRAWDZENIE ILE JEST WEZ£ÓW  A ILE LINKÓW
@@ -80,24 +72,17 @@ bool Swiat::Inicjalizacja(const char* PlikWejsciowy,const char DelimiterDanych)
 		else
 		{
 			if(DefMaxLiczbaLinkow==unsigned(-1))
-			  DefMaxLiczbaLinkow=Swiat::IleMoznaWezlow()*Swiat::IleMoznaWezlow(); //Mog¹ byæ rózne rodzaje, lepiej z zapasem
+			  DefMaxLiczbaLinkow=(Swiat::IleMoznaWezlow()*(Swiat::IleMoznaWezlow()-1))/2;
 			Swiat::_UstalLiczbeLaczy(DefMaxLiczbaLinkow);
 		}
 	Swiat::_UstalLiczbeInfo(DefMaxLiczbaKomunikatow);
 	Swiat::_UstalPoczLiczbeProc(DefLiczbaProcesowNaWezel);
-
 	if(Swiat::IleMoznaWezlow()<IleWezlow)
-		{cerr<<endl<<"Tablica wezlow za krotka. Za malo slotow o "<<IleWezlow-Swiat::IleMoznaWezlow()<<endl;
-		 TLOG(0, <<"Tablica wezlow za krotka. Za malo slotow o "<<IleWezlow-Swiat::IleMoznaWezlow()  )
-			return false;}
+		{cerr<<endl<<"Tablica wezlow za krotka. Za malo slotow o "<<IleWezlow-Swiat::IleMoznaWezlow()<<endl;return false;}
 	if(Swiat::IleMoznaPowiazan()<IleLinkow)
-		{cerr<<endl<<"Tablica powiazan za krotka. Za malo slotow o "<<IleLinkow-Swiat::IleMoznaPowiazan()<<endl;
-		 TLOG(0, << "Tablica powiazan za krotka. Za malo slotow o "<<IleLinkow-Swiat::IleMoznaPowiazan()   )
-			return false;}
+		{cerr<<endl<<"Tablica powiazan za krotka. Za malo slotow o "<<IleLinkow-Swiat::IleMoznaPowiazan()<<endl;return false;}
 	if(Swiat::IleMoznaInformacji()<IleInform)
-		{cerr<<endl<<"Tablica komunikatow za krotka. Za malo slotow o "<<IleInform-Swiat::IleMoznaInformacji()<<endl;
-		 TLOG(0, <<"Tablica komunikatow za krotka. Za malo slotow o "<<IleInform-Swiat::IleMoznaInformacji()   )
-			return false;}
+		{cerr<<endl<<"Tablica komunikatow za krotka. Za malo slotow o "<<IleInform-Swiat::IleMoznaInformacji()<<endl;return false;}
 
 	//WLASCIWE TWORZENIE STRUKTURY
 	//...Na razie uproszczone bo s¹ tylko elementy typu "generic"
@@ -108,7 +93,6 @@ bool Swiat::Inicjalizacja(const char* PlikWejsciowy,const char DelimiterDanych)
 		if(strlen(NazwaTypu->c_str())<1) //Pusta komórka typu!!!
 		{
 			cerr<<_LPL("Pusta komórka typu. Kolumna A, wiersz ","Empty type definition. Column A, row ")<<i+1<<endl;
-			TLOG(0, << _LPL("Pusta komórka typu. Kolumna A, wiersz ","Empty type definition. Column A, row ")<<i+1     )
 			continue;
 		}
 		RECOVERY:
@@ -154,16 +138,14 @@ bool Swiat::Inicjalizacja(const char* PlikWejsciowy,const char DelimiterDanych)
 				ElementModelu* Pom=Kon->KonstruktorWgListy(NazwaTypu,Kolumn,GdzieBlad);
 				if(Pom==NULL) //Jakiœ b³¹d
 				{
-					cerr<<_LPL("Niepoprawna komorka danych. Wiersz:","Invalid cell. Row:")<<i+1<<_LPL(" kolumna:"," column")<<char('A'+GdzieBlad)<<_LPL(" Typ:"," Type:")<<"\""<<NazwaTypu->c_str()<<'"'<<endl;
-					TLOG(0, <<_LPL("Niepoprawna komorka danych. Wiersz:","Invalid cell. Row:")<<i+1<<_LPL(" kolumna:"," column")<<char('A'+GdzieBlad)<<_LPL(" Typ:"," Type:")<<"\""<<NazwaTypu->c_str()<<'"'  )
+					cerr<<_LPL("Niepoprawna komorka danych. Wiersz:",
+							   "Invalid cell. Row:")
+						<<i+1<<_LPL(" kolumna:"," column")<<char('A'+GdzieBlad)
+						<<_LPL(" Typ:"," Type:")<<"\""<<NazwaTypu->c_str()<<'"'<<endl;
 					cerr<<'"'<<DaneStruktury(i,GdzieBlad)<<'"'<<endl;
-					if(!ForceTolerant)
-						return false;
-						else
-						continue;
+					return false;
 				}
 				else
-				{
 				if((PomW=dynamic_cast<WezelSieci*>(Pom))!=NULL)
 				   WstawWezel(PomW);
 				   else
@@ -177,33 +159,25 @@ bool Swiat::Inicjalizacja(const char* PlikWejsciowy,const char DelimiterDanych)
 							 WstawInfo(PomI);
 							 else
 							 {   //Problem - nie da³o siê zrzutowaæ!!!
-								cerr<<_LPL(" Typ:"," Type:")<<NazwaTypu->c_str()<<" nie jest ani wezlem (node) ani powiazaniem (link)\n ani procesem(proc) ani komunikatem (info)"<<endl;
-								TLOG( 0 , <<_LPL(" Typ:"," Type:")<<NazwaTypu->c_str()<<" nie jest ani wezlem (node) ani powiazaniem (link)\n ani procesem(proc) ani komunikatem (info)"  )
+								cerr<<_LPL(" Typ:"," Type:")<<NazwaTypu->c_str()
+									<<" nie jest ani wezlem (node) ani powiazaniem (link)\n ani procesem(proc) ani komunikatem (info)"<<endl;
 								cerr<<_LPL("Zastanie zignorowany","It will be ignored")<<endl;
 								delete Pom;
 							 }
-				   if(!Pom->Poprawny())  //Ostateczne sprawdzenie
-						{
-							cerr<<i+1<<". wiersz. Obiekt \""<<NazwaTypu->c_str()<<"\" jednak nie jest poprawny, sprawdŸ dozwolone zakresy wartoœci"<<endl;
-							TLOG( 0 , <<i+1<<". wiersz. Obiekt \""<<NazwaTypu->c_str()<<"\" jednak nie jest poprawny" )
-							if(!ForceTolerant)
-								return false;
-								else
-								continue;
-                        }
-				}
 			}
 			else
 			{
 				const char* Nazwa=NazwaTypu->c_str();
 				if(strcmp(Nazwa,"<UNKNOWN>")==0)
 				{
-					cerr<<_LPL("Prawdopodobnie plik w nieobslugiwanym formacie","Probably unsuported file format")<<endl;
-					TLOG(0, <<_LPL("Prawdopodobnie plik w nieobslugiwanym formacie","Probably unsuported file format")   )
+						cerr<<_LPL("Prawdopodobnie plik w nieobslugiwanym formacie",
+									"Probably unsuported file format")<<endl;
 								return false;
 				}
-				cerr<<endl<<i+1<<_LPL(". wiersz.","-th row.")<<": "<<_LPL("Podmieniono nieznany typ","Replace unknown type")<<" \""<<Nazwa<<"\"";
-				TLOG(0, <<i+1<<_LPL(". wiersz.","-th row.")<<": "<<_LPL("Podmieniono nieznany typ","Replace unknown type")<<" \""<<Nazwa<<"\""  )
+				cerr<<endl<<i+1<<_LPL(". wiersz.","-th row.")<<": "
+				<<_LPL("Podmieniono nieznany typ",
+					   "Replace unknown type")<<" \""<<Nazwa<<"\"";
+
 				if(strstr(Nazwa,"node") || strstr(Nazwa,"NODE") || strstr(Nazwa,"Node"))
 						*NazwaTypu="gennode";
 						else
@@ -223,7 +197,6 @@ bool Swiat::Inicjalizacja(const char* PlikWejsciowy,const char DelimiterDanych)
 		}
 	}
    //	cerr<<" OK"<<endl;
-    TLOG(0, <<" FILE +-OK "<<endl ) //KONIEC WCZYTYWANIA
 	Swiat::UwagaZmienionoStrukture(); //I tak wykonanie tej funkcji drugi raz w programie mo¿e zrobiæ kaszanê, ale moze kiedyœ ...
 	return true;
 }

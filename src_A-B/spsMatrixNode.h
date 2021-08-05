@@ -38,21 +38,12 @@ class WezelMacierzowy:public GenerycznyWezelSieci
 	DziedzinaWKolorze*  Tablica;
 	unsigned 			Wysokosc;
 	unsigned 			Szerokosc;
-	//Procedury pomocnicze przydatne te¿ dla klas potomnych
-	//////////////////////////////////////////////////////////////////////////
 	virtual bool _ZaladujKoloryZPliku(const char* Nazwa,const char* TekstPomocniczy=NULL);//Procedura ³aduj¹ca dane
 				//zwraca "true" jeœli siê uda, false jak nie (komunikat mo¿e byæ na perror)
 				//z plików DAT (tab delimited), i ewentualnie graficznym PBM
 				// - jest w osobnym Ÿródle wiêc mo¿na przeimplementowaæ
-				//TekstPomocniczy to dane po gwiazdce (*) w komórce poprzedzajacej nazwê
-	//Funkcja przeszukiwania "bazy danych". Mo¿e losowo, albo liniowo, ale potomne mog¹ zaiplementowac coœ lepszego
-	virtual DziedzinaWKolorze _ZnajdzNajpodobniejszy(DziedzinaWKolorze D,unsigned& Indeks,double& WzglednePobienstwo,unsigned IleProb=Swiat::INVINDEX);
-	//...Element bêd¹cy podstw¹ mo¿e byæ wskazany lub losowy
-	virtual bool _OdpowiedzLosowymBitem(Komunikat* Pyt,unsigned Ktory=Swiat::INVINDEX,bool AND_OR=true);
-	//MOZE BYÆ KOSZTOWNA! Jak nie podano liczby prób to przegl¹da ca³¹ zawartoœæ!!!
-	virtual bool _OdpowiedzNajpodobniejszym(Komunikat* Pyt,unsigned IleProb=-1);
+				//TekstPomocniczy to dane po gwiazdce (*) w komórce poprzedzjacej nazwê
 };
-
 
 //---------------------------------------------------------------------------
 

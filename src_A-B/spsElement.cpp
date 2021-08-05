@@ -15,15 +15,6 @@
 #include <iostream>
 using namespace std;
 
-#include "INCLUDE/wb_bits.h"
-using namespace wbrtm;
-
-unsigned DziedzinaWKolorze::IleBitow()
-//Zwraca liczbê bitów 1 w tych danych
-{
-    return bits(A)+bits(R)+bits(G)+bits(B);
-}
-
 ElementModelu::ElementModelu()
 //Kolor czyli "dziedzinê" musi miec kazdy obiekt w modelu
 {Col.ARGB=0;_MojIndeks=-1;}
@@ -58,22 +49,13 @@ void ElementModelu::UstawDziedzine(unsigned R,unsigned G, unsigned B, unsigned A
    Col.B=B;
 }
 
-
-
-ElementModelu::WirtualnyKonstruktor* ElementModelu::VKonstruktor()
-{
-	//Klasa bazowa nie ma bo jest pure-virtual
-	return NULL;
-}
-
 unsigned  ElementModelu::VWidocznosc()
 //Bazuj¹ca na FLAGS informacja o widocznosci
 {
    WirtualnyKonstruktor* Kons=this->VKonstruktor();
    if(Kons)
    {
-	  // cerr<<Kons->NazwaTypu()<<endl;
-	   return  Kons->Flagi() & 0x3; //Dwa najmlodsze bity
+       return  Kons->Flagi() & 0x3; //Dwa najmlodsze bity
    }
    else return 4; //Na wszelki wypadek pe³na wizualizacja
 }

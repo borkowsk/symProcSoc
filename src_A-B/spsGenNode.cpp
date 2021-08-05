@@ -5,7 +5,7 @@
 // Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Definicje podstawowego typu realnego wêz³a (nie pure virtual jak WezelSieci) 27.10.2011
+// Definicje podstawowego typu realnego wêz³a (nie pure virtual jak WezelSieci)
 ////////////////////////////////////////////////////////////////////////////////////////
 #include <iostream>
 #include <cassert>
@@ -142,108 +142,6 @@ const char* GenerycznyWezelSieci::Nazwa()
 	  return Dane[1].c_str();
 	  else
 	  return "<NONAME>";
-}
-
-void GenerycznyWezelSieci::_RuszProcesPriorytetowy()
-//Posuniêcie do przodu najpilniejszego z procesów
-{
-	unsigned ile=Swiat::IleProcesow(MojID());
-	unsigned ktory=Swiat::NajpilniejszyProc(MojID(),NULL);
-	if(ktory==Swiat::INVINDEX) //Nie ma nic do roboty
-			return; //To wychodzimy z pracy :-);
-
-	Proces* Roboczy=Swiat::Proc(ktory,MojID());
-	//Roboczy->  Mo¿na by ustawiaæ porcjê czasu, ale ogólny proces nie ma (jeszcze) takiej opcji
-	if(Roboczy)
-		Roboczy->ChwilaDlaCiebie(); //Popchnij
-}
-
-void GenerycznyWezelSieci::_RuszKazdyProces()
-//Daje szanse na ruch kazdemu procesowi
-{
-	unsigned NID=MojID();
-	unsigned ile=Swiat::IleProcesow(NID);
-	Proces*  Pr=NULL;
-	for(unsigned i=0;i<ile;i++)
-	  if((Pr=Swiat::Proc(i,NID))!=NULL )
-		Pr->ChwilaDlaCiebie();
-}
-
-bool GenerycznyWezelSieci::_KomunikatDoProcesow(Komunikat* Co)
-//Obrobienie komunikatu przez pierwszy chêtny proces
-{                                           					assert(Co->Kanal()!=Swiat::INVINDEX);
-	unsigned NID=MojID();
-	unsigned ile=Swiat::IleProcesow(NID);
-	Proces*  Pr=NULL;
-	for(unsigned i=0;i<ile;i++)
-	  if((Pr=Swiat::Proc(i,NID))!=NULL)
-	  {                                                         assert(Co->Kanal()!=Swiat::INVINDEX);
-		 if(Pr->InterpretujKomunikat(Co) )
-		 {              //Tu ju¿ komunikat mo¿e byæ ziszczony
-			return true;//Jak któryœ proces uzna³ obróbkê za zakoñczon¹
-		 }
-	  }
-																assert(Co->Kanal()!=Swiat::INVINDEX);
-	return false; //Zaden siê nie przyzna³
-}
-
-void GenerycznyWezelSieci::_KomunikatPrzekazLosowo(Komunikat* Co,double P)
-//Przekazuje komunikat losowo i z prawdopodobieñstwem P namna¿a
-//Dosyæ to kosztowne, ale "generic node" nie mo¿e mieæ pomocniczych struktur
-//bo jest baz¹ do dziedziczenia dla bardziej u¿ytecznych typów wêz³ów
-{
-	//Przygotowanie listy powi¹zañ zdatnych do przesy³ania
-	wb_dynarray<unsigned> ListaPow;
-	unsigned IlePowFakt=0;
-	ListaPow.alloc(Swiat::IlePowiazan());
-	//Przepisywanie na listê
-	for(unsigned i=0;i<Swiat::IlePowiazan();i++)
-	{
-		Powiazanie* Pom=Swiat::Lacze(i);
-		if( Pom!=NULL  //Mo¿e byæ pusty slot
-			&& ( (Swiat::Wezel(Pom->Poczatek())==this) //Gdzie jest pocz¹tkiem
-			|| (!Pom->Kierunkowy() && Swiat::Wezel(Pom->Koniec())==this)) //Albo koncem linku obustronnego
-			)
-			ListaPow[IlePowFakt++]=i;
-	}
-
-	if(IlePowFakt==0) //To s¹ tylko takie którymi mo¿na coœ dostaæ!!!
-			return; //To siê wys³aæ nie da nic.
-
-
-	// PRÓBY WYSY£ANIA
-	//cout<<endl<<"Wezel: "<<Dane[1]<<" Linkow: "<<IlePowFakt<<endl;
-	unsigned wyslano=0;
-	unsigned probowano=0;
-	wb_ptr<Komunikat> Klon( Co->Klonuj() );
-
-	do
-	{
-	  unsigned a=RANDOM(IlePowFakt);
-										assert(a<IlePowFakt);
-	  if(ListaPow[a]==Swiat::INVINDEX)
-				continue; //Trafiony ju¿ u¿ywany slot
-
-	  Powiazanie* Pom=Swiat::Lacze(ListaPow[a]);
-	  bool Kierunek=Swiat::Wezel(Pom->Poczatek())==this;
-	  Klon->Zaadresuj(ListaPow[a],Kierunek,0.01+DRAND()*0.2);
-
-	  if( Pom->Akceptacja( Klon.get_ptr_val() )  )  //Jawnie sprawdza akceptacje
-	  {
-		 //cout<<Pom->Poczatek()<<"->"<<Pom->Koniec()<<' '<<Kierunek<<endl;
-		 if(Swiat::WstawInfo(Klon.give())!=Swiat::INVINDEX)
-				wyslano++;//OK. Wstawi³ klon komunikatu trac¹c z "zarz¹du"
-
-		 ListaPow[a]=Swiat::INVINDEX;//Blokada tego ³¹cza
-
-		 if( DRAND()<P )
-			Klon.take(Co->Klonuj()); //Bêdzie potrzebna kolejna kopia
-			else
-			return; //Lub konczy...
-	  }
-	  probowano++;
-	}
-	while(probowano<IlePowFakt);
 }
 
 

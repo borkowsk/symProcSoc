@@ -17,8 +17,6 @@ class GeneryczneInfo:public Komunikat
 	GeneryczneInfo(); //Generyczny konstruktor tworz¹cy pusty komunikat
 	static KonstruktorElementowModelu<GeneryczneInfo> WirtualnyKonstruktor;
 	ElementModelu::WirtualnyKonstruktor* VKonstruktor() { return &WirtualnyKonstruktor;}
-	virtual const std::string& Rodzaj();//"???" - klasy potomne mog¹ mieæ rózne rodzaje interpretacji DziedzinyWKolorze komunikatu
-	virtual bool  UstawRodzaj(const char* );
 	virtual bool Poprawny(); //true jeœli kanal jest dobrze zdefiniowany (wci¹¿ istnieje link, nadawca i odbiorca etc...
 	virtual double  Waznosc() { return Predkosc; }  //Po prostu jak szybko ma dotrzeæ. Trochê jak priorytet.
 	//Metoda pobiera wszystkie potrzebne dane z listy stringów. Jak blad to podaje ktora pozycja
@@ -33,7 +31,6 @@ class GeneryczneInfo:public Komunikat
 	virtual unsigned  Nadawca(); //Od kogo ...
 	virtual unsigned Odbiorca(); //... do kogo.
 	virtual float  JakDostawa(); //0 po starcie, jak 1 to ju¿ dotar³
-	virtual float  JakiTermin();//W ile kroków powinien zostaæ dostarczony?
 	//Specyficzne dla generycznego komunikatu
 	virtual Komunikat* Klonuj(); //Robi na stercie kopie komunikatu do przechowania lub wstawienia
 	bool 	Zwrotnie(float _Szybkosc=0);//Mo¿na odwróciæ komunikat - zw³aszcza jak jest to klon
