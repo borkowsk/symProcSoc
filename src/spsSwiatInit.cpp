@@ -1,32 +1,33 @@
-////////////////////////////////////////////////////////////////////////////////
-// Symulator Procesów Sieciowych/Spolecznych (c) Instytut Studiów Spo³ecznych
+// //////////////////////////////////////////////////////////////////////////////
+// Symulator Procesï¿½w Sieciowych/Spolecznych (c) Instytut Studiï¿½w Spoï¿½ecznych
 // Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 // Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 //
-// Funkcje inicjalizacja struktur danych Œwiata  na podstawie pliku
-// - wyodrêbnione ¿eby by³o ³atwo znaleŸæ i rozbudowywaæ
-////////////////////////////////////////////////////////////////////////////////
+// Funkcje inicjalizacja struktur danych ï¿½wiata  na podstawie pliku
+// - wyodrï¿½bnione ï¿½eby byï¿½o ï¿½atwo znaleï¿½ï¿½ i rozbudowywaï¿½
+// //////////////////////////////////////////////////////////////////////////////
 
 #include "spsModel.h"
 #include "spsGenNode.h"
 #include "spsGenLink.h"
 #include "spsGenInfo.h"
 
-#include "INCLUDE/platform.hpp"
-#include "MISCCLASSES/Wieloboki.hpp"
-#include "MISCCLASSES/TabelaTabDeli.h"
-#include "INCLUDE/wb_smartlog.h"
+#include "wieloboki.hpp"
+#include "TabDelimited.hpp"
+#include "wb_smartlog.hpp"
+#include "compatyb.h"
+#include "lingo.hpp"
 
 #include <iostream>
 #include <cassert>
 #include <cstring>
 using namespace std;
 
-static TabelaTabDelimited DaneStruktury;//Dane struktury
-										//istniej¹ ca³y czas, choæ bezpoœrednio
-										//nie s¹ dostêpne
+static wbrtm::TabelaTabDelimited DaneStruktury;//Dane struktury
+										//istniejï¿½ caï¿½y czas, choï¿½ bezpoï¿½rednio
+										//nie sï¿½ dostï¿½pne
 bool Swiat::ForceTolerant=0;
 
 bool Swiat::Inicjalizacja(const char* PlikWejsciowy,const char DelimiterDanych)
@@ -35,17 +36,17 @@ bool Swiat::Inicjalizacja(const char* PlikWejsciowy,const char DelimiterDanych)
 	DaneStruktury.Opisowo=VerboseInput; //Testownie danych struktury przy wczytywaniu i wypis na ekran
 	TheApplicationLog.SetName("_LastExpDetailedLog.log");
 
-	bool Udane=DaneStruktury.WczytajZPliku(PlikWejsciowy,DelimiterDanych);//char PlikWejsciowy[] - Wejœciowy plik struktury (dat)
-																//char DelimiterDanych - Jaki znak s³u¿y do rozdzielania danych w pliku DAT (mo¿e byæ \t : ; , | \ / itp
+	bool Udane=DaneStruktury.WczytajZPliku(PlikWejsciowy,DelimiterDanych);//char PlikWejsciowy[] - Wejï¿½ciowy plik struktury (dat)
+																//char DelimiterDanych - Jaki znak sï¿½uï¿½y do rozdzielania danych w pliku DAT (moï¿½e byï¿½ \t : ; , | \ / itp
 	TLOG(0, <<"START "<<PlikWejsciowy )
 	TLOG(0, <<"============================================================================================="   )
 	if(!Udane) {cerr<<endl<<_LPL("Nieudane wczytywanie z pliku","Failed to read the file")<<" "<<PlikWejsciowy<<endl;
 				TLOG(0, <<_LPL("Nieudane wczytywanie z pliku","Failed to read the file")<<" "<<PlikWejsciowy )
 				return false;}
 
-	unsigned Wierszy=DaneStruktury.IleWierszy();  //Liczba wierszy bêdzie jeszcze wiele razy potrzebna
-	unsigned Kolumn=DaneStruktury.IleKolumn();	  //Liczba kolumn te¿ pewnie kilka razy...
-	//SPRAWDZENIE ILE JEST WEZ£ÓW  A ILE LINKÓW
+	unsigned Wierszy=DaneStruktury.IleWierszy();  //Liczba wierszy bï¿½dzie jeszcze wiele razy potrzebna
+	unsigned Kolumn=DaneStruktury.IleKolumn();	  //Liczba kolumn teï¿½ pewnie kilka razy...
+	//SPRAWDZENIE ILE JEST WEZï¿½ï¿½W  A ILE LINKï¿½W
 	unsigned IleWezlow=0;
 	unsigned IleLinkow=0;
 	unsigned IleInform=0;
@@ -55,7 +56,7 @@ bool Swiat::Inicjalizacja(const char* PlikWejsciowy,const char DelimiterDanych)
 		const char* Nazwa=DaneStruktury(i,0).c_str();
 		while(isspace(*Nazwa)) Nazwa++; //SKIP BLANKS!!!
 		if(Nazwa!=DaneStruktury(i,0).c_str()) //Byly spacje
-			   DaneStruktury(i,0)=Nazwa; //Podmieniamy, ¿eby dalej nie by³o tego k³opotu
+			   DaneStruktury(i,0)=Nazwa; //Podmieniamy, ï¿½eby dalej nie byï¿½o tego kï¿½opotu
 		if(Nazwa[0]=='#')  //SKIP ALL COMMENTS HERE!
 				continue;
 
@@ -68,9 +69,9 @@ bool Swiat::Inicjalizacja(const char* PlikWejsciowy,const char DelimiterDanych)
 	}
 
 	//USTALANIE ROZMIAROW STRUKTURY
-	//unsigned DefMaxLiczbaWezlow=2;  //Liczby od 1 do 10 oznaczaj¹ wielokrotnoœæ liczby pocz¹tkowej...
-	//unsigned DefMaxLiczbaLinkow=-1;  //wiêksze s¹ brane literalnie. -1 dla linków oznacza graf pe³ny
-	//unsigned MaxLiczbaKomunikatow=10*1024; //Ile mo¿e jednoczesnie istniec komunikatów w systemie
+	//unsigned DefMaxLiczbaWezlow=2;  //Liczby od 1 do 10 oznaczajï¿½ wielokrotnoï¿½ï¿½ liczby poczï¿½tkowej...
+	//unsigned DefMaxLiczbaLinkow=-1;  //wiï¿½ksze sï¿½ brane literalnie. -1 dla linkï¿½w oznacza graf peï¿½ny
+	//unsigned MaxLiczbaKomunikatow=10*1024; //Ile moï¿½e jednoczesnie istniec komunikatï¿½w w systemie
 	if(0 < DefMaxLiczbaWezlow && DefMaxLiczbaWezlow<=10)
 		Swiat::_UstalLiczbeWezlow(DefMaxLiczbaWezlow*IleWezlow);
 		else
@@ -80,7 +81,7 @@ bool Swiat::Inicjalizacja(const char* PlikWejsciowy,const char DelimiterDanych)
 		else
 		{
 			if(DefMaxLiczbaLinkow==unsigned(-1))
-			  DefMaxLiczbaLinkow=Swiat::IleMoznaWezlow()*Swiat::IleMoznaWezlow(); //Mog¹ byæ rózne rodzaje, lepiej z zapasem
+			  DefMaxLiczbaLinkow=Swiat::IleMoznaWezlow()*Swiat::IleMoznaWezlow(); //Mogï¿½ byï¿½ rï¿½zne rodzaje, lepiej z zapasem
 			Swiat::_UstalLiczbeLaczy(DefMaxLiczbaLinkow);
 		}
 	Swiat::_UstalLiczbeInfo(DefMaxLiczbaKomunikatow);
@@ -100,19 +101,19 @@ bool Swiat::Inicjalizacja(const char* PlikWejsciowy,const char DelimiterDanych)
 			return false;}
 
 	//WLASCIWE TWORZENIE STRUKTURY
-	//...Na razie uproszczone bo s¹ tylko elementy typu "generic"
+	//...Na razie uproszczone bo sï¿½ tylko elementy typu "generic"
 	const char* Lang=_LPL("pl","en");
 	for(unsigned i=0;i<Wierszy;i++)
 	{
 		string* NazwaTypu=&DaneStruktury(i,0);
-		if(strlen(NazwaTypu->c_str())<1) //Pusta komórka typu!!!
+		if(strlen(NazwaTypu->c_str())<1) //Pusta komï¿½rka typu!!!
 		{
-			cerr<<_LPL("Pusta komórka typu. Kolumna A, wiersz ","Empty type definition. Column A, row ")<<i+1<<endl;
-			TLOG(0, << _LPL("Pusta komórka typu. Kolumna A, wiersz ","Empty type definition. Column A, row ")<<i+1     )
+			cerr<<_LPL("Pusta komï¿½rka typu. Kolumna A, wiersz ","Empty type definition. Column A, row ")<<i+1<<endl;
+			TLOG(0, << _LPL("Pusta komï¿½rka typu. Kolumna A, wiersz ","Empty type definition. Column A, row ")<<i+1     )
 			continue;
 		}
 		RECOVERY:
-		if(*(NazwaTypu->c_str())=='#')  //Komentarz, #config lub definicja nazw pól
+		if(*(NazwaTypu->c_str())=='#')  //Komentarz, #config lub definicja nazw pï¿½l
 		{
 			//Parametr konfiguracyjny
 			if(stricmp("#CONFIG",NazwaTypu->c_str())==0)
@@ -121,7 +122,7 @@ bool Swiat::Inicjalizacja(const char* PlikWejsciowy,const char DelimiterDanych)
 				continue;
 			}
 
-			//Definicja nazw pól dla jakiegoœ typu
+			//Definicja nazw pï¿½l dla jakiegoï¿½ typu
 			const char* pom;
 			if((pom=strchr(NazwaTypu->c_str(),'*'))!=NULL)
 			 if(*(pom-1)=='#' || strncmp(pom-2,Lang,2)==0 //*(pom-2)==*Lang
@@ -131,8 +132,8 @@ bool Swiat::Inicjalizacja(const char* PlikWejsciowy,const char DelimiterDanych)
 			  ElementModelu::WirtualnyKonstruktor* Kon=ElementModelu::WirtualnyKonstruktor::DajWirtualnyKonstruktor(pom);
 			  if(Kon)
 			  {
-				if(Kon->IleNazwPol()>0 && strcmp(Kon->NazwaPola(1),"<DEF>")!=0) //Ju¿ coœ by³o
-					cerr<<_LPL("Powtórzona definicja nazw kolumn. Wiersz:",
+				if(Kon->IleNazwPol()>0 && strcmp(Kon->NazwaPola(1),"<DEF>")!=0) //Juï¿½ coï¿½ byï¿½o
+					cerr<<_LPL("Powtï¿½rzona definicja nazw kolumn. Wiersz:",
 							   "Field names already defined. Row:")<<i+1
 							   <<_LPL(" Typ:"," Type:")<<"\""<<NazwaTypu->c_str()<<'"'<<endl;
 				Kon->Nazwy.InicjujWgListy(NazwaTypu,Kolumn);
@@ -152,7 +153,7 @@ bool Swiat::Inicjalizacja(const char* PlikWejsciowy,const char DelimiterDanych)
 			{
 				unsigned GdzieBlad=0; WezelSieci* PomW; Proces* PomPr; Powiazanie* PomL; Komunikat* PomI;
 				ElementModelu* Pom=Kon->KonstruktorWgListy(NazwaTypu,Kolumn,GdzieBlad);
-				if(Pom==NULL) //Jakiœ b³¹d
+				if(Pom==NULL) //Jakiï¿½ bï¿½ï¿½d
 				{
 					cerr<<_LPL("Niepoprawna komorka danych. Wiersz:","Invalid cell. Row:")<<i+1<<_LPL(" kolumna:"," column")<<char('A'+GdzieBlad)<<_LPL(" Typ:"," Type:")<<"\""<<NazwaTypu->c_str()<<'"'<<endl;
 					TLOG(0, <<_LPL("Niepoprawna komorka danych. Wiersz:","Invalid cell. Row:")<<i+1<<_LPL(" kolumna:"," column")<<char('A'+GdzieBlad)<<_LPL(" Typ:"," Type:")<<"\""<<NazwaTypu->c_str()<<'"'  )
@@ -176,7 +177,7 @@ bool Swiat::Inicjalizacja(const char* PlikWejsciowy,const char DelimiterDanych)
 						if((PomI=dynamic_cast<Komunikat*>(Pom))!=NULL)
 							 WstawInfo(PomI);
 							 else
-							 {   //Problem - nie da³o siê zrzutowaæ!!!
+							 {   //Problem - nie daï¿½o siï¿½ zrzutowaï¿½!!!
 								cerr<<_LPL(" Typ:"," Type:")<<NazwaTypu->c_str()<<" nie jest ani wezlem (node) ani powiazaniem (link)\n ani procesem(proc) ani komunikatem (info)"<<endl;
 								TLOG( 0 , <<_LPL(" Typ:"," Type:")<<NazwaTypu->c_str()<<" nie jest ani wezlem (node) ani powiazaniem (link)\n ani procesem(proc) ani komunikatem (info)"  )
 								cerr<<_LPL("Zastanie zignorowany","It will be ignored")<<endl;
@@ -184,7 +185,7 @@ bool Swiat::Inicjalizacja(const char* PlikWejsciowy,const char DelimiterDanych)
 							 }
 				   if(!Pom->Poprawny())  //Ostateczne sprawdzenie
 						{
-							cerr<<i+1<<". wiersz. Obiekt \""<<NazwaTypu->c_str()<<"\" jednak nie jest poprawny, sprawdŸ dozwolone zakresy wartoœci"<<endl;
+							cerr<<i+1<<". wiersz. Obiekt \""<<NazwaTypu->c_str()<<"\" jednak nie jest poprawny, sprawdï¿½ dozwolone zakresy wartoï¿½ci"<<endl;
 							TLOG( 0 , <<i+1<<". wiersz. Obiekt \""<<NazwaTypu->c_str()<<"\" jednak nie jest poprawny" )
 							if(!ForceTolerant)
 								return false;
@@ -224,7 +225,7 @@ bool Swiat::Inicjalizacja(const char* PlikWejsciowy,const char DelimiterDanych)
 	}
    //	cerr<<" OK"<<endl;
     TLOG(0, <<" FILE +-OK "<<endl ) //KONIEC WCZYTYWANIA
-	Swiat::UwagaZmienionoStrukture(); //I tak wykonanie tej funkcji drugi raz w programie mo¿e zrobiæ kaszanê, ale moze kiedyœ ...
+	Swiat::UwagaZmienionoStrukture(); //I tak wykonanie tej funkcji drugi raz w programie moï¿½e zrobiï¿½ kaszanï¿½, ale moze kiedyï¿½ ...
 	return true;
 }
 

@@ -1,37 +1,41 @@
-////////////////////////////////////////////////////////////////////////////////
-// Symulator Procesów Sieciowych/Spolecznych (c) Instytut Studiów Spo³ecznych
+// //////////////////////////////////////////////////////////////////////////////
+// Symulator Procesï¿½w Sieciowych/Spolecznych (c) Instytut Studiï¿½w Spoï¿½ecznych
 // Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 // Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 //
-// Definicje matrycowego typu wêz³a - czyli zawieraj¹cego tablicê "dziedin"
-// która jest wizualizowana jako obrazek i mo¿e byæ obrazkiem zainicjowana
-////////////////////////////////////////////////////////////////////////////////
+// Definicje matrycowego typu wï¿½zï¿½a - czyli zawierajï¿½cego tablicï¿½ "dziedin"
+// ktï¿½ra jest wizualizowana jako obrazek i moï¿½e byï¿½ obrazkiem zainicjowana
+// //////////////////////////////////////////////////////////////////////////////
 //---------------------------------------------------------------------------
 
-#pragma hdrstop
+#pragma hdrstop //???
 
 #include "spsMatrixNode.h"
-#include "INCLUDE/platform.hpp"
-#include "SYMSHELL/sshutils.hpp"
-#include "INCLUDE/wb_ptr.hpp"
-#include "INCLUDE/wb_smartlog.h"
-using namespace wbrtm;
+#include "sshutils.hpp"
+#include "wb_ptr.hpp"
+#include "wb_smartlog.hpp"
+#include "lingo.hpp"
 
 #include <stdlib.h>
 #include <iostream>
 #include <cassert>
 using namespace std;
 
+
+using namespace wbrtm;
+
+
+
 //---------------------------------------------------------------------------
 //#pragma package(smart_init)
 //  protected:
-	//DziedzKol  		Col;   //Dziedziczony z ElementModelu - interpretowane jako t³o
+	//DziedzKol  		Col;   //Dziedziczony z ElementModelu - interpretowane jako tï¿½o
 	//std::string*	Dane;
 	//unsigned		IleDanych; //Dziedziczony z  GenerycznyWezelSieci
 	//double    		W,_X,_Y,_Z;
-	//Wielobok* 		Ksztalt; //U¿ywany do wyœwietlania pojedynczego "piksela"
+	//Wielobok* 		Ksztalt; //Uï¿½ywany do wyï¿½wietlania pojedynczego "piksela"
 	//DziedzinaWKolorze*  Tablica;
 	//unsigned 			Wysokosc;
 	//unsigned 			Szerokosc;
@@ -44,7 +48,7 @@ WezelMacierzowy::WezelMacierzowy():	Tablica(0),//DziedzinaWKolorze*
 WezelMacierzowy::KonstruktorElementowModelu<WezelMacierzowy> WezelMacierzowy::WirtualnyKonstruktor("MattNode");
 
 DziedzKol& WezelMacierzowy::operator() (unsigned x,unsigned y)
-//Dostêp do danych macierzy
+//Dostï¿½p do danych macierzy
 {
 	if(x<Szerokosc && y<Wysokosc && Tablica)
 	{
@@ -62,14 +66,14 @@ DziedzinaWKolorze WezelMacierzowy::_ZnajdzNajpodobniejszy(DziedzinaWKolorze D,
 															unsigned& Indeks,
 														   double& WzglednePobienstwo,
 															unsigned IleProb)
-//Funkcja przeszukiwania "bazy danych". Mo¿e losowo, albo liniowo,
-//ale potomne mog¹ zaiplementowac coœ lepszego
+//Funkcja przeszukiwania "bazy danych". Moï¿½e losowo, albo liniowo,
+//ale potomne mogï¿½ zaiplementowac coï¿½ lepszego
 {
 	//static
-	Indeks=Swiat::INVINDEX; //Jakby nie znalza³
-	WzglednePobienstwo=0;//Podobienstwo mniejsze ni¿ 0 byæ nie mo¿e
+	Indeks=Swiat::INVINDEX; //Jakby nie znalzaï¿½
+	WzglednePobienstwo=0;//Podobienstwo mniejsze niï¿½ 0 byï¿½ nie moï¿½e
 	DziedzinaWKolorze Wynik;//Na rezultat
-	double IleBitowWzorca=D.IleBitow();  //Zeby tego ci¹gle nie powtarzaæ, ale czy potrzebne
+	double IleBitowWzorca=D.IleBitow();  //Zeby tego ciï¿½gle nie powtarzaï¿½, ale czy potrzebne
 	unsigned ile=Szerokosc*Wysokosc;
 	if(IleProb>ile) //Liniowo
 	{
@@ -106,7 +110,7 @@ DziedzinaWKolorze WezelMacierzowy::_ZnajdzNajpodobniejszy(DziedzinaWKolorze D,
 		  }
 	   }
 	}
-	//Coœ siê znanalz³o
+	//Coï¿½ siï¿½ znanalzï¿½o
 	if(IleBitowWzorca<=1)
 			{
 		   //	clog<<"?";//DEBUG
@@ -114,50 +118,50 @@ DziedzinaWKolorze WezelMacierzowy::_ZnajdzNajpodobniejszy(DziedzinaWKolorze D,
 	return Wynik;
 }
 
-//Metoda pobiera wszystkie potrzebne dane z listy stringów. Jak blad to podaje ktora pozycja
+//Metoda pobiera wszystkie potrzebne dane z listy stringï¿½w. Jak blad to podaje ktora pozycja
 bool WezelMacierzowy::ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad)
 {
 	Dane.InicjujWgListy(Lista,Ile);  //Przepisanie listy i ...
-	if(Dane.Ile()<11)			//Sprawdzenie czy jest wystarczaj¹co danych do inicjacji
-			{ Blad=Ile; return false; } //Za ma³o danych. Pierwsza kom. za.
+	if(Dane.Ile()<11)			//Sprawdzenie czy jest wystarczajï¿½co danych do inicjacji
+			{ Blad=Ile; return false; } //Za maï¿½o danych. Pierwsza kom. za.
 
 	const char* astr;//Pozycja tekstu pomocniczego
-	if((astr=strchr(Dane[8].c_str(),'*'))!=NULL) //Jeœli jest gwiazdka to bêdzie plik
-	{   //Wiêc zawartosc macierzy z pliku
+	if((astr=strchr(Dane[8].c_str(),'*'))!=NULL) //Jeï¿½li jest gwiazdka to bï¿½dzie plik
+	{   //Wiï¿½c zawartosc macierzy z pliku
 	   if(!_ZaladujKoloryZPliku(Dane[9].c_str(),astr+1))
 			{ Blad=9; return false; }
 	}
-	else  //Je¿eli nie z pliku to pole 7 i 8 zawieraj¹ szerokoœæ i wysokoœæ
+	else  //Jeï¿½eli nie z pliku to pole 7 i 8 zawierajï¿½ szerokoï¿½ï¿½ i wysokoï¿½ï¿½
 	{
 		if(Dane.KonwertujDo(8,Szerokosc)!=-1 || Szerokosc==0)
 			{ Blad=8; return false; }
 		if(Dane.KonwertujDo(9,Wysokosc)!=-1 || Wysokosc==0)
 			{ Blad=9; return false; }
-		if(Tablica) delete [] Tablica; //Zwalnianie starej pamiêci
+		if(Tablica) delete [] Tablica; //Zwalnianie starej pamiï¿½ci
 		Tablica=new DziedzinaWKolorze[Szerokosc*Wysokosc];
 		//Kolor konieczny do inicjowania
 		char* endptr=NULL;
 		Col.ARGB=strtorgb(Dane[4].c_str(),&endptr);
 		if(endptr!=NULL && *endptr!='\0')
 					{ Blad=4; return false;}
-		//W³asciwe inicjowanie tablicy
+		//Wï¿½asciwe inicjowanie tablicy
 		for(unsigned i=0;i<Szerokosc*Wysokosc;i++)
 			   Tablica[i]=Col;
 	}
 
-	{//Waga jest od razu potrzebna bo wg. niej oblicza siê promieñ
+	{//Waga jest od razu potrzebna bo wg. niej oblicza siï¿½ promieï¿½
 	double W;
 	if(Dane.KonwertujDo(3,W)!=-1 || W<=0)
 			{ Blad=3; return false;}
 			else
 			Waga=W;
 	}
-	//Wczytujemy pozosta³e pola (???) G³ownie chodzi o tworzenie wielok¹ta
-	//Drobna sztuczka - na chwilê zmniejszamy wagê, ¿eby by³ mniejszy
+	//Wczytujemy pozostaï¿½e pola (???) Gï¿½ownie chodzi o tworzenie wielokï¿½ta
+	//Drobna sztuczka - na chwilï¿½ zmniejszamy wagï¿½, ï¿½eby byï¿½ mniejszy
 	double ZapamietajW=Waga;
 	double JakaWagaJednostki=double( Waga/std::max(Szerokosc,Wysokosc) );
 	if(JakaWagaJednostki<0.1)
-			JakaWagaJednostki=0.1; //Awaryjny rozmiar jednostki jak za ma³a
+			JakaWagaJednostki=0.1; //Awaryjny rozmiar jednostki jak za maï¿½a
 	Dane.PrzypiszZ(3, JakaWagaJednostki );
 	if(!_PrzeniesDaneNaPola(Blad))
 			return false;
@@ -170,7 +174,7 @@ bool WezelMacierzowy::ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned
 	if((poz=Dane.KonwertujDo(10,RandPar))>=0)
 			{ Blad=10; return false;}
 
-	if(RandPar!=0) //Jakiœ szumek jest
+	if(RandPar!=0) //Jakiï¿½ szumek jest
 	for(unsigned i=0;i<Szerokosc*Wysokosc;i++)
 	{
 		  Tablica[i].R=unsigned(Tablica[i].R*(1-2*DRAND_LOOP(RandPar)))%256;
@@ -178,28 +182,28 @@ bool WezelMacierzowy::ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned
 		  Tablica[i].B=unsigned(Tablica[i].B*(1-2*DRAND_LOOP(RandPar)))%256;
 	}
 
-	Blad=11; //10 pól ju¿ jest wczytanych
-	return true;   	//Teraz juz naprawdê wszystko gotowe
+	Blad=11; //10 pï¿½l juï¿½ jest wczytanych
+	return true;   	//Teraz juz naprawdï¿½ wszystko gotowe
 }
 
 WezelMacierzowy::~WezelMacierzowy()
 //Destruktor wirtualny
 {
-   if(Tablica) delete [] Tablica; //Zwalnianie pamiêci
+   if(Tablica) delete [] Tablica; //Zwalnianie pamiï¿½ci
 }
 
 	//Proste akcesory
 double WezelMacierzowy::R(double Angle)
-//Promieñ otaczaj¹cego okrêgu lub elipsy
+//Promieï¿½ otaczajï¿½cego okrï¿½gu lub elipsy
 {
 	if(Waga>0)
-	 return ((JakieRwProcWidth/100.0)*ver*Waga);//Idzie na ³atwiznê na razie
+	 return ((JakieRwProcWidth/100.0)*ver*Waga);//Idzie na ï¿½atwiznï¿½ na razie
 	 else
 	 return 1; //jeden piksel !
 }
 
 bool WezelMacierzowy::Trafiony(float sX,float sY)
-//Np. do inspekcji myszk¹ - Tu trafienie w prostok¹t.
+//Np. do inspekcji myszkï¿½ - Tu trafienie w prostokï¿½t.
 {
 	 double StartX,StartY,EndX,EndY,Step;
 	 double R=this->R(0);
@@ -226,27 +230,27 @@ bool WezelMacierzowy::Trafiony(float sX,float sY)
 
 
 bool WezelMacierzowy::_OdpowiedzLosowymBitem(Komunikat* Pyt,unsigned Ktory,bool AND_OR)
-//...Element bêd¹cy podstaw¹ mo¿e byæ wskazany lub losowy
+//...Element bï¿½dï¿½cy podstawï¿½ moï¿½e byï¿½ wskazany lub losowy
 {
-	wb_ptr<Komunikat> Klon( Pyt->Klonuj() ); //Jak siê z jakiœ powodów nie uda wyslaæ to przygotowywany komunikat znika dziêki wb_ptr
+	wb_ptr<Komunikat> Klon( Pyt->Klonuj() ); //Jak siï¿½ z jakiï¿½ powodï¿½w nie uda wyslaï¿½ to przygotowywany komunikat znika dziï¿½ki wb_ptr
 	if(Klon->Zwrotnie())//O ile uda sie adresowanie zwrotne
 		{
 			DziedzKol Pom=Pyt->PodajDziedzine();//Jaka jest dziedzina komunikatu
 			unsigned i=Ktory;
 			if(i==Swiat::INVINDEX)
-						RANDOM(Szerokosc*Wysokosc); //Jakiœ losowy element
+						RANDOM(Szerokosc*Wysokosc); //Jakiï¿½ losowy element
 			if(AND_OR)
-				Pom.ARGB=Tablica[i].ARGB & Pom.ARGB;// Czêœæ wspólna pytania i odpowiedzi
+				Pom.ARGB=Tablica[i].ARGB & Pom.ARGB;// Czï¿½ï¿½ wspï¿½lna pytania i odpowiedzi
 			else
 				Pom.ARGB=Tablica[i].ARGB | Pom.ARGB;// Suma logiczna pytania i odpowiedzi
 			Klon->UstawDziedzine(Pom);
-			return Swiat::WstawInfo(Klon.give())!=Swiat::INVINDEX;//Wstawi³ klon komunikatu - trac¹c z "zarz¹du"
+			return Swiat::WstawInfo(Klon.give())!=Swiat::INVINDEX;//Wstawiï¿½ klon komunikatu - tracï¿½c z "zarzï¿½du"
 		}
 	return false;
 }
 
 bool WezelMacierzowy::_OdpowiedzNajpodobniejszym(Komunikat* Pyt,unsigned IleProb)
-//MOZE BYÆ KOSZTOWNA! Jak nie podano liczby prób to przegl¹da ca³¹ zawartoœæ!!!
+//MOZE BYï¿½ KOSZTOWNA! Jak nie podano liczby prï¿½b to przeglï¿½da caï¿½ï¿½ zawartoï¿½ï¿½!!!
 {
 										  //	assert("NIE ZAIMPLEMENTOWANE!!!");
 	DziedzinaWKolorze D;
@@ -260,7 +264,7 @@ bool WezelMacierzowy::_OdpowiedzNajpodobniejszym(Komunikat* Pyt,unsigned IleProb
 		&& Swiat::WstawInfo(ODP)!=Swiat::INVINDEX)
 			 return true;
 		else
-		TLOG(1, <<"Nie uda³o siê wys³aæ odpowiedzi na komunikat rodzaju \""<<Pyt->Rodzaj()<<"\" D:"<<hex<<Pyt->PodajDziedzine().ARGB<<" Do "<<Pyt->Nadawca()  )
+		TLOG(1, <<"Nie udaï¿½o siï¿½ wysï¿½aï¿½ odpowiedzi na komunikat rodzaju \""<<Pyt->Rodzaj()<<"\" D:"<<hex<<Pyt->PodajDziedzine().ARGB<<" Do "<<Pyt->Nadawca()  )
 	return false;
 }
 

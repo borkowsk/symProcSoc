@@ -1,14 +1,14 @@
-////////////////////////////////////////////////////////////////////////////////
-// Symulator Procesów Sieciowych/Spolecznych (c) Instytut Studiów Spo³ecznych
+// //////////////////////////////////////////////////////////////////////////////
+// Symulator Procesï¿½w Sieciowych/Spolecznych (c) Instytut Studiï¿½w Spoï¿½ecznych
 // Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 // Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 //
-// G³ówna funkcja symulacji kroku i to co jej potrzebne (ale mo¿e nie wszystko?)
-// - wyodrêbnione ¿eby by³o ³atwo znaleŸæ i rozbudowywaæ
-// UWAGA! Czêœæ modelu mo¿e byæ w innych plikach, jak ten zanadto uroœnie!
-////////////////////////////////////////////////////////////////////////////////
+// Gï¿½ï¿½wna funkcja symulacji kroku i to co jej potrzebne (ale moï¿½e nie wszystko?)
+// - wyodrï¿½bnione ï¿½eby byï¿½o ï¿½atwo znaleï¿½ï¿½ i rozbudowywaï¿½
+// UWAGA! Czï¿½ï¿½ modelu moï¿½e byï¿½ w innych plikach, jak ten zanadto uroï¿½nie!
+// //////////////////////////////////////////////////////////////////////////////
 
 #include "spsModel.h"
 
@@ -16,15 +16,16 @@
 #include <cassert>
 using namespace std;
 
-#include "INCLUDE/platform.hpp"
-#include "INCLUDE/wb_ptr.hpp"
+#include "wb_ptr.hpp"
+#include "lingo.hpp"
+
 using namespace wbrtm;
 
 
 static double NumerKrokuSymulacji=0; //"static" bo schowane przed linkerem
 
 double Swiat::NumerKroku()
-// Mo¿e kroki bêd¹ te¿ u³amkowe? A w ogóle double ma wiêcej cyfr znacz¹cych
+// Moï¿½e kroki bï¿½dï¿½ teï¿½ uï¿½amkowe? A w ogï¿½le double ma wiï¿½cej cyfr znaczï¿½cych
 {
    return  NumerKrokuSymulacji;
 }
@@ -33,12 +34,12 @@ static wb_dynarray<unsigned> ListaKom;
 static unsigned IleKomFakt=0;
 
 bool Swiat::Krok_modelu()
-// Wykonanie kroku modelu - mo¿e byæ wizualizacja w trakcie
+// Wykonanie kroku modelu - moï¿½e byï¿½ wizualizacja w trakcie
 {
 	for(unsigned i=0;i<Swiat::IleWezlow();i++)
 	{
 		WezelSieci* Pom=Swiat::Wezel(i);
-		//Teraz niech siê rz¹dzi
+		//Teraz niech siï¿½ rzï¿½dzi
 		if(Pom)
 		{
 			if( ! Pom->Poprawny() )
@@ -46,9 +47,9 @@ bool Swiat::Krok_modelu()
 			else
 			{
 				Pom->ChwilaDlaCiebie();
-				//A co z procesami?  Trzeba im uj¹æ dostêpnego czasu
-				// i ewentualnie usun¹æ jak nie s¹ poprawne.
-				//Wykonaniem steruj¹ ju¿ wêz³y samodzielnie
+				//A co z procesami?  Trzeba im ujï¿½ï¿½ dostï¿½pnego czasu
+				// i ewentualnie usunï¿½ï¿½ jak nie sï¿½ poprawne.
+				//Wykonaniem sterujï¿½ juï¿½ wï¿½zï¿½y samodzielnie
 				unsigned ile_p=IleProcesow(i);
 				for(unsigned p=0;p<ile_p;p++)
 				{
@@ -56,15 +57,15 @@ bool Swiat::Krok_modelu()
 					if(Pr)
 					{
 						if( Pr->Procesor()!=i )
-						{ //Powa¿ny k³opot
-							cerr<<_LPL("Na wezle ","On node ")<<Pom->Nazwa()<<_LPL(" wykryto niezwi¹zany proces"," unlinked proces detected")<<endl;
+						{ //Powaï¿½ny kï¿½opot
+							cerr<<_LPL("Na wezle ","On node ")<<Pom->Nazwa()<<_LPL(" wykryto niezwiï¿½zany proces"," unlinked proces detected")<<endl;
 						}
 						else
 						{
 						if( ! Pr->Poprawny()    //Jak nie jest poprawny to usuwamy    (hiperzabezpieczenie)
 						|| Pr->JakZaawansowany()>=PROCES_NAD_ZAAWANSOWANY)  //... albo jak bardzo po-zakonczony
-											//W ten sposób proces sam mo¿e zdecydowaæ o swoim zakonczeniu
-											//Bo nie mo¿e siê bezpiecznie sam usun¹æ! (bo delete!)
+											//W ten sposï¿½b proces sam moï¿½e zdecydowaï¿½ o swoim zakonczeniu
+											//Bo nie moï¿½e siï¿½ bezpiecznie sam usunï¿½ï¿½! (bo delete!)
 						UsunProc(p,i);
 						else
 						Pr->_IleKrokowDoKonca--;
@@ -75,7 +76,7 @@ bool Swiat::Krok_modelu()
 		}
 	}
 
-	//Ewentualne zmiany linków
+	//Ewentualne zmiany linkï¿½w
 	for(unsigned i=0;i<Swiat::IlePowiazan();i++)
 	{
 		Powiazanie* Pom=Swiat::Lacze(i);
@@ -88,8 +89,8 @@ bool Swiat::Krok_modelu()
 		}
 	}
 
-	//Komunikaty trzeba przetwarzaæ tak, ¿eby nowe zaczekaly - lista bardzo zmienna
-	if(Swiat::IleInformacji()>0) //W ogóle s¹ jakieœ
+	//Komunikaty trzeba przetwarzaï¿½ tak, ï¿½eby nowe zaczekaly - lista bardzo zmienna
+	if(Swiat::IleInformacji()>0) //W ogï¿½le sï¿½ jakieï¿½
 	{
 		ListaKom.alloc(Swiat::IleInformacji());
 		IleKomFakt=0;
@@ -105,14 +106,14 @@ bool Swiat::Krok_modelu()
 			}
 		}
 
-		//Stare komunikaty bêd¹ przetworzone, a nowe - powsta³e w trakcie przetwarzania ju¿ nie
+		//Stare komunikaty bï¿½dï¿½ przetworzone, a nowe - powstaï¿½e w trakcie przetwarzania juï¿½ nie
 		for(unsigned i=0;i<IleKomFakt;i++)
 		{
 			Komunikat* Messg=Swiat::Info(ListaKom[i]);
-			if(Messg==NULL) continue; //Jakby jednak znikn¹³ w miedzyczasie (???)
+			if(Messg==NULL) continue; //Jakby jednak zniknï¿½ï¿½ w miedzyczasie (???)
 
-			if(Messg->JakDostawa()>=1) //Jeœli ju¿ dowieziony do celu
-			{  //To trzeba zorganizowaæ odbiór
+			if(Messg->JakDostawa()>=1) //Jeï¿½li juï¿½ dowieziony do celu
+			{  //To trzeba zorganizowaï¿½ odbiï¿½r
 			   unsigned Cel=Messg->Odbiorca();
 			   WezelSieci* Odbiorca=Swiat::Wezel(Cel); 		assert(Odbiorca!=NULL);
 			   Odbiorca->InterpretujKomunikat(Messg);
@@ -124,7 +125,7 @@ bool Swiat::Krok_modelu()
 	}
 	//Poprawny koniec kroku
 	//cout<<'\b';
-	NumerKrokuSymulacji+=1; // Ca³y krok?
+	NumerKrokuSymulacji+=1; // Caï¿½y krok?
 	return true;
 }
 

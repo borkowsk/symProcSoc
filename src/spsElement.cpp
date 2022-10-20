@@ -1,44 +1,43 @@
-////////////////////////////////////////////////////////////////////////////////
-// Symulator ProcesÛw Sieciowych/Spolecznych (c) Instytut StudiÛw Spo≥ecznych
+// //////////////////////////////////////////////////////////////////////////////
+// Symulator Proces√≥w Sieciowych/Spo≈Çecznych (c) Instytut Studi√≥w Spo≈Çecznych
 // Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 // Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 //
 // Te metody klasy bazowej ElementModelu
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 #include "spsElement.h"
 
-
-#include "INCLUDE/platform.hpp"
 #include <cassert>
+#include <cstring>
 #include <iostream>
 using namespace std;
 
-#include "INCLUDE/wb_bits.h"
-using namespace wbrtm;
+#include "wb_bits.h"
+#include "lingo.hpp"
 
+/// \details Zwraca liczbƒô bit√≥w 1 w tych danych
 unsigned DziedzinaWKolorze::IleBitow()
-//Zwraca liczbÍ bitÛw 1 w tych danych
 {
     return bits(A)+bits(R)+bits(G)+bits(B);
 }
 
+/// \details Kolor czyli "dziedzina" musi miec kazdy obiekt w modelu
 ElementModelu::ElementModelu()
-//Kolor czyli "dziedzinÍ" musi miec kazdy obiekt w modelu
 {Col.ARGB=0;_MojIndeks=-1;}
 
 //virtual
+/// \details Destruktor wirtualny, bo bÔøΩdÔøΩ metody wirtualne
 ElementModelu::~ElementModelu()
-//Destruktor wirtualny, bo bÍdπ metody wirtualne
 {
-//	assert(_MojIndeks!=-1);    //Tak naprawdÍ to siÍ zdarza
+//	assert(_MojIndeks!=-1);    //Tak naprawdÔøΩ to siÔøΩ zdarza
 }
 
+/// Zwraca Indeks ustawiony przez ≈õwiat albo jaki≈õ innych identyfikator wobec swiata
 unsigned ElementModelu::MojID()
-//Zwraca Indeks ustawiony przez åwiat albo jakiú innych identyfikator wobec swiata
-{
-	assert(_MojIndeks!=-1);    //Tak naprawdÍ to siÍ zdarza jak obiekt nie wstawiony do úwiata
+{                                                                                               assert(_MojIndeks!=-1);
+                                                        //Tak naprawdƒô to siƒô zdarza jak obiekt nie wstawiony do ≈õwiata
 	return _MojIndeks;
 }
 
@@ -48,7 +47,9 @@ DziedzKol ElementModelu::PodajDziedzine()
 }
 
 void ElementModelu::UstawDziedzine(const DziedzinaWKolorze& D)
-{ Col=D; }
+{
+    Col=D;
+}
 
 void ElementModelu::UstawDziedzine(unsigned R,unsigned G, unsigned B, unsigned A)//A=0 domyslnie
 {
@@ -66,8 +67,8 @@ ElementModelu::WirtualnyKonstruktor* ElementModelu::VKonstruktor()
 	return NULL;
 }
 
+/// BazujƒÖca na FLAGS informacja o widocznosci
 unsigned  ElementModelu::VWidocznosc()
-//Bazujπca na FLAGS informacja o widocznosci
 {
    WirtualnyKonstruktor* Kons=this->VKonstruktor();
    if(Kons)
@@ -75,11 +76,11 @@ unsigned  ElementModelu::VWidocznosc()
 	  // cerr<<Kons->NazwaTypu()<<endl;
 	   return  Kons->Flagi() & 0x3; //Dwa najmlodsze bity
    }
-   else return 4; //Na wszelki wypadek pe≥na wizualizacja
+   else return 4; //Na wszelki wypadek peÔøΩna wizualizacja
 }
 
 unsigned ElementModelu::WirtualnyKonstruktor::IleNazwPol()
-{  //Dwa pola sπ obslugiwane nawet jak nie ma nazw!
+{  //Dwa pola sƒÖ obslugiwane nawet jak nie ma nazw!
 	if(Nazwy.Ile()>2)
 		return Nazwy.Ile();
 	else
@@ -132,8 +133,8 @@ bool   ElementModelu::UstawPole(unsigned Ktore,const char* NowaWartosc)
 			return false;
 }
 
-//Klasa pomocnicza obslugujaca zarzπdaznie danymi tekstowymi obiektÛw modelu
-//a mogπca teø przejπc zarzπdzanie ich konwersjami i przekszta≥cenie w warianty
+//Klasa pomocnicza obslugujaca zarzÔøΩdaznie danymi tekstowymi obiektÔøΩw modelu
+//a mogÔøΩca teÔøΩ przejÔøΩc zarzÔøΩdzanie ich konwersjami i przeksztaÔøΩcenie w warianty
 //
 // class ElementModelu::DaneLokalne
 //	string* Dane;
@@ -165,15 +166,15 @@ void ElementModelu::DaneLokalne::InicjujWgListy(const std::string* Lista,unsigne
 }
 
 void ElementModelu::AktualizujListeDanych()
-// Funkcja musi zadbaÊ øeby wszystko by≥o aktualne
-// ale klasy potomne mogπ gdzie indziej chcieÊ zapisywaÊ
-// dziedzinÍ, a to jedyne pole poza nazwπ typu ktÛr etu by moøna zaktualizowaÊ
+// Funkcja musi zadbaÔøΩ ÔøΩeby wszystko byÔøΩo aktualne
+// ale klasy potomne mogÔøΩ gdzie indziej chcieÔøΩ zapisywaÔøΩ
+// dziedzinÔøΩ, a to jedyne pole poza nazwÔøΩ typu ktÔøΩr etu by moÔøΩna zaktualizowaÔøΩ
 {
 	if(Dane.Ile()==0)
 	{
 		Dane.Realokuj(1);
 		WirtualnyKonstruktor* Kons=this->VKonstruktor();
-		if(Kons)  	//Chyba nie warto robiÊ nic wiÍcej?
+		if(Kons)  	//Chyba nie warto robiÔøΩ nic wiÔøΩcej?
 			Dane[0]=Kons->NazwaTypu();
 	}
 }
@@ -189,19 +190,19 @@ void ElementModelu::DaneLokalne::InicjujZDanych(const DaneLokalne& Wzor)
 		Dane[i]=Wzor[i];
 	 }
 }
-//const DaneLokalne& operator = (const DaneLokalne& Wzor);  - powinno byÊ zabronione na wszelki wypadek
+//const DaneLokalne& operator = (const DaneLokalne& Wzor);  - powinno byÔøΩ zabronione na wszelki wypadek
 
 
-void ElementModelu::DaneLokalne::Realokuj(unsigned Ile)//Rozbudowuje lub skraca listÍ
+void ElementModelu::DaneLokalne::Realokuj(unsigned Ile)//Rozbudowuje lub skraca listÔøΩ
 {
-	if(Ile==IleDanych) //Nic siÍ nie zmieni≥o!
+	if(Ile==IleDanych) //Nic siÔøΩ nie zmieniÔøΩo!
 		return;
 	string* StaraLista=Dane;
 	Dane=new string[Ile];                    assert(Dane!=NULL);
 	unsigned limit=min(Ile,IleDanych);
 	if(limit>0)
-	  for(unsigned i=0;i<limit;i++)//Nie jest to najszybszy sposÛb
-		Dane[i]=StaraLista[i];	//ale nie wiem czy moøna bezpiecznie zrobiÊ cos lepszego
+	  for(unsigned i=0;i<limit;i++)//Nie jest to najszybszy sposÔøΩb
+		Dane[i]=StaraLista[i];	//ale nie wiem czy moÔøΩna bezpiecznie zrobiÔøΩ cos lepszego
 	if(StaraLista!=NULL)
 		delete [] StaraLista;
 	IleDanych=Ile;
@@ -209,10 +210,10 @@ void ElementModelu::DaneLokalne::Realokuj(unsigned Ile)//Rozbudowuje lub skraca 
 
 
 //Przypisania i konwersje na elementy listy
-//Zwracajπ true jak siÍ uda≥o
+//ZwracajÔøΩ true jak siÔøΩ udaÔøΩo
 bool ElementModelu::DaneLokalne::PrzypiszZ(unsigned gdzie,double co)
 {
-	char bufor[512];//Duøo za duøo?
+	char bufor[512];//DuÔøΩo za duÔøΩo?
 	if(sprintf(bufor,"%g",co)!=EOF)
 	{
 		Dane[gdzie]=bufor;
@@ -223,7 +224,7 @@ bool ElementModelu::DaneLokalne::PrzypiszZ(unsigned gdzie,double co)
 
 bool ElementModelu::DaneLokalne::PrzypiszZ(unsigned gdzie,long   co)
 {
-	char bufor[512];//Duøo za duøo?
+	char bufor[512];//DuÔøΩo za duÔøΩo?
 	if(sprintf(bufor,"%lu",co)!=EOF)
 	{
 		Dane[gdzie]=bufor;
@@ -232,20 +233,20 @@ bool ElementModelu::DaneLokalne::PrzypiszZ(unsigned gdzie,long   co)
 	else return false;
 }
 
-//Zwracajπ indeks znaku ktÛry nie pasowa≥ lub -1 jako sukces
+//ZwracajÔøΩ indeks znaku ktÔøΩry nie pasowaÔøΩ lub -1 jako sukces
 int ElementModelu::DaneLokalne::KonwertujDo(unsigned zkad,float& naco)
 {
 	double pom;
 	int ret=KonwertujDo(zkad,pom);
 	if(ret!=-1) return ret;
-	naco=pom; //TU SI  MOØE SKOPA∆ !!!
+	naco=pom; //TU SIÔøΩ MOÔøΩE SKOPAÔøΩ !!!
 	return -1;
 }
 
 int ElementModelu::DaneLokalne::KonwertujDo(unsigned zkad,double& naco)
 {
 	bool procent=false;
-	char  temp[512];//Duøa tablica na stosie
+	char  temp[512];//DuÔøΩa tablica na stosie
 	char* pom=temp;
 	strncpy(temp,Dane[zkad].c_str(),511);
 
@@ -253,7 +254,7 @@ int ElementModelu::DaneLokalne::KonwertujDo(unsigned zkad,double& naco)
 		   { naco=0;  return 0; }
 
 	if( strchr(temp,'.')==NULL //Gdy nie ma kropki
-	  && (pom=strrchr(temp,','))!=NULL ) //To ostatni przecinek zmienia na kropkÍ
+	  && (pom=strrchr(temp,','))!=NULL ) //To ostatni przecinek zmienia na kropkÔøΩ
 			*pom='.';
 
 	if( (pom=strrchr(temp,'%'))!=NULL )

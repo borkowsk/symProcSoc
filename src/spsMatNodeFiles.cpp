@@ -1,22 +1,23 @@
-////////////////////////////////////////////////////////////////////////////////
-// Symulator Procesów Sieciowych/Spolecznych (c) Instytut Studiów Spo³ecznych
+// //////////////////////////////////////////////////////////////////////////////
+// Symulator Procesï¿½w Sieciowych/Spolecznych (c) Instytut Studiï¿½w Spoï¿½ecznych
 // Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 // Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 //
-// Wczytywanie z plików dla matrycowego typu wêz³a -
-// czyli zawieraj¹cego tablicê "dziedzin"
+// Wczytywanie z plikï¿½w dla matrycowego typu wï¿½zï¿½a -
+// czyli zawierajï¿½cego tablicï¿½ "dziedzin"
 // - wizualizowana jako obrazek i ewentualnie obrazkiem zainicjowana
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 //------------------------------------------------------------------------------
 
 #pragma hdrstop
 
 #include "spsMatrixNode.h"
-#include "INCLUDE/platform.hpp"
-#include "MISCCLASSES/TabelaTabDeli.h"
-#include "SYMSHELL/sshutils.hpp"
+#include "TabDelimited.hpp"
+#include "sshutils.hpp"
+#include "lingo.hpp"
+
 #include <iostream>
 #include <cassert>
 //#include <cstring>
@@ -27,11 +28,11 @@ using namespace std;
 //------------------------------------------------------------------------------
 //#pragma package(smart_init)
 //  protected:
-	//DziedzKol  		Col;   //Dziedziczony z ElementModelu - interpretowane jako t³o
+	//DziedzKol  		Col;   //Dziedziczony z ElementModelu - interpretowane jako tï¿½o
 	//std::string*	Dane;
 	//unsigned		IleDanych; //Dziedziczony z  GenerycznyWezelSieci
 	//double    		W,_X,_Y,_Z;
-	//Wielobok* 		Ksztalt; //U¿ywany do wyœwietlania pojedynczego "piksela"
+	//Wielobok* 		Ksztalt; //Uï¿½ywany do wyï¿½wietlania pojedynczego "piksela"
 	//DziedzinaWKolorze*  Tablica;
 	//unsigned 			Wysokosc;
 	//unsigned 			Szerokosc;
@@ -39,19 +40,23 @@ using namespace std;
 
 
 bool WezelMacierzowy::_ZaladujKoloryZPliku(const char* NazwaPliku,const char* TekstPomocniczy/*=NULL*/)
-//Procedura ³aduj¹ca dane
-//zwraca "true" jeœli siê uda, false jak nie (komunikat mo¿e byæ na perror)
-//z plików DAT (tab delimited), i ewentualnie graficznym PBM
-// - jest w osobnym Ÿródle wiêc mo¿na przeimplementowaæ
+//Procedura ï¿½adujï¿½ca dane
+//zwraca "true" jeï¿½li siï¿½ uda, false jak nie (komunikat moï¿½e byï¿½ na perror)
+//z plikï¿½w DAT (tab delimited), i ewentualnie graficznym PBM
+// - jest w osobnym ï¿½rï¿½dle wiï¿½c moï¿½na przeimplementowaï¿½
 {
 	//Na razie tylko czytanie z pliku DAT - tab delimited
-	 TabelaTabDelimited PlikDat;   //Po u¿yciu automatycznie dealokowane
+	 wbrtm::TabelaTabDelimited PlikDat;   //Po uï¿½yciu automatycznie dealokowane
 	 if(!PlikDat.WczytajZPliku(NazwaPliku))
-		{cerr<<endl<<_LPL("Nieudane wczytywanie z pliku","Failed to read the file")<<" '"<<NazwaPliku<<"'"<<endl; return false;}
+     {
+         cerr<<endl<<_LPL("Nieudane wczytywanie z pliku","Failed to read the file")
+             <<" '"<<NazwaPliku<<"'"<<endl;
+         return false;
+     }
 	 unsigned Szerokosc=PlikDat.IleKolumn();
 	 unsigned Wysokosc=PlikDat.IleWierszy();
 	 unsigned index=0;
-	 if(Tablica) delete [] Tablica; //Zwalnianie starej pamiêci
+	 if(Tablica) delete [] Tablica; //Zwalnianie starej pamiï¿½ci
 	 Tablica=new DziedzinaWKolorze[Szerokosc*Wysokosc];
 	 this->Szerokosc=Szerokosc;
 	 this->Wysokosc=Wysokosc;
@@ -65,17 +70,17 @@ bool WezelMacierzowy::_ZaladujKoloryZPliku(const char* NazwaPliku,const char* Te
 					<<_LPL("Niepoprawna komorka","Invalid cell")<<" : "<<char('A'+s)<<' '<<w+1<<endl; return false;}
 			index++;
 		}
-	 return true;//Doszed³ tu wiêc siê uda³o
+	 return true;//Doszedï¿½ tu wiï¿½c siï¿½ udaï¿½o
 }
 
 
-/********************************************************************/
-/*			          SPS  version 2011                             */
-/********************************************************************/
-/*           THIS CODE IS DESIGNED & COPYRIGHT  BY:                 */
-/*            W O J C I E C H   B O R K O W S K I                   */
-/*    Instytut Studiow Spolecznych Uniwersytetu Warszawskiego       */
-/*        WWW:  http://wwww.iss.uw.edu.pl/borkowski/                */
-/*                                                                  */
-/*                               (Don't change or remove this note) */
-/********************************************************************/
+/* *******************************************************************/
+/*			          SPS  version 2011                              */
+/* *******************************************************************/
+/*           THIS CODE IS DESIGNED & COPYRIGHT  BY:                  */
+/*            W O J C I E C H   B O R K O W S K I                    */
+/*    Instytut Studiow Spolecznych Uniwersytetu Warszawskiego        */
+/*        WWW:  http://wwww.iss.uw.edu.pl/borkowski/                 */
+/*                                                                   */
+/*                               (Don't change or remove this note)  */
+/* *******************************************************************/

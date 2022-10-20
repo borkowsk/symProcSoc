@@ -1,35 +1,40 @@
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 // Symulator Procesów Sieciowych/Spolecznych (c) Instytut Studiów Spo³ecznych
 // Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 // Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 //
 // G³ówne definicje danych i funkcji Œwiata
 // czyli wszystkie te które nie s¹ w innych plikach jak np. Init-cjalizacja czy Stat-ystyka
-///////////////////
-// U¯YWAMY NAJPROSZTRZEJ - LINIOWEJ ORGANIZACJI KONTENERÓW NA OBIEKTY ŒWIATA  !!!
-// MO¯NA J¥ ZAST¥PIÆ JAK¥Œ INN¥, POD WARUNKIEM ¯E GWARANTUJE NIEZMIENNE UCHWYTY W POSTACI
+// /////////////////
+// U¯YWAMY NAJPROSTSZEJ, LINIOWEJ ORGANIZACJI KONTENERÓW NA OBIEKTY ŒWIATA  !!!
+// MO¯NA J¥ ZAST¥PIÆ JAK¥Œ INN¥, POD WARUNKIEM, ¯E GWARANTUJE NIEZMIENNE UCHWYTY W POSTACI
 // LICZB CA£KOWITYCH.
-////////////////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////////////////
 #include "spsModel.h"
 
-#include "INCLUDE/platform.hpp"
 #include <cassert>
 #include <iostream>
 using namespace std;
-#include "INCLUDE/wb_smartlog.h"
+
+#include "wb_smartlog.hpp"
+#include "compatyb.h"
+#include "lingo.hpp"
+
 using namespace wbrtm;
 
-Swiat Swiat::Ten; //!!!  //Staramy sie miec tylko jeden Swiat :-)
-//Poniewa¿ dane s¹ w jednej to wszystkie inne "metody" mog¹ byæ "static"
+///< Gdy dane s¹ w jednym to wszystkie inne "metody" mog¹ byæ "static"
+Swiat Swiat::Ten; ///<  Staramy siê wiêc mieæ tylko jeden Œwiat :-)
+
 
 static const int LOGBASE=5; //Na jakim poziomie logowania domyœlnie zapisywaæ zdarzenia wewn¹trz prywatnych struktur danych
 
-///////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
 //      ZARZ¥DZANIE STRUKTURAMI DANYCH   Swiata
-////////////////////////////////////////////////////////////////////////////
-//Wskazniki tablic
+// //////////////////////////////////////////////////////////////////////////
+
+// WskaŸniki tablic
 static WezelSieci** _Wezly=NULL;
 static Powiazanie** _Polaczenia=NULL;
 static Komunikat** _Informacje=NULL;

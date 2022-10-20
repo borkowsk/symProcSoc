@@ -1,12 +1,12 @@
-////////////////////////////////////////////////////////////////////////////////
-// Symulator Procesów Sieciowych/Spolecznych (c) Instytut Studiów Spo³ecznych
+// //////////////////////////////////////////////////////////////////////////////
+// Symulator Procesï¿½w Sieciowych/Spolecznych (c) Instytut Studiï¿½w Spoï¿½ecznych
 // Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 // Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 //
-// Definicje podstawowego typu realnego wêz³a (nie pure virtual jak WezelSieci) 27.10.2011
-////////////////////////////////////////////////////////////////////////////////////////
+// Definicje podstawowego typu realnego wï¿½zï¿½a (nie pure virtual jak WezelSieci) 27.10.2011
+// //////////////////////////////////////////////////////////////////////////////////////
 #include <iostream>
 #include <cassert>
 #include <cfloat>
@@ -16,9 +16,9 @@ using namespace std;
 
 #include "spsGenNode.h"
 
-#include "MISCCLASSES/Wieloboki.hpp"
-#include "SYMSHELL/sshutils.hpp"
-#include "INCLUDE/wb_ptr.hpp"
+#include "wieloboki.hpp"
+#include "sshutils.hpp"
+#include "wb_ptr.hpp"
 using namespace wbrtm;
 
 GenerycznyWezelSieci::KonstruktorElementowModelu<GenerycznyWezelSieci> GenerycznyWezelSieci::WirtualnyKonstruktor("GenNode");
@@ -27,10 +27,10 @@ GenerycznyWezelSieci::KonstruktorElementowModelu<GenerycznyWezelSieci> Generyczn
 class GenerycznyWezelSieci:public WezelSieci
 {
   public:
-	//Konstruktor  pobiera wszystkie potrzebne dane z listy stringów
+	//Konstruktor  pobiera wszystkie potrzebne dane z listy stringï¿½w
 	GenerycznyWezelSieci(const std::string* Lista,unsigned Ile);
 
-  //Specyficzne dla Wêz³a
+  //Specyficzne dla Wï¿½zï¿½a
   private:
   std::string*   Dane;
   double    W,X,Y,Z;
@@ -40,9 +40,9 @@ class GenerycznyWezelSieci:public WezelSieci
 */
 
 bool GenerycznyWezelSieci::Poprawny()
-//true jeœli jest dobrze zdefiniowany
+//true jeï¿½li jest dobrze zdefiniowany
 {
-    return Ksztalt!=NULL;//Kszta³t musi byc! I co jeszcze???
+    return Ksztalt!=NULL;//Ksztaï¿½t musi byc! I co jeszcze???
 }
 
 //Reszta to "technikalia"    ...
@@ -85,7 +85,7 @@ bool GenerycznyWezelSieci::_PrzeniesDaneNaPola(unsigned& Pol)
 					{ Pol=2; return false;}
 	  double RR=R(0);
 	  if(RR<1.0)
-			RR=1; //Jak za ma³e to chocia¿ "kropa"
+			RR=1; //Jak za maï¿½e to chociaï¿½ "kropa"
 	  Ksztalt=new Wielobok(Pom,RR);//R co najmniej 1!
 	}
 	else
@@ -97,30 +97,30 @@ bool GenerycznyWezelSieci::_PrzeniesDaneNaPola(unsigned& Pol)
 		Ksztalt->Centruj();
 		double  mX,mY,mxX,mxY,R;
 		Ksztalt->Zakresy(mX,mY,mxX,mxY,R);
-		double Skala=this->R(0);  //Tyle powinno byæ
-		Skala=Skala/R; //Czyli jak przeliczyæ (zwiêkszyæ czy zmniejszyæ)
+		double Skala=this->R(0);  //Tyle powinno byï¿½
+		Skala=Skala/R; //Czyli jak przeliczyï¿½ (zwiï¿½kszyï¿½ czy zmniejszyï¿½)
 		Ksztalt->Skaluj(Skala,Skala);
 	}
 
-	Pol=8; //Uda³o siê wczytaæ 7 pol! Wskazujemy na nastepne
+	Pol=8; //Udaï¿½o siï¿½ wczytaï¿½ 7 pol! Wskazujemy na nastepne
 	return true;
 }
 
 bool GenerycznyWezelSieci::ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad)
 {
 	Dane.InicjujWgListy(Lista,Ile);
-	if(Dane.Ile()<7) { Blad=Ile; return false; } //Za ma³o danych. Pierwsza kom. za.
+	if(Dane.Ile()<7) { Blad=Ile; return false; } //Za maï¿½o danych. Pierwsza kom. za.
 	return _PrzeniesDaneNaPola(Blad);   //Interpretuje konieczne pola
 }
 
 double GenerycznyWezelSieci::R(double)
-//Promieñ otaczaj¹cego okrêgu lub elipsy
+//Promieï¿½ otaczajï¿½cego okrï¿½gu lub elipsy
 {
 	return 1+((JakieRwProcWidth/100)*ver*Waga); //R co najmniej 1!
 }
 
 bool GenerycznyWezelSieci::Trafiony(float sX,float sY)
-//Np. do inspekcji myszk¹ - trafienie w otaczaj¹ce ko³o
+//Np. do inspekcji myszkï¿½ - trafienie w otaczajï¿½ce koï¿½o
 {
 	double dist=distance(this->X(),sX,this->Y(),sY);
 	if(dist<=this->R(0))
@@ -136,7 +136,7 @@ GenerycznyWezelSieci::~GenerycznyWezelSieci()
 }
 
 const char* GenerycznyWezelSieci::Nazwa()
-//Musi posiadaæ jakas nazwe
+//Musi posiadaï¿½ jakas nazwe
 {
 	if(Dane.Ile()>0)
 	  return Dane[1].c_str();
@@ -145,7 +145,7 @@ const char* GenerycznyWezelSieci::Nazwa()
 }
 
 void GenerycznyWezelSieci::_RuszProcesPriorytetowy()
-//Posuniêcie do przodu najpilniejszego z procesów
+//Posuniï¿½cie do przodu najpilniejszego z procesï¿½w
 {
 	unsigned ile=Swiat::IleProcesow(MojID());
 	unsigned ktory=Swiat::NajpilniejszyProc(MojID(),NULL);
@@ -153,7 +153,7 @@ void GenerycznyWezelSieci::_RuszProcesPriorytetowy()
 			return; //To wychodzimy z pracy :-);
 
 	Proces* Roboczy=Swiat::Proc(ktory,MojID());
-	//Roboczy->  Mo¿na by ustawiaæ porcjê czasu, ale ogólny proces nie ma (jeszcze) takiej opcji
+	//Roboczy->  Moï¿½na by ustawiaï¿½ porcjï¿½ czasu, ale ogï¿½lny proces nie ma (jeszcze) takiej opcji
 	if(Roboczy)
 		Roboczy->ChwilaDlaCiebie(); //Popchnij
 }
@@ -170,7 +170,7 @@ void GenerycznyWezelSieci::_RuszKazdyProces()
 }
 
 bool GenerycznyWezelSieci::_KomunikatDoProcesow(Komunikat* Co)
-//Obrobienie komunikatu przez pierwszy chêtny proces
+//Obrobienie komunikatu przez pierwszy chï¿½tny proces
 {                                           					assert(Co->Kanal()!=Swiat::INVINDEX);
 	unsigned NID=MojID();
 	unsigned ile=Swiat::IleProcesow(NID);
@@ -179,39 +179,39 @@ bool GenerycznyWezelSieci::_KomunikatDoProcesow(Komunikat* Co)
 	  if((Pr=Swiat::Proc(i,NID))!=NULL)
 	  {                                                         assert(Co->Kanal()!=Swiat::INVINDEX);
 		 if(Pr->InterpretujKomunikat(Co) )
-		 {              //Tu ju¿ komunikat mo¿e byæ ziszczony
-			return true;//Jak któryœ proces uzna³ obróbkê za zakoñczon¹
+		 {              //Tu juï¿½ komunikat moï¿½e byï¿½ ziszczony
+			return true;//Jak ktï¿½ryï¿½ proces uznaï¿½ obrï¿½bkï¿½ za zakoï¿½czonï¿½
 		 }
 	  }
 																assert(Co->Kanal()!=Swiat::INVINDEX);
-	return false; //Zaden siê nie przyzna³
+	return false; //Zaden siï¿½ nie przyznaï¿½
 }
 
 void GenerycznyWezelSieci::_KomunikatPrzekazLosowo(Komunikat* Co,double P)
-//Przekazuje komunikat losowo i z prawdopodobieñstwem P namna¿a
-//Dosyæ to kosztowne, ale "generic node" nie mo¿e mieæ pomocniczych struktur
-//bo jest baz¹ do dziedziczenia dla bardziej u¿ytecznych typów wêz³ów
+//Przekazuje komunikat losowo i z prawdopodobieï¿½stwem P namnaï¿½a
+//Dosyï¿½ to kosztowne, ale "generic node" nie moï¿½e mieï¿½ pomocniczych struktur
+//bo jest bazï¿½ do dziedziczenia dla bardziej uï¿½ytecznych typï¿½w wï¿½zï¿½ï¿½w
 {
-	//Przygotowanie listy powi¹zañ zdatnych do przesy³ania
+	//Przygotowanie listy powiï¿½zaï¿½ zdatnych do przesyï¿½ania
 	wb_dynarray<unsigned> ListaPow;
 	unsigned IlePowFakt=0;
 	ListaPow.alloc(Swiat::IlePowiazan());
-	//Przepisywanie na listê
+	//Przepisywanie na listï¿½
 	for(unsigned i=0;i<Swiat::IlePowiazan();i++)
 	{
 		Powiazanie* Pom=Swiat::Lacze(i);
-		if( Pom!=NULL  //Mo¿e byæ pusty slot
-			&& ( (Swiat::Wezel(Pom->Poczatek())==this) //Gdzie jest pocz¹tkiem
+		if( Pom!=NULL  //Moï¿½e byï¿½ pusty slot
+			&& ( (Swiat::Wezel(Pom->Poczatek())==this) //Gdzie jest poczï¿½tkiem
 			|| (!Pom->Kierunkowy() && Swiat::Wezel(Pom->Koniec())==this)) //Albo koncem linku obustronnego
 			)
 			ListaPow[IlePowFakt++]=i;
 	}
 
-	if(IlePowFakt==0) //To s¹ tylko takie którymi mo¿na coœ dostaæ!!!
-			return; //To siê wys³aæ nie da nic.
+	if(IlePowFakt==0) //To sï¿½ tylko takie ktï¿½rymi moï¿½na coï¿½ dostaï¿½!!!
+			return; //To siï¿½ wysï¿½aï¿½ nie da nic.
 
 
-	// PRÓBY WYSY£ANIA
+	// PRï¿½BY WYSYï¿½ANIA
 	//cout<<endl<<"Wezel: "<<Dane[1]<<" Linkow: "<<IlePowFakt<<endl;
 	unsigned wyslano=0;
 	unsigned probowano=0;
@@ -222,7 +222,7 @@ void GenerycznyWezelSieci::_KomunikatPrzekazLosowo(Komunikat* Co,double P)
 	  unsigned a=RANDOM(IlePowFakt);
 										assert(a<IlePowFakt);
 	  if(ListaPow[a]==Swiat::INVINDEX)
-				continue; //Trafiony ju¿ u¿ywany slot
+				continue; //Trafiony juï¿½ uï¿½ywany slot
 
 	  Powiazanie* Pom=Swiat::Lacze(ListaPow[a]);
 	  bool Kierunek=Swiat::Wezel(Pom->Poczatek())==this;
@@ -232,12 +232,12 @@ void GenerycznyWezelSieci::_KomunikatPrzekazLosowo(Komunikat* Co,double P)
 	  {
 		 //cout<<Pom->Poczatek()<<"->"<<Pom->Koniec()<<' '<<Kierunek<<endl;
 		 if(Swiat::WstawInfo(Klon.give())!=Swiat::INVINDEX)
-				wyslano++;//OK. Wstawi³ klon komunikatu trac¹c z "zarz¹du"
+				wyslano++;//OK. Wstawiï¿½ klon komunikatu tracï¿½c z "zarzï¿½du"
 
-		 ListaPow[a]=Swiat::INVINDEX;//Blokada tego ³¹cza
+		 ListaPow[a]=Swiat::INVINDEX;//Blokada tego ï¿½ï¿½cza
 
 		 if( DRAND()<P )
-			Klon.take(Co->Klonuj()); //Bêdzie potrzebna kolejna kopia
+			Klon.take(Co->Klonuj()); //Bï¿½dzie potrzebna kolejna kopia
 			else
 			return; //Lub konczy...
 	  }

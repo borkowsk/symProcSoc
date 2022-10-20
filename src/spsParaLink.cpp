@@ -1,11 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Symulator Procesów Sieciowych/Spolecznych (c) Instytut Studiów Spo³ecznych
+// Symulator Procesï¿½w Sieciowych/Spolecznych (c) Instytut Studiï¿½w Spoï¿½ecznych
 // Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
 ///////////////////////////////////////////////////////////////////////////////
 // Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Deklaracja/Definicja linku ogólnego, ale rysowanego jako ³uk
+// Deklaracja/Definicja linku ogï¿½lnego, ale rysowanego jako ï¿½uk
 ////////////////////////////////////////////////////////////////////////////////
 
 #pragma hdrstop
@@ -17,7 +17,7 @@
 #include <iostream>
 using namespace std;
 
-#include "INCLUDE/wb_smartlog.h"
+#include "wb_smartlog.hpp"
 using namespace wbrtm;
 
 //---------------------------------------------------------------------------
@@ -31,7 +31,7 @@ bool PowiazaniePaboliczne::Poprawny()
 {
 	if(fabs(parametr)>10)
 			{
-				TLOG(0, <<"PowiazaniePaboliczne::Parametr="<<parametr<<" ZA DU¯Y???" )
+				TLOG(0, <<"PowiazaniePaboliczne::Parametr="<<parametr<<" ZA DUï¿½Y???" )
 				return false;
 			}
 	return GenerycznePowiazanie::Poprawny();
@@ -39,31 +39,31 @@ bool PowiazaniePaboliczne::Poprawny()
 
 PowiazaniePaboliczne::~PowiazaniePaboliczne()
 {
-   //Nie musi robiæ nic - robotê wykonuje destruktor klasy bazowej
+   //Nie musi robiï¿½ nic - robotï¿½ wykonuje destruktor klasy bazowej
 }
 
 PowiazaniePaboliczne::PowiazaniePaboliczne()
-//Domyslny konstruktor ustawiaj¹cy pusty link
+//Domyslny konstruktor ustawiajï¿½cy pusty link
 {
 	parametr=1;		krokow=0;
 	Xa=Ya=Xb=Yb=Promien=alfa=0;
 }
 
 PowiazaniePaboliczne::PowiazaniePaboliczne(double par)
-//Domyslny konstruktor ustawiaj¹cy pusty link Z PARAMETREM
+//Domyslny konstruktor ustawiajï¿½cy pusty link Z PARAMETREM
 {
 	parametr=par;	krokow=0;
 	Xa=Ya=Xb=Yb=Promien=alfa=0;
 }
 
 void PowiazaniePaboliczne::UstawWygiecie(double par)
-//Zmienia parametr wiêc i pomocnicze zmienne siê musz¹ zmienic
+//Zmienia parametr wiï¿½c i pomocnicze zmienne siï¿½ muszï¿½ zmienic
 {
 	parametr=par;	krokow=0;
 	Xa=Ya=Xb=Yb=Promien=alfa=0;
 }
 
-//Metoda pobiera wszystkie potrzebne dane z listy stringów. Jak blad to podaje ktora pozycja
+//Metoda pobiera wszystkie potrzebne dane z listy stringï¿½w. Jak blad to podaje ktora pozycja
 bool PowiazaniePaboliczne::ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad)
 {
    if(!GenerycznePowiazanie::ZrobWgListy(Lista,Ile,Blad))
@@ -71,14 +71,14 @@ bool PowiazaniePaboliczne::ZrobWgListy(const std::string* Lista,unsigned Ile,uns
    //Teraz zostaje ustalenie parametru - jak jest zdefiniowany
    if(Dane.KonwertujDo(6,parametr)!=-1)
 				{ Blad=6 ;return false;}
-   Blad=7;//6 pole uda³o siê wczytaæ
+   Blad=7;//6 pole udaï¿½o siï¿½ wczytaï¿½
    return true;
 }
 
 const double Eps=1;
 
-void PowiazaniePaboliczne::_PoliczParametryLuku()//Liczy parametry ³uku dla danej wartosci parametru
-//Pomocnicze pola zawieraj¹ce niezbêdne parametry ³uku
+void PowiazaniePaboliczne::_PoliczParametryLuku()//Liczy parametry ï¿½uku dla danej wartosci parametru
+//Pomocnicze pola zawierajï¿½ce niezbï¿½dne parametry ï¿½uku
 //	double Xa,Ya,Xb,Yb,Xo,Yo,Promien,alfa,beta;
 {
    WezelSieci* Pocz=Swiat::Wezel(_S);          assert(Pocz!=NULL);
@@ -88,29 +88,29 @@ void PowiazaniePaboliczne::_PoliczParametryLuku()//Liczy parametry ³uku dla dane
    Xb=Koni->X();
    Yb=Koni->Y();
 
-   if(Xa==Xb && Ya==Yb) //Bardzo z³oœliwa sytuacja
+   if(Xa==Xb && Ya==Yb) //Bardzo zï¿½oï¿½liwa sytuacja
 		{Promien=0;krokow=0; return;} //NIC SIE NIE DA ZROBIC
 
-   //Liczenie wspó³rzêdnych œrodka okrêgu z którego bierzemy ³uk
+   //Liczenie wspï¿½rzï¿½dnych ï¿½rodka okrï¿½gu z ktï¿½rego bierzemy ï¿½uk
 
-   if(fabs(Xa-Xb)<Eps)// tylko ¿e w pionie
+   if(fabs(Xa-Xb)<Eps)// tylko ï¿½e w pionie
    {
 		  if(Ya<Yb)	alfa=M_PI/2;
 		  else      alfa=1.5*M_PI;
    }
-   else //Jednak trzeba trochê bardziej policzyæ
+   else //Jednak trzeba trochï¿½ bardziej policzyï¿½
    {
-	   //alfa=atan2( (Xa-Xb),(Ya-Yb) );// nie dzia³a  ?????
-	   //alfa=atan2( (Xb-Xa),(Yb-Ya) );// nie dzia³a ?????
+	   //alfa=atan2( (Xa-Xb),(Ya-Yb) );// nie dziaï¿½a  ?????
+	   //alfa=atan2( (Xb-Xa),(Yb-Ya) );// nie dziaï¿½a ?????
 	   //!!!! atan2( Y , X ) - funkcja wymaga najpierw Y, potem X!!!!!!!!!!!!!
-	   //Procedura do korekty, ale na razie dzia³a, choæ nie wiem dlaczego!
+	   //Procedura do korekty, ale na razie dziaï¿½a, choï¿½ nie wiem dlaczego!
 											if((Xb-Xa)==0 && (Ya-Yb)==0)
 											{
 												clog<<"Zbyt krotki link? X1:"<<Xa<<" Y1"<<Ya<<endl;
 												Promien=0;krokow=0; return;
 											}
 
-	   alfa=atan2( (Xb-Xa),(Ya-Yb) )-M_PI/2;//?????  TAK DZIA£A!  WHY????
+	   alfa=atan2( (Xb-Xa),(Ya-Yb) )-M_PI/2;//?????  TAK DZIAï¿½A!  WHY????
 	  /* if(alfa<0)
 		{
 			alfa=2*M_PI-alfa-M_PI/2;
@@ -125,16 +125,16 @@ void PowiazaniePaboliczne::_PoliczParametryLuku()//Liczy parametry ³uku dla dane
    if(krokow<3) krokow=3;
 }
 
-//Tak naprawdê to ró¿ni siê tylko sposobem rysowania
-//Który zalezy od funkcji licz¹cej punkty na ³uku
+//Tak naprawdï¿½ to rï¿½ni siï¿½ tylko sposobem rysowania
+//Ktï¿½ry zalezy od funkcji liczï¿½cej punkty na ï¿½uku
 void PowiazaniePaboliczne::PodajPozycje(double D,bool KierunekZwykly,double& X,double& Y,Komunikat* Messg)
 //Przelicza polozenia wdluz linku
 {
    WezelSieci* Pocz=Swiat::Wezel(_S);
    WezelSieci* Koni=Swiat::Wezel(_T);
    if(Pocz->X()!=Xa || Pocz->Y()!=Ya || Koni->X()!=Xb || Koni->Y()!=Yb)
-		   _PoliczParametryLuku();//Którys siê przesuna³ albo zmienil siê parametr
-   if(krokow==0) //Coœ siê chyba nie uda³o
+		   _PoliczParametryLuku();//Ktï¿½rys siï¿½ przesunaï¿½ albo zmienil siï¿½ parametr
+   if(krokow==0) //Coï¿½ siï¿½ chyba nie udaï¿½o
    {
 	GenerycznePowiazanie::PodajPozycje(D,KierunekZwykly,X,Y,Messg);//RACZEJ TYMCZASOWO
 	return;
@@ -149,7 +149,7 @@ void PowiazaniePaboliczne::PodajPozycje(double D,bool KierunekZwykly,double& X,d
    Y=Ya+(-Przeliczony*D*D+Przeliczony*0.25);
    //Y=Ya;
 
-   //Obrót UWAGA! 90 stopni (alfa=M_PI) jest w dó³ a 270 w górê
+   //Obrï¿½t UWAGA! 90 stopni (alfa=M_PI) jest w dï¿½ a 270 w gï¿½rï¿½
 
    D=sqrt((Xa-X)*(Xa-X)+(Ya-Y)*(Ya-Y));
    X-=Xa;

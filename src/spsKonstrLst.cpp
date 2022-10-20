@@ -1,19 +1,24 @@
-////////////////////////////////////////////////////////////////////////////////
-// Symulator Procesów Sieciowych/Spolecznych (c) Instytut Studiów Spo³ecznych
+// //////////////////////////////////////////////////////////////////////////////
+// Symulator Procesï¿½w Sieciowych/Spolecznych (c) Instytut Studiï¿½w Spoï¿½ecznych
 // Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 // Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 //
-// Metody klasy bazowej ElementModelu  slu¿ace rejestracji wirtualnych konstruktorów
-// w sytuacji gdy nie mo¿na u¿yæ <map>  Szuka liniowo po klasycznej liœcie,
-// wiêc przy wiêkszej liczbie typów bêdzie nieefektywne, ale przy malej jest
-// ca³kiem skuteczne, szybko siê kompiluje i nie wywala nawet w "Borlandzie"
-////////////////////////////////////////////////////////////////////////////////////
-#include<string>
+// Metody klasy bazowej ElementModelu  sluï¿½ace rejestracji wirtualnych konstruktorï¿½w
+// w sytuacji gdy nie moï¿½na uï¿½yï¿½ <map>  Szuka liniowo po klasycznej liï¿½cie,
+// wiï¿½c przy wiï¿½kszej liczbie typï¿½w bï¿½dzie nieefektywne, ale przy malej jest
+// caï¿½kiem skuteczne, szybko siï¿½ kompiluje i nie wywala nawet w "Borlandzie"
+// //////////////////////////////////////////////////////////////////////////////////
+
+#include <cstring>
+#include <string>
+
+
 using namespace std;
 
 #include "spsElement.h"
+#include "compatyb.h"
 
 struct WezelListy
 {
@@ -27,7 +32,7 @@ bool	ListaNazwTypowAktualna=false;
 
 #define SAFE_LIST_CONSTRUCTION
 #ifdef SAFE_LIST_CONSTRUCTION
-//GENEROWANIE LISTY ZA POMOC¥ MOJE KLASY wb_pchar - dziala zawsze ...
+//GENEROWANIE LISTY ZA POMOCï¿½ MOJE KLASY wb_pchar - dziala zawsze ...
 #include"INCLUDE/wb_ptr.hpp" 
 using namespace wbrtm;
 
@@ -38,23 +43,23 @@ const char*  dummy()
 	if(ListaNazwTypowAktualna)
 			return ListaNazwTypow.get();
 
-	WezelListy* Top=Head; //Pocz¹tek
+	WezelListy* Top=Head; //Poczï¿½tek
 	size_t Rozmiar=0;
 	while(Top!=NULL)
 	{
 	   if(Top->Konst!=NULL)
 	   {
-		  Rozmiar+=strlen(Top->Nazwa.c_str())+1;//Zliczanie rozmiarów
+		  Rozmiar+=strlen(Top->Nazwa.c_str())+1;//Zliczanie rozmiarï¿½w
 	   }
 	   Top=Top->Nastepny;//Szuka dalej
 	}
 	ListaNazwTypow.alloc(Rozmiar+1);
-	Top=Head; //Znowu pocz¹tek
+	Top=Head; //Znowu poczï¿½tek
 	while(Top!=NULL)
 	{
 	   if(Top->Konst!=NULL)
 	   {
-		   ListaNazwTypow.add("%s;",Top->Nazwa.c_str());//Rozmiar musi byæ OK!!!
+		   ListaNazwTypow.add("%s;",Top->Nazwa.c_str());//Rozmiar musi byï¿½ OK!!!
 	   }
 	   Top=Top->Nastepny;//Szuka dalej
 	}
@@ -65,10 +70,10 @@ const char*  dummy()
 
 const char*   ElementModelu::WirtualnyKonstruktor::ListaNazwTypow()
 {
-	return dummy();//Wewn¹trz tej funkcji nie mo¿na u¿yæ klas z nag³ówków ??? Zw³aszcza STL
+	return dummy();//Wewnï¿½trz tej funkcji nie moï¿½na uï¿½yï¿½ klas z nagï¿½ï¿½wkï¿½w ??? Zwï¿½aszcza STL
 }
 #else
-//GENEROWANIE LISTY ZA POMOC¥ KLASY stringstream - nie w ka¿dym kompilatorze dzia³a poprawnie ! ! !
+//GENEROWANIE LISTY ZA POMOCï¿½ KLASY stringstream - nie w kaï¿½dym kompilatorze dziaï¿½a poprawnie ! ! !
 #include <sstream>
 
 stringstream ListaNazwTypow;
@@ -78,7 +83,7 @@ static const char*  dummy()
 	if(ListaNazwTypowAktualna)
 			return ListaNazwTypow.str().c_str();
 
-	WezelListy* Top=Head; //Pocz¹tek
+	WezelListy* Top=Head; //Poczï¿½tek
 	while(Top!=NULL)
 	{
 	   if(Top->Konst!=NULL)
@@ -94,8 +99,8 @@ static const char*  dummy()
 
 const char*   ElementModelu::WirtualnyKonstruktor::ListaNazwTypow()
 {
-	return dummy();//Wewn¹trz tej funkcji nie mo¿na u¿yæ klas z nag³ówków ??? Zw³aszcza STL
-				   //Bezpoœrednio nie rozpoznaje poprawnie strstream np.!!!
+	return dummy();//Wewnï¿½trz tej funkcji nie moï¿½na uï¿½yï¿½ klas z nagï¿½ï¿½wkï¿½w ??? Zwï¿½aszcza STL
+				   //Bezpoï¿½rednio nie rozpoznaje poprawnie strstream np.!!!
 }
 
 #endif
@@ -103,11 +108,11 @@ const char*   ElementModelu::WirtualnyKonstruktor::ListaNazwTypow()
 
 WezelListy* Znajdz(const char* NazwaKlasy)
 {
-	WezelListy* Top=Head; //Pocz¹tek
+	WezelListy* Top=Head; //Poczï¿½tek
 	while(Top!=NULL)
 	{
 	   if(stricmp(NazwaKlasy,Top->Nazwa.c_str())==0)
-			return Top; //Znalaz³
+			return Top; //Znalazï¿½
 			else
 			Top=Top->Nastepny;//Szuka dalej
 	}
@@ -115,7 +120,7 @@ WezelListy* Znajdz(const char* NazwaKlasy)
 }
 
 void ElementModelu::WirtualnyKonstruktor::Zarejestruj(const char* NazwaKlasy,WirtualnyKonstruktor* Ten)
-//Obiekt musi istnieæ puki jest potrzebny
+//Obiekt musi istnieï¿½ puki jest potrzebny
 {//Mapa[NazwaKlasy]=Ten;
 	 WezelListy* Pom=new WezelListy;
 	 Pom->Nastepny=Head;
@@ -126,12 +131,12 @@ void ElementModelu::WirtualnyKonstruktor::Zarejestruj(const char* NazwaKlasy,Wir
 }
 
 void ElementModelu::WirtualnyKonstruktor::Wyrejestruj(const char* NazwaKlasy,WirtualnyKonstruktor* Ten)
-//A potem mo¿na wyrejestrowaæ
+//A potem moï¿½na wyrejestrowaï¿½
 {//if(Mapa[NazwaKlasy]==Ten) Mapa[NazwaKlasy]=NULL;
 	WezelListy* Pom=Znajdz(NazwaKlasy);
 	if(Pom)
 		Pom->Konst=NULL; //Skasowane...
-	//... Mo¿na by dealokowaæ, ale to jest prosta implementacja :-)
+	//... Moï¿½na by dealokowaï¿½, ale to jest prosta implementacja :-)
 	ListaNazwTypowAktualna=false;
 }
 

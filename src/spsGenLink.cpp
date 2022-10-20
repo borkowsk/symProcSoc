@@ -1,12 +1,12 @@
-////////////////////////////////////////////////////////////////////////////////
-// Symulator Procesów Sieciowych/Spolecznych (c) Instytut Studiów Spo³ecznych
+// //////////////////////////////////////////////////////////////////////////////
+// Symulator Procesï¿½w Sieciowych/Spolecznych (c) Instytut Studiï¿½w Spoï¿½ecznych
 // Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 // Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 //
 // Definicje podstawowego typu realnego linku (nie pure virtual jak Powiazanie)
-////////////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////////////
 #include "spsGenLink.h"
 
 #include <iostream>
@@ -17,11 +17,11 @@
 #include <cmath>
 using namespace std;
 
-#include "SYMSHELL/sshutils.hpp"
+#include "sshutils.hpp"
 
-//Zakres w jakim musi siê zmieœciæ wizualizacja linków
-//Ale mo¿e byæ jeszcze przeskalowane przez odpowiednie parametry klasy Swiat
-//Domyslne wartosæi daj¹ maksymalnie szerokie linki
+//Zakres w jakim musi siï¿½ zmieï¿½ciï¿½ wizualizacja linkï¿½w
+//Ale moï¿½e byï¿½ jeszcze przeskalowane przez odpowiednie parametry klasy Swiat
+//Domyslne wartosï¿½i dajï¿½ maksymalnie szerokie linki
 float GenerycznePowiazanie::MINIMALNA_GRUBOSC_LINKU=0.05;
 float GenerycznePowiazanie::MAKSYMALNA_GRUBOSC_LINKU=0.5;
 
@@ -31,7 +31,7 @@ GenerycznePowiazanieSkierowane::KonstruktorElementowModelu<GenerycznePowiazanieS
 				GenerycznePowiazanieSkierowane::WirtualnyKonstruktor("DirGenLink");
 
 
-//Specyficzne dla Powi¹zania (linku)
+//Specyficzne dla Powiï¿½zania (linku)
 /*
   private: //Pola
   std::string*	Dane;
@@ -42,17 +42,17 @@ GenerycznePowiazanieSkierowane::KonstruktorElementowModelu<GenerycznePowiazanieS
 */
 
 bool GenerycznePowiazanie::Poprawny()
-//true jeœli jest dobrze zdefiniowany
+//true jeï¿½li jest dobrze zdefiniowany
 {
 	return Swiat::Wezel(_S)!=NULL && Swiat::Wezel(_T)!=NULL;
 }
 
 bool  GenerycznePowiazanie::Akceptacja(Komunikat* Co)
-//Ta implementacja pozwala ka¿demu POPRAWNEMU komunikatowi mo¿e przejœæ tym ³¹czem
+//Ta implementacja pozwala kaï¿½demu POPRAWNEMU komunikatowi moï¿½e przejï¿½ï¿½ tym ï¿½ï¿½czem
 {
 	unsigned _N=Co->Nadawca();
 	unsigned _O=Co->Odbiorca();
-	if(	(_N==_S && _O==_T)     //Klasy potomne mog¹ byæ skierowane
+	if(	(_N==_S && _O==_T)     //Klasy potomne mogï¿½ byï¿½ skierowane
 		|| ( !Kierunkowy() && _N==_T && _O==_S) )
 			return true;
 			else
@@ -61,7 +61,7 @@ bool  GenerycznePowiazanie::Akceptacja(Komunikat* Co)
 
 //virtual bool  Kierunkowy()=0;
 void  GenerycznePowiazanie::PodajPozycje(double D,bool KierunekZwykly,double& X,double& Y,Komunikat*)
-//Oblicza polozenia wdluz linku. Nie uwzglêdnia specyfiki komunikatu bo nie mo¿e jej znaæ
+//Oblicza polozenia wdluz linku. Nie uwzglï¿½dnia specyfiki komunikatu bo nie moï¿½e jej znaï¿½
 {
 	WezelSieci *_P, *_K;
 	if(KierunekZwykly)
@@ -91,7 +91,7 @@ void  GenerycznePowiazanie::PodajPozycje(double D,bool KierunekZwykly,double& X,
 
 
   GenerycznePowiazanie::GenerycznePowiazanie() :  Waga(1)
-  // Domyslny konstruktor ustawiaj¹cy pusty link
+  // Domyslny konstruktor ustawiajï¿½cy pusty link
   {
 	  Col.ARGB = 0;
 	  _S = _T = -1;
@@ -99,10 +99,10 @@ void  GenerycznePowiazanie::PodajPozycje(double D,bool KierunekZwykly,double& X,
 
   bool GenerycznePowiazanie::ZrobWgListy(const std::string* Lista,
 											unsigned Ile, unsigned& Blad)
-  // Metoda pobiera wszystkie potrzebne dane z listy stringów. Jak blad to podaje ktora pozycja
+  // Metoda pobiera wszystkie potrzebne dane z listy stringï¿½w. Jak blad to podaje ktora pozycja
   {
 	  Dane.InicjujWgListy(Lista,Ile);
-	  if(Dane.Ile()<5) { Blad=Ile; return false; } //Za ma³o danych. Pierwsza kom. za.
+	  if(Dane.Ile()<5) { Blad=Ile; return false; } //Za maï¿½o danych. Pierwsza kom. za.
 	//std::string*	Dane;
 	//unsigned		IleDanych;
 	//unsigned    	W,_S,_T;
@@ -110,7 +110,7 @@ void  GenerycznePowiazanie::PodajPozycje(double D,bool KierunekZwykly,double& X,
 	//DziedzKol  	Col;
 	//	0					1				2				  3		  4 	5
 	//typ(node/link)	Nazwa/Zrodlo	Wizualizacja/Cel	Waga	Kolor 	Z	Pole1	Pole2	Pole3	itd.
-	//genlink				Wydzia³ 			Uniwerek	1			0   0
+	//genlink				Wydziaï¿½ 			Uniwerek	1			0   0
 	//genlink				Badacz A			Badacz B	0.5		00FF00   1
 	//...
 	//unsigned long strtoul(const char *s, char **endptr,int base);
@@ -135,13 +135,13 @@ void  GenerycznePowiazanie::PodajPozycje(double D,bool KierunekZwykly,double& X,
 	if(_T==Swiat::INVINDEX)
 		{ Blad=2; return false;}
 
-	Blad=6;//Uda³o siê wczytaæ do indeksu 5
+	Blad=6;//Udaï¿½o siï¿½ wczytaï¿½ do indeksu 5
 
 	return true;
   }
 
   GenerycznePowiazanie::~GenerycznePowiazanie()
-  // Destruktor wirtualny, bo bêd¹ metody wirtualne
+  // Destruktor wirtualny, bo bï¿½dï¿½ metody wirtualne
   {
   }
 
