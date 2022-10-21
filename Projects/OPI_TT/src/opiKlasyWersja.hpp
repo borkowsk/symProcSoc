@@ -31,8 +31,8 @@ extern float  JEDNOSTKOWA_WYPLATA;//=100;//Wartoœæ najmniejszej wp³aty/wyplaty. 
 extern float  WAGA_NA_DZIENDOBRY;//=0.1;//Wspó³czynnik zmniejszania wagi przy pierwszym kontakcie - nie mo¿e byæ za du¿a
 extern float  TEMPO_SPADKU_LINKU;// np. =0.01;//O jak¹ czêœæ link socjalny zanika przy nie u¿ywaniu
 extern float  TEMPO_WZROSTU_LINKU;// np. =0.1;//O jak¹ czêœæ link socjalny roœnie przy odpowiedzi
-extern char* const  KONTO;//="Ruch konta"; //Marker komunikatu finansowego z przep³ywem
-extern char* const DZIENDOBRY;//="Dzien dobry";//Marker otwieraj¹cego komunikatu spo³ecznego
+extern const char* const KONTO;//="Ruch konta"; //Marker komunikatu finansowego z przep³ywem
+extern const char* const DZIENDOBRY;//="Dzien dobry";//Marker otwieraj¹cego komunikatu spo³ecznego
 
 //Klasa wewnêtrzna skupiaj¹ca wspólne w³aœciwoœci WEZLOW z pracownikami (zespo³ów)
 //////////////////////////////////////////////////////////////////////////////////

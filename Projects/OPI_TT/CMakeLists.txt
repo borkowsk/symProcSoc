@@ -24,7 +24,7 @@ add_subdirectory( ${SPS} ${SPS} )
 #   add_subdirectory( HELPERS/ )
 #endif()
 
-include_directories( "${SYMSHELL}" "${WBRTM}" "${WBRTM}INCLUDE/" )
+include_directories( "${SPS}" "${SYMSHELL}" "${WBRTM}" "${WBRTM}INCLUDE/" )
 
 # MAIN APPLICATION 
 add_executable( opi_tt
@@ -50,7 +50,7 @@ target_compile_options( opi_tt  PRIVATE "${CMAKE_CXX_FLAGS}"
 
 target_link_libraries( opi_tt
 #        "-L ${MYLIBS}"
-        wbsymshell wbsyshX11 wbrtm X11 Xpm
+        SymProcSoc wbsymshell wbsyshX11 wbrtm X11 Xpm
         ${CMAKE_THREAD_LIBS_INIT}
         pthread
         rt

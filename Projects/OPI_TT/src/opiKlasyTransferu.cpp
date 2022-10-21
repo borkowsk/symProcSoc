@@ -1,10 +1,10 @@
 // Transfer technologii 2011 - w³aœciwa implementacja modelu     25-10-2011
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 // ***TODO!!!!-->
 // Implementacja akcji klas w³aœciwego modelu bezpoœrednio zwi¹zanych z TT
 // na poziomie rynkowym (BOTT) i naukowym (UOTT) i odpowiednie procesy oraz komunikaty
 // (bez technikaliów obslugi interfaceu )
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 
 #include "opiKlasyWersja.hpp"
 #include "INCLUDE/wb_smartlog.h"
@@ -15,7 +15,7 @@ double OTT_FANTAZJA=0.05; //Jak czêsto OTT bez kontaktu z rynkiem "zapuszcza" so
 bool   PROMUJ_SKOMPLIKOWANE_ROZWIAZANIA=false;
 double ILE_RAZY_PROTOTYP_DROZSZY_NIZ_TOWAR=2; //Na razie nieznacznie bo nie ma finansowania zewnetrznego
 extern double ILE_RAZY_BADANIA_DROZSZE_NIZ_TOWAR; //Na razie nieznacznie bo nie ma finansowania zewnetrznego
-extern char* const  KONTO; //Marker komunikatu finansowego z przep³ywem
+extern const char* const  KONTO; //Marker komunikatu finansowego z przep³ywem
 
 static const int LOCLOG=0; //Na jakim poziomie logowania domyœlnie zapisywaæ problemy z tego pliku
 

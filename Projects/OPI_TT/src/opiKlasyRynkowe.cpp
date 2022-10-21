@@ -1,20 +1,20 @@
-// Transfer technologii 2011 - w³aœciwa implementacja modelu     24-10-2011
-////////////////////////////////////////////////////////////////////////////////
+//  Transfer technologii 2011 - w³aœciwa implementacja modelu     24-10-2011
+// //////////////////////////////////////////////////////////////////////////////
 // Implementacja akcji klas w³aœciwego modelu
 // Rynek, firma, kooperacja, produkty i pieni¹dze
-//(bez technikaliów obslugi interfaceu )
-////////////////////////////////////////////////////////////////////////////////
+// (bez technikaliów obs³ugi interfejsu )
+// //////////////////////////////////////////////////////////////////////////////
 
 #include "opiKlasyWersja.hpp"
 #include "INCLUDE/wb_smartlog.h"
 using namespace wbrtm;
 
-char* const  KONTO="Ruch konta"; //Marker komunikatu finansowego z przep³ywem
-float  JEDNOSTKOWA_WYPLATA=100;  //Wartoœæ najmniejszej wp³aty/wyplaty. Sposób u¿ycia niejasny :-)
+const char* const KONTO="Ruch konta"; //Marker komunikatu finansowego z przep³ywem
+float  JEDNOSTKOWA_WYPLATA=100;  //Wartoœæ najmniejszej wp³aty/wyp³aty. Sposób u¿ycia niejasny :-)
 static const int LOCLOG=2; //Na jakim poziomie logowania domyœlnie zapisywaæ problemy z tego pliku
 
-//Klasa wewnêtrzna skupiaj¹ca wspólne w³aœciwoœci wêz³ów z pracownikami (zespo³ów)
-//////////////////////////////////////////////////////////////////////////////////
+// Klasa wewnêtrzna skupiaj¹ca wspólne w³aœciwoœci wêz³ów z pracownikami (zespo³ów)
+// ////////////////////////////////////////////////////////////////////////////////
 /*
 class _ZespolRoboczy:public GenerycznyWezelSieci
 {
