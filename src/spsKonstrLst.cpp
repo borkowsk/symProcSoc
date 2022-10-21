@@ -111,7 +111,7 @@ WezelListy* Znajdz(const char* NazwaKlasy)
 	WezelListy* Top=Head; //Pocz�tek
 	while(Top!=NULL)
 	{
-	   if(stricmp(NazwaKlasy,Top->Nazwa.c_str())==0)
+	   if(strcasecmp(NazwaKlasy,Top->Nazwa.c_str())==0)
 			return Top; //Znalaz�
 			else
 			Top=Top->Nastepny;//Szuka dalej

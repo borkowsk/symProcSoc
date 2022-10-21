@@ -116,7 +116,7 @@ bool Swiat::Inicjalizacja(const char* PlikWejsciowy,const char DelimiterDanych)
 		if(*(NazwaTypu->c_str())=='#')  //Komentarz, #config lub definicja nazw p�l
 		{
 			//Parametr konfiguracyjny
-			if(stricmp("#CONFIG",NazwaTypu->c_str())==0)
+			if(strcasecmp("#CONFIG",NazwaTypu->c_str())==0)
 			{
 				konfiguruj( DaneStruktury(i,1).c_str(),DaneStruktury(i,2).c_str());
 				continue;
