@@ -1,0 +1,19 @@
+#1	#2	#3	#4	#5	#6	#7	#8	#9	#10
+#config	Vertical	600							
+#config	Horizontal	600							
+#config	Radius	1							
+# typ wezla	Nazwa	Wizualizacja	Waga	Kolor 	X	Y	Z		
+gennode	A	3	1	0x000000	400	300	1		
+gennode	B	3	1	0xFF0000	400	500	1		
+gennode	C	3	1	0x00FF00	500	300	1		
+gennode	D	3	1	0x0000FF	100	100	1		
+gennode	E	3	1	0xFF00FF	300	400	1		
+# typ linku	Zrodlo	Cel	Waga	Kolor 	Z	Parametr			
+paralink	B	A	0.5	0xFF0000	3	-0.3			
+paralink	C	A	0.5	0x00FF00	3	0.43			
+paralink	D	A	0.5	0x0000FF	3	-0.3			
+paralink	E	A	0.5	0xFF00FF	3	0.43			
+paralink	B	C	0.333	0xFF0F00	3	-0.75			
+paralink	C	D	0.334	0x0FFF00	3	-0.5			
+paralink	D	E	0.335	0x000FFF	3	-0.75			
+paralink	E	B	0.336	0xFFAAFF	3	-0.5			
