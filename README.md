@@ -11,7 +11,7 @@ PL: Biblioteka służy do modelowania procesów społecznych zachodzących w sie
 EN: Library is used for modeling social processes occurring in networks with 
     arbitraly defined or variable topology and with the use of message exchange.
 
-**COFFEE**   
+**BUY ME A COFFEE**   
 
 https://www.buymeacoffee.com/wborkowsk
 
