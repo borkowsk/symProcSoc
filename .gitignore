@@ -26,7 +26,23 @@
 *.a
 *.lib
 
+# cmake
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+cmake-build-debug/
+cmake-build-release/
+
+# clang/clion
+.idea/
+
 # Executables
 *.exe
 *.out
 *.app
+
+#trash
+*~
+*.tmp
+

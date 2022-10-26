@@ -1,21 +1,13 @@
+#include <windows.h>
 #include <cstdio>
 #include <cstdlib>
-
-#ifdef USE_WINDOWS
-#include <windows.h>
-#else
-#include <iostream>
-#endif
-
 using namespace std;
 
-/// \brief   Funkcja wczytywania nazwy pliku
-/// \details mo¿e byæ trywialna, czyli konsolowa, ale ...
-///          mog³aby byæ te¿ bardziej zaawansowana i przez to zale¿na od systemu
-///          - np. jako dialog systemowy Windows.
 bool podaj_nazwe_pliku(char* Bufor,unsigned size,const char* Monit)
+// Funkcja wczytwywania nazwy pliku - mo¿e byæ trywialna, czyli konsolowa, ale
+// mog³aby byæ te¿ bardziej zaawansowana i przez to zale¿na od systemu - np.
+// jako dialog.
 {
-#ifdef USE_WINDOWS
 	OPENFILENAME ofn; // common dialog box structure
 	HWND hwnd; // owner window
 	HANDLE hf; // file handle
@@ -56,25 +48,17 @@ bool podaj_nazwe_pliku(char* Bufor,unsigned size,const char* Monit)
 			return false;
 	}
 	else return true;
-#else
-    cout<<endl;
-    cout<<Monit<<endl;
-    cin.getline(Bufor,size);
-    if(!cin.fail())
-        return true;
-    else
-        return false;
-#endif
 }
 
 
-/* *******************************************************************/
-/*			          SPS/SPS  version 2011/2022                     */
-/* *******************************************************************/
-/*           THIS CODE IS DESIGNED & COPYRIGHT  BY:                  */
-/*            W O J C I E C H   B O R K O W S K I                    */
-/*    Instytut Studiów Spo³ecznych Uniwersytetu Warszawskiego        */
-/*        WWW:  http://wwww.iss.uw.edu.pl/borkowski/                 */
-/*                                                                   */
-/*                               (Don't change or remove this note)  */
-/* *******************************************************************/
+/********************************************************************/
+/*			          SPS/SPS  version 2011                         */
+/********************************************************************/
+/*           THIS CODE IS DESIGNED & COPYRIGHT  BY:                 */
+/*            W O J C I E C H   B O R K O W S K I                   */
+/*    Instytut Studiow Spolecznych Uniwersytetu Warszawskiego       */
+/*        WWW:  http://wwww.iss.uw.edu.pl/borkowski/                */
+/*                                                                  */
+/*                               (Don't change or remove this note) */
+/********************************************************************/
+

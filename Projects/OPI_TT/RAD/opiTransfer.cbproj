@@ -63,7 +63,7 @@
 			<ILINK_TranslatedLibraryPath>$(BDS)\lib\$(LANGDIR)\release;$(ILINK_TranslatedLibraryPath)</ILINK_TranslatedLibraryPath>
 		</PropertyGroup>
 		<ItemGroup>
-			<CppCompile Include="spsSwiatWizual.cpp">
+			<CppCompile Include="sps_opi_2011\spsSwiatWizual.cpp">
 				<BuildOrder>8</BuildOrder>
 			</CppCompile>
 			<CppCompile Include="opiTsrc\opiGlobals.cpp">
@@ -73,26 +73,26 @@
 				<Form>menuetc.res</Form>
 				<BuildOrder>28</BuildOrder>
 			</ResourceCompile>
-			<CppCompile Include="spsMatrixNode.cpp">
-				<DependentOn>spsMatrixNode.h</DependentOn>
+			<CppCompile Include="sps_opi_2011\spsMatrixNode.cpp">
+				<DependentOn>sps_opi_2011\spsMatrixNode.h</DependentOn>
 				<BuildOrder>21</BuildOrder>
 			</CppCompile>
-			<CppCompile Include="opiTsrc\opiKlasyWersja.cpp">
+			<CppCompile Include=""src_opi_2011\opiKlasyWersja.cpp">
 				<BuildOrder>27</BuildOrder>
 			</CppCompile>
-			<CppCompile Include="spsElement.cpp">
+			<CppCompile Include="sps_opi_2011\spsElement.cpp">
 				<BuildOrder>16</BuildOrder>
 			</CppCompile>
 			<CppCompile Include="S:\WBRTM\MISCCLASSES\Wieloboki.cpp">
 				<BuildOrder>3</BuildOrder>
 			</CppCompile>
-			<CppCompile Include="opiTsrc\opiNazwaPliku.cpp">
+			<CppCompile Include=""src_opi_2011\opiNazwaPliku.cpp">
 				<BuildOrder>14</BuildOrder>
 			</CppCompile>
-			<CppCompile Include="spsKonstrLst.cpp">
+			<CppCompile Include="sps_opi_2011\spsKonstrLst.cpp">
 				<BuildOrder>17</BuildOrder>
 			</CppCompile>
-			<CppCompile Include="spsSwiatProc.cpp">
+			<CppCompile Include="sps_opi_2011\spsSwiatProc.cpp">
 				<BuildOrder>26</BuildOrder>
 			</CppCompile>
 			<ResFiles Include="opiTransfer.res">
@@ -116,58 +116,58 @@
 			<CppCompile Include="S:\WBRTM\MISCCLASSES\Smartlog.cpp">
 				<BuildOrder>37</BuildOrder>
 			</CppCompile>
-			<CppCompile Include="opiTsrc\opiKlasySpoleczne.cpp">
+			<CppCompile Include=""src_opi_2011\opiKlasySpoleczne.cpp">
 				<BuildOrder>32</BuildOrder>
 			</CppCompile>
-			<CppCompile Include="spsGenProc.cpp">
-				<DependentOn>spsGenProc.h</DependentOn>
+			<CppCompile Include="sps_opi_2011\spsGenProc.cpp">
+				<DependentOn>sps_opi_2011\spsGenProc.h</DependentOn>
 				<BuildOrder>27</BuildOrder>
 			</CppCompile>
-			<CppCompile Include="opiTsrc\opiKlasyRynkowe.cpp">
+			<CppCompile Include=""src_opi_2011\opiKlasyRynkowe.cpp">
 				<BuildOrder>33</BuildOrder>
 			</CppCompile>
-			<CppCompile Include="opiTsrc\opiKlasyTransferu.cpp">
+			<CppCompile Include=""src_opi_2011\opiKlasyTransferu.cpp">
 				<BuildOrder>35</BuildOrder>
 			</CppCompile>
-			<CppCompile Include="opiTsrc\opiKlasyJednNaukowych.cpp">
+			<CppCompile Include=""src_opi_2011\opiKlasyJednNaukowych.cpp">
 				<BuildOrder>34</BuildOrder>
 			</CppCompile>
-			<CppCompile Include="opiTsrc\opiStats.cpp">
+			<CppCompile Include=""src_opi_2011\opiStats.cpp">
 				<BuildOrder>9</BuildOrder>
 			</CppCompile>
 			<None Include="res\opiresource.h">
 				<BuildOrder>29</BuildOrder>
 			</None>
-			<CppCompile Include="spsSwiatInit.cpp">
+			<CppCompile Include="sps_opi_2011\spsSwiatInit.cpp">
 				<BuildOrder>7</BuildOrder>
 			</CppCompile>
-			<CppCompile Include="spsSwiatBaza.cpp">
+			<CppCompile Include="sps_opi_2011\spsSwiatBaza.cpp">
 				<BuildOrder>6</BuildOrder>
 			</CppCompile>
-			<CppCompile Include="spsParaLink.cpp">
-				<DependentOn>spsParaLink.h</DependentOn>
+			<CppCompile Include="sps_opi_2011\spsParaLink.cpp">
+				<DependentOn>sps_opi_2011\spsParaLink.h</DependentOn>
 				<BuildOrder>20</BuildOrder>
 			</CppCompile>
 			<CppCompile Include="S:\WBRTM\SYMSHELL\src\BGraphix\sshutils.cpp">
 				<BuildOrder>23</BuildOrder>
 			</CppCompile>
-			<CppCompile Include="spsGenInfo.cpp">
-				<DependentOn>spsGenInfo.h</DependentOn>
+			<CppCompile Include="sps_opi_2011\spsGenInfo.cpp">
+				<DependentOn>sps_opi_2011\spsGenInfo.h</DependentOn>
 				<BuildOrder>15</BuildOrder>
 			</CppCompile>
 			<CppCompile Include="S:\WBRTM\SYMSHELL\src\BGraphix\strtorgb.cpp">
 				<BuildOrder>24</BuildOrder>
 			</CppCompile>
-			<CppCompile Include="spsGenNode.cpp">
+			<CppCompile Include="sps_opi_2011\spsGenNode.cpp">
 				<BuildOrder>12</BuildOrder>
 			</CppCompile>
-			<CppCompile Include="opiTsrc\opiMain.cpp">
+			<CppCompile Include=""src_opi_2011\opiMain.cpp">
 				<BuildOrder>5</BuildOrder>
 			</CppCompile>
 			<CppCompile Include="S:\WBRTM\SYMSHELL\src\errorent.c">
 				<BuildOrder>22</BuildOrder>
 			</CppCompile>
-			<CppCompile Include="opiTsrc\opiKlasyGeneryczne.cpp">
+			<CppCompile Include=""src_opi_2011\opiKlasyGeneryczne.cpp">
 				<BuildOrder>19</BuildOrder>
 			</CppCompile>
 			<CppCompile Include="S:\WBRTM\MISCCLASSES\TabelaTabDeli.cpp">
@@ -179,26 +179,26 @@
 			<CppCompile Include="S:\WBRTM\SYMSHELL\src\Windows\symshwin.c">
 				<BuildOrder>21</BuildOrder>
 			</CppCompile>
-			<CppCompile Include="spsGenLink.cpp">
-				<DependentOn>spsGenLink.h</DependentOn>
+			<CppCompile Include="sps_opi_2011\spsGenLink.cpp">
+				<DependentOn>sps_opi_2011\spsGenLink.h</DependentOn>
 				<BuildOrder>26</BuildOrder>
 			</CppCompile>
-			<None Include="spsModel.h">
+			<None Include="sps_opi_2011\spsModel.h">
 				<BuildOrder>5</BuildOrder>
 			</None>
-			<CppCompile Include="opiTsrc\opiKlasyZespolRoboczy.cpp">
+			<CppCompile Include=""src_opi_2011\opiKlasyZespolRoboczy.cpp">
 				<BuildOrder>36</BuildOrder>
 			</CppCompile>
 			<CppCompile Include="S:\WBRTM\SYMSHELL\src\Windows\sshmenufwin.c">
 				<BuildOrder>31</BuildOrder>
 			</CppCompile>
-			<CppCompile Include="spsMatNodeFiles.cpp">
+			<CppCompile Include="sps_opi_2011\spsMatNodeFiles.cpp">
 				<BuildOrder>25</BuildOrder>
 			</CppCompile>
-			<CppCompile Include="spsSwiatKrokSymul.cpp">
+			<CppCompile Include="sps_opi_2011\spsSwiatKrokSymul.cpp">
 				<BuildOrder>10</BuildOrder>
 			</CppCompile>
-			<CppCompile Include="opiTsrc\opiKlasyAdmNaukowej.cpp">
+			<CppCompile Include=""src_opi_2011\opiKlasyAdmNaukowej.cpp">
 				<BuildOrder>43</BuildOrder>
 			</CppCompile>
 			<BuildConfiguration Include="Base">

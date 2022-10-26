@@ -1,24 +1,27 @@
-////////////////////////////////////////////////////////////////////////////////
-// Symulator Procesów Sieciowych/Spolecznych (c) Instytut Studiów Spo³ecznych
+// //////////////////////////////////////////////////////////////////////////////
+// Symulator Procesï¿½w Sieciowych/Spolecznych (c) Instytut Studiï¿½w Spoï¿½ecznych
 // Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 // Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 //
-// Definicje danych i funkcji Œwiata
+// Definicje danych i funkcji ï¿½wiata
 // zwiazane z
-///////////////////
-// U¯YWAMY LINIOWEJ ORGANIZACJI KONTENERÓW, ALE NIELINIOWO JEJ U¯YWAMY.
-// MO¯NA TO ZAST¥PIÆ JAK¥Œ INN¥ IMPLEMENTACJ¥
-////////////////////////////////////////////////////////////////////////////////////////////
+// /////////////////
+// Uï¿½YWAMY LINIOWEJ ORGANIZACJI KONTENERï¿½W, ALE NIELINIOWO JEJ Uï¿½YWAMY.
+// MOï¿½NA TO ZASTï¿½PIï¿½ JAKï¿½ï¿½ INNï¿½ IMPLEMENTACJï¿½
+// //////////////////////////////////////////////////////////////////////////////////////////
 #include "spsModel.h"
 
-#include "INCLUDE/platform.hpp"
 #include "INCLUDE/wb_ptr.hpp"
 #include <cassert>
 #include <iostream>
 #include <float.h>
+
 using namespace std;
+
+#include "lingo.hpp"
+
 using namespace wbrtm;
 
 unsigned DefLiczbaProcesowNaWezel=2;
@@ -37,26 +40,26 @@ static unsigned PoIleProcesowAlokowac=1;
 
 bool Swiat::_UstalPoczLiczbeProc(unsigned IleMaxDlaWezla)
 {
-  unsigned len=Swiat::IleMoznaWezlow();//Tyle co najmniej musi byæ list procesów
-  if(len==0) return false; //Coœ jest nie tak z pewnoœci¹, ale mo¿e bêdzie kiedyœ lepiej
+  unsigned len=Swiat::IleMoznaWezlow();//Tyle co najmniej musi byï¿½ list procesï¿½w
+  if(len==0) return false; //Coï¿½ jest nie tak z pewnoï¿½ciï¿½, ale moï¿½e bï¿½dzie kiedyï¿½ lepiej
   Procesy.alloc(len);
   PoIleProcesowAlokowac=IleMaxDlaWezla;
-  return Procesy.get_size()==Swiat::IleWezlow();//I to siê musi udaæ raczej, ale ...
+  return Procesy.get_size()==Swiat::IleWezlow();//I to siï¿½ musi udaï¿½ raczej, ale ...
 }
 
 unsigned Swiat::WstawProc(Proces* Jaki,unsigned KtoryWezel)
-//Musi byæ jasne który wêze³
+//Musi byï¿½ jasne ktï¿½ry wï¿½zeï¿½
 {
 								assert(Procesy.get_size()>=Swiat::IleWezlow());
-	Jaki->_MojWezel=KtoryWezel; //Jakby kod zarz¹dzaj¹cy nie zadba³?
-	if(!Jaki->Poprawny()) //Teraz powinien byæ ju¿ poprawny, czyli gotowy do dzia³ania
+	Jaki->_MojWezel=KtoryWezel; //Jakby kod zarzï¿½dzajï¿½cy nie zadbaï¿½?
+	if(!Jaki->Poprawny()) //Teraz powinien byï¿½ juï¿½ poprawny, czyli gotowy do dziaï¿½ania
 	{
 		cerr<<'\b'<<_LPL("Niepoprawny proces nie zostanie uruchomiony","Invalid process can't be started")<<endl;
 		delete Jaki;
 		return -1;
 	}
 
-	if(Procesy[KtoryWezel].wolnych==0)//Trzeba realokowaæ jak brak miejsca
+	if(Procesy[KtoryWezel].wolnych==0)//Trzeba realokowaï¿½ jak brak miejsca
 	{
 	   wb_dynarray<Proces*> Pom=Procesy[KtoryWezel].Tab; //TRANSFER!!!
 	   unsigned len=Pom.get_size()+PoIleProcesowAlokowac;
@@ -68,11 +71,11 @@ unsigned Swiat::WstawProc(Proces* Jaki,unsigned KtoryWezel)
 		Proces** Tar=Procesy[KtoryWezel].Tab.get_ptr_val(0);
 		Proces** Sou=Pom.get_ptr_val(0);
 		memcpy(Tar,Sou,bytes);
-		Pom.dispose();//wskaŸniki nie maj¹ destruktorów wiêc to bezpieczne
+		Pom.dispose();//wskaï¿½niki nie majï¿½ destruktorï¿½w wiï¿½c to bezpieczne
 	   }
 	   Procesy[KtoryWezel].wolnych=PoIleProcesowAlokowac;
 	}
-	//Teraz szukamy wolnego - od koñca
+	//Teraz szukamy wolnego - od koï¿½ca
 	int i;//Pozycja
 	for(i=Procesy[KtoryWezel].Tab.get_size()-1;i>=0;i--)
 		if(Procesy[KtoryWezel].Tab[i]==NULL)
@@ -86,7 +89,7 @@ unsigned Swiat::WstawProc(Proces* Jaki,unsigned KtoryWezel)
 }
 
 Proces*		Swiat::Proc(unsigned Ktory,unsigned KtoryWezel/*=-1*/)
-//Zwi¹zane z wez³ami   - jak nie ma wêz³a to k³opot
+//Zwiï¿½zane z wezï¿½ami   - jak nie ma wï¿½zï¿½a to kï¿½opot
 {
 	if(KtoryWezel==INVINDEX)
 	{
@@ -114,7 +117,7 @@ int sort_function_procesy(const void *a, const void *b)
 }
 
 unsigned     Swiat::NajpilniejszyProc(unsigned KtoryWezel,unsigned* IleRealnie,bool Posortuj)
-//Daje indeks procesu o najwy¿szym priorytecie
+//Daje indeks procesu o najwyï¿½szym priorytecie
 {
 	if(!Posortuj)
 	{
@@ -134,10 +137,10 @@ unsigned     Swiat::NajpilniejszyProc(unsigned KtoryWezel,unsigned* IleRealnie,b
 			}
 		}
 		if(IleRealnie!=NULL)  //Gdy odbiorca jest zainteresowany?
-			*IleRealnie=Licznik; //to mo¿e dostaæ te¿ liczbê realnie dzia³ajacych procesów
-		return Ktory; //Mo¿e zwrócic -1 jak nie ma procesów!!!
+			*IleRealnie=Licznik; //to moï¿½e dostaï¿½ teï¿½ liczbï¿½ realnie dziaï¿½ajacych procesï¿½w
+		return Ktory; //Moï¿½e zwrï¿½cic -1 jak nie ma procesï¿½w!!!
 	}
-	else //if(Posortuj) //Jak sortowanie to najpilniejszy znajdzie siê na pocz¹tku
+	else //if(Posortuj) //Jak sortowanie to najpilniejszy znajdzie siï¿½ na poczï¿½tku
 	{
 
 		qsort(Procesy[KtoryWezel].Tab.get_ptr_val(),Procesy[KtoryWezel].Tab.get_size(),sizeof(Proces*),sort_function_procesy);
@@ -147,12 +150,12 @@ unsigned     Swiat::NajpilniejszyProc(unsigned KtoryWezel,unsigned* IleRealnie,b
 		  if(Procesy[KtoryWezel].Tab[i]!=NULL)
 					Licznik++;
 		if(IleRealnie!=NULL)  //Gdy odbiorca jest zainteresowany?
-			*IleRealnie=Licznik; //to mo¿e dostaæ te¿ liczbê realnie dzia³ajacych procesów
+			*IleRealnie=Licznik; //to moï¿½e dostaï¿½ teï¿½ liczbï¿½ realnie dziaï¿½ajacych procesï¿½w
 		if(Licznik>0)
 		{
 			Proces* Pr=Procesy[KtoryWezel].Tab[0];      assert(Pr!=NULL);
 			double Prior=Pr->Priorytet(); //Debug
-			return 0; //Jak sortowanie to najpilniejszy znajdzie siê na pocz¹tku
+			return 0; //Jak sortowanie to najpilniejszy znajdzie siï¿½ na poczï¿½tku
 		}
 		else return Swiat::INVINDEX; //Nie ma nic
 	}
@@ -180,7 +183,7 @@ unsigned Swiat::UsunProc(Proces* Jaki,unsigned KtoryWezel/*=-1*/)    //Dlaczego 
 }
 
 unsigned Swiat::IleProcesow(unsigned KtoryWezel/*=-1*/)
-//jak -1 to ogolnie, jak numer wêz³a to lokalnie
+//jak -1 to ogolnie, jak numer wï¿½zï¿½a to lokalnie
 {
 	if(KtoryWezel==INVINDEX)
 	{
@@ -194,7 +197,7 @@ unsigned Swiat::IleProcesow(unsigned KtoryWezel/*=-1*/)
 }
 
 unsigned Swiat::IleMoznaProcesow(unsigned KtoryWezel/*=-1*/)
-//jak -1 to ogolnie, jak numer wêz³a to lokalnie
+//jak -1 to ogolnie, jak numer wï¿½zï¿½a to lokalnie
 {
 	if(KtoryWezel==INVINDEX)
 	{
@@ -203,7 +206,7 @@ unsigned Swiat::IleMoznaProcesow(unsigned KtoryWezel/*=-1*/)
 	}
 	else
 	{
-		return Procesy[KtoryWezel].wolnych; //Zwraca liczbê wolnych slotow, ale brak oznacza tylko ¿e bêdzie realokacja
+		return Procesy[KtoryWezel].wolnych; //Zwraca liczbï¿½ wolnych slotow, ale brak oznacza tylko ï¿½e bï¿½dzie realokacja
 	}
 }
 

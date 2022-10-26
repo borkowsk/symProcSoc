@@ -1,0 +1,31 @@
+#1	#2	#3	#4	#5	#6	#7	#8	#9	#10
+#config	Vertical	500							
+#config	Horizontal	500							
+#config	Radius	1							
+# typ wezla	Nazwa	Wizualizacja	Waga	Kolor 	X	Y	Z	KAT	KAT2
+gennode	A	4	1	0x000000	250	250	1	0	0
+gennode	B	4	1	0xFF0000	314,4217687	326,4842187	1	0,7	0,785398163
+gennode	C	4	1	0x00FF00	348,544973	266,9967143	1	1,4	1,570796327
+gennode	D	4	1	0x0000FF	336,3209367	199,5153895	1	2,1	2,35619449
+gennode	E	4	1	0xFF00FF	283,498815	155,7777659	1	2,8	3,141592654
+gennode	F	4	1	0xFFFF00	214,9216772	156,3543313	1	3,5	3,926990817
+gennode	G	4	1	0x00FFFF	162,8424228	200,9739179	1	4,2	4,71238898
+gennode	H	4	1	0x8800BB	151,7547387	268,6512369	1	4,9	5,497787144
+gennode	I	4	1	0xBBAAFF	186,8733362	327,5565879	1	5,6	6,283185307
+# typ linku	Zrodlo	Cel	Waga	Kolor 	Z	Parametr			
+paralink	A	B	0.25	0xFF0000	3	0.3			
+paralink	A	C	0.25	0x00FF00	3	0.3			
+paralink	A	D	0.25	0x0000FF	3	0.3			
+paralink	A	E	0.25	0xFF00FF	3	0.3			
+paralink	A	F	0.25	0xFFFF00	3	0.3			
+paralink	A	G	0.25	0x00FFFF	3	0.3			
+paralink	A	H	0.25	0x8800BB	3	0.3			
+paralink	A	I	0.25	0xBBAAFF	3	0.3			
+paralink	B	A	0.75	0xFF0000	3	0.3			
+paralink	C	A	0.75	0x00FF00	3	0.3			
+paralink	D	A	0.75	0x0000FF	3	0.3			
+paralink	E	A	0.75	0xFF00FF	3	0.3			
+paralink	F	A	0.75	0xFFFF00	3	0.3			
+paralink	G	A	0.75	0x00FFFF	3	0.3			
+paralink	H	A	0.75	0x8800BB	3	0.3			
+paralink	I	A	0.75	0xBBAAFF	3	0.3			

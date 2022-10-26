@@ -1,17 +1,15 @@
-////////////////////////////////////////////////////////////////////////////////
-// Symulator Procesów Sieciowych/Spolecznych (c) Instytut Studiów Spo³ecznych
+// //////////////////////////////////////////////////////////////////////////////
+// Symulator Procesï¿½w Sieciowych/Spolecznych (c) Instytut Studiï¿½w Spoï¿½ecznych
 // Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 // Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-////////////////////////////////////////////////////////////////////////////////
-//
-//---------------------------------------------------------------------------
+// //////////////////////////////////////////////////////////////////////////////
+
 #pragma hdrstop
 
 #include "spsGenProc.h"
-#include "SYMSHELL/sshutils.hpp"
-//---------------------------------------------------------------------------
-#include "INCLUDE/platform.hpp"
+#include "sshutils.hpp"
+
 #include <iostream>
 #include <cassert>
 #include <cstring>
@@ -20,16 +18,16 @@ using namespace std;
 #pragma package(smart_init)
 /*
 protected:
-	int 	 Prior;//Jaki ma priorytet dzia³ania
-	unsigned WymaganyCzasPracy;//Ile czasu ("roboczogodzin") musi dzia³aæ ¿eby byæ gotowy
-	unsigned DotychczasowyCzas;//Ile ju¿ dzia³a³...
+	int 	 Prior;//Jaki ma priorytet dziaï¿½ania
+	unsigned WymaganyCzasPracy;//Ile czasu ("roboczogodzin") musi dziaï¿½aï¿½ ï¿½eby byï¿½ gotowy
+	unsigned DotychczasowyCzas;//Ile juï¿½ dziaï¿½aï¿½...
 */
 
 //static              KonstruktorElementowModelu<GenerycznyProces> WirtualnyKonstruktor;
 	GenerycznyProces::KonstruktorElementowModelu<GenerycznyProces> GenerycznyProces::WirtualnyKonstruktor("GenProc");
 
 GenerycznyProces::GenerycznyProces():Prior(1),WymaganaIloscPracy(1),PracaDotychczasowa(0),TmpPorcjaPracy(1)
-//Konstruktor musi zapewniæ ¿eby proces z raz dosta³ czas i mog³ siê zmienic
+//Konstruktor musi zapewniï¿½ ï¿½eby proces z raz dostaï¿½ czas i mogï¿½ siï¿½ zmienic
 {_IleKrokowDoKonca=1;}
 
 GenerycznyProces::GenerycznyProces(const GenerycznyProces* Wzor):
@@ -37,7 +35,7 @@ GenerycznyProces::GenerycznyProces(const GenerycznyProces* Wzor):
 				   Prior(Wzor->Prior),PracaDotychczasowa(0),TmpPorcjaPracy(Wzor->TmpPorcjaPracy)
 {
 	if(TmpPorcjaPracy>0)
-		_IleKrokowDoKonca=WymaganaIloscPracy/TmpPorcjaPracy; //Raczej trzeba to zmienieæ  potem
+		_IleKrokowDoKonca=WymaganaIloscPracy/TmpPorcjaPracy; //Raczej trzeba to zmienieï¿½  potem
 	 Dane.InicjujZDanych(Wzor->Dane);
 	 Col=(Wzor->Col); //!!! DZIEDZINA!
 }
@@ -66,25 +64,25 @@ GenerycznyProces::~GenerycznyProces()
 }
 
 double   GenerycznyProces::Priorytet()
-//Im wy¿szy tym proces wiêcej dziala
+//Im wyï¿½szy tym proces wiï¿½cej dziala
 {
 	double IleDoZrobienia=WymaganaIloscPracy-PracaDotychczasowa;
 
-	if(TmpPorcjaPracy<=0.25)//Cwierc czy po³ dnia pracy osoby to minimum
+	if(TmpPorcjaPracy<=0.25)//Cwierc czy poï¿½ dnia pracy osoby to minimum
 					TmpPorcjaPracy=0.25;
 
 	double NaIleKrokow=IleDoZrobienia/TmpPorcjaPracy;
 
 	double NewPrior=-1;
 	if(_IleKrokowDoKonca<=0)
-	{        //A ten jest ju¿ po terminie
+	{        //A ten jest juï¿½ po terminie
 		NewPrior=IleDoZrobienia; //NaIleKrokow???
-			//Chcia³by wiêcej ni¿ mo¿na
+			//Chciaï¿½by wiï¿½cej niï¿½ moï¿½na
 	}
 	else
 	{
-		NewPrior=NaIleKrokow/_IleKrokowDoKonca; //A ten rozs¹dnie planowany
-			//Ile czasu pracy chcia³by na dziœ
+		NewPrior=NaIleKrokow/_IleKrokowDoKonca; //A ten rozsï¿½dnie planowany
+			//Ile czasu pracy chciaï¿½by na dziï¿½
 	}
 
 	Prior=NewPrior;
@@ -94,21 +92,21 @@ double   GenerycznyProces::Priorytet()
 
 //Specyficzne dla Procesu-projektu
 double   GenerycznyProces::JakZaawansowany()
-//0 po starcie, jak 1 to ju¿ zakoñczony
+//0 po starcie, jak 1 to juï¿½ zakoï¿½czony
 {
-	if(TmpPorcjaPracy<0) //WYMUSZANIE ZAKOÑCZENIA
+	if(TmpPorcjaPracy<0) //WYMUSZANIE ZAKOï¿½CZENIA
 		return  PROCES_NAD_ZAAWANSOWANY;
 		else
 		if(WymaganaIloscPracy>0)
 			return  double(PracaDotychczasowa)/double(WymaganaIloscPracy);
 				else
-				return 1.0001;//¯eby wiêksze od 1
+				return 1.0001;//ï¿½eby wiï¿½ksze od 1
 }
 
 void GenerycznyProces::ChwilaDlaCiebie()
-//Daje procesowi mo¿liwoœæ zmiany stanów - zrobienia czegoœ
+//Daje procesowi moï¿½liwoï¿½ï¿½ zmiany stanï¿½w - zrobienia czegoï¿½
 {
-   PracaDotychczasowa+=TmpPorcjaPracy; //Dolicza porcje pracy na to wywo³anie
+   PracaDotychczasowa+=TmpPorcjaPracy; //Dolicza porcje pracy na to wywoï¿½anie
 
    if(_IleKrokowDoKonca<-1)
    {
@@ -119,17 +117,17 @@ void GenerycznyProces::ChwilaDlaCiebie()
 }
 
 bool GenerycznyProces::Poprawny()
-//true jeœli jest dobrze zdefiniowany (wci¹¿ istnieje procesor)
+//true jeï¿½li jest dobrze zdefiniowany (wciï¿½ï¿½ istnieje procesor)
 {
 	unsigned procesorek=Procesor();
 	return procesorek!=Swiat::INVINDEX && Swiat::Wezel(procesorek)!=NULL;
 }
 
-//Metoda pobiera wszystkie potrzebne dane z listy stringów. Jak blad to podaje ktora pozycja listy
+//Metoda pobiera wszystkie potrzebne dane z listy stringï¿½w. Jak blad to podaje ktora pozycja listy
 bool GenerycznyProces::ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad)
 {
 	Dane.InicjujWgListy(Lista,Ile);
-	if(Dane.Ile()<7) { Blad=Ile; return false; } //Za ma³o danych. Pierwsza kom. za.
+	if(Dane.Ile()<7) { Blad=Ile; return false; } //Za maï¿½o danych. Pierwsza kom. za.
 //		0			   1		2			3		   4		5				6           7
 //	#typ procesu	Nazwa	Procesor	Priorytet	Kolor 	Zaawansowany	Wymagany      Deadline
 //	genproc	         BST	Badacz A	2	argb(1,64,10,32)	50	          100           100
@@ -150,13 +148,13 @@ bool GenerycznyProces::ZrobWgListy(const std::string* Lista,unsigned Ile,unsigne
 	if(!Dane.KonwertujDo(5,PracaDotychczasowa)) { Blad=5; return false;}
 	if(!Dane.KonwertujDo(6,WymaganaIloscPracy)) { Blad=6; return false;}
 	if(!Dane.KonwertujDo(7,_IleKrokowDoKonca)) 		{ Blad=7; return false;}  //Czas do konca jest polem z klasy "Proces" !!!
-	Blad=8; //Uda³o siê wczytac pole nr 7
+	Blad=8; //Udaï¿½o siï¿½ wczytac pole nr 7
 	return true;
 }
 
-//	float WymaganaIloscPracy;//Ile "roboczogodzin" musi dzia³aæ ¿eby byæ gotowy
-//	float PracaDotychczasowa;//Ile ju¿ zrobiono
-//	float CzasuDoKonca;//Ile kroków czasu zosta³o do deadlinu
+//	float WymaganaIloscPracy;//Ile "roboczogodzin" musi dziaï¿½aï¿½ ï¿½eby byï¿½ gotowy
+//	float PracaDotychczasowa;//Ile juï¿½ zrobiono
+//	float CzasuDoKonca;//Ile krokï¿½w czasu zostaï¿½o do deadlinu
 
 
 
