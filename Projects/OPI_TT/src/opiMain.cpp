@@ -1,13 +1,15 @@
-////////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
 //			Symulacja transferu technologii dla OPI
 //------------------------------------------------------------------------------
-//Plik main() dostosowany do u¿ytej najbardziej prymitywnej biblioteki graficznej
-//Bez wodotrysków, ¿eby nie inwestowaæ zanadto w kosmetykê, która ju¿ mog¹ zrobiæ
-//zawodowi informatycy.
-////////////////////////////////////////////////////////////////////////////////
-//POD Dev-Cpp potrzebne s¹ dwie bibloteki:
-//".../Dev-Cpp/lib/libgdi32.a"
-//".../Dev-Cpp/lib/libcomdlg32.a"
+// Plik main() dostosowany do uï¿½ytej najbardziej prymitywnej biblioteki graficznej
+// Bez wodotryskï¿½w, ï¿½eby nie inwestowaï¿½ zanadto w kosmetykï¿½, ktï¿½ra juï¿½ mogï¿½ zrobiï¿½
+// zawodowi informatycy.
+//*//////////////////////////////////////////////////////////////////////////////
+// POD Dev-Cpp potrzebne sï¿½ dwie bibloteki:
+// ".../Dev-Cpp/lib/libgdi32.a"
+// ".../Dev-Cpp/lib/libcomdlg32.a"
+
+
 
 #include <iostream>
 #include <cassert>
@@ -21,7 +23,8 @@
  #endif
 using namespace std;
 
-#include "INCLUDE/platform.hpp"
+#include "compatyb.hpp"
+#include "lingo.hpp"
 #ifndef LOCAL_VERSION
 	unsigned wbrtm::_lingo_selector=0;
 #else
@@ -29,26 +32,26 @@ using namespace std;
 #endif
 
 
-#include "INCLUDE/wb_ptr.hpp"
-#include "SYMSHELL/symshell.h"
-#include "SYMSHELL/sshmenuf.h"
-#include "MISCCLASSES/Wieloboki.hpp"
-#include "INCLUDE/wb_smartlog.h"
+#include "wb_ptr.hpp"
+#include "symshell.h"
+#include "sshmenuf.h"
+#include "wb_smartlog.hpp"
+#include "wieloboki.hpp"
 
-#include "spsModel.h" //Najwa¿niejsze deklaracje konieczne do wspó³pracy modu³ów
-#include "spsGenLink.h" //Ze wzglêdu na statyczne parametry wizualizacji linków
+#include "spsModel.h" //Najwaï¿½niejsze deklaracje konieczne do wspï¿½pracy moduï¿½ï¿½w
+#include "spsGenLink.h" //Ze wzglï¿½du na statyczne parametry wizualizacji linkï¿½w
 
 #include "res/opiresource.h"
 
 bool ViewHtml(string URL); //Otwieranie
 
-//extern int		wbrtm::wb_smartlog::log_level;//=0;   POZIOM LOGOWANIA PLIKU LOG U¯YWANEGO SPS
+//extern int		wbrtm::wb_smartlog::log_level;//=0;   POZIOM LOGOWANIA PLIKU LOG Uï¿½YWANEGO SPS
 
-extern char PlikWejsciowy[256];//="ModelDefaults.dat"; //Wejœciowy plik struktury (dat)
-extern char DelimiterDanych;//='\t'; //Jaki znak s³u¿y do rozdzielania danych w pliku DAT (mo¿e byæ te¿ : ; , | \ / itp
+extern char PlikWejsciowy[256];//="ModelDefaults.dat"; //Wejï¿½ciowy plik struktury (dat)
+extern char DelimiterDanych;//='\t'; //Jaki znak sï¿½uï¿½y do rozdzielania danych w pliku DAT (moï¿½e byï¿½ teï¿½ : ; , | \ / itp
 
-//Lokalne funkcje strukturalizuj¹ce proto-interfejs programu
-bool obsluz_mouse_click(); //Jak true to trafiony i trzeba zastopowaæ symulacje
+//Lokalne funkcje strukturalizujï¿½ce proto-interfejs programu
+bool obsluz_mouse_click(); //Jak true to trafiony i trzeba zastopowaï¿½ symulacje
 bool symuluj=false;
 bool czyscciagle=true;
 unsigned czekaj_ms=50;
@@ -65,8 +68,8 @@ void ZmienWidocznoscObiektu(const char* NazwaKlasy, unsigned int MenuId, ssh_men
 	if(VF==3) VF=1; else VF=3;
 	if(VF==3) ssh_menu_mark_item(MainMenu,1,MenuId);
 	else  ssh_menu_mark_item(MainMenu,0,MenuId);
-	FL&=~ElementModelu::WirtualnyKonstruktor::VFLAG; //Wyzerowanie czêœci wizualnej
-	FL|=VF;		 //Naniesienie nowej czêœci wizyjnej
+	FL&=~ElementModelu::WirtualnyKonstruktor::VFLAG; //Wyzerowanie czï¿½ci wizualnej
+	FL|=VF;		 //Naniesienie nowej czï¿½ci wizyjnej
 	WK->Flagi()=FL; //Zapisanie
 	ssh_realize_menu(MainMenu);
 
@@ -106,7 +109,7 @@ const char* SciezkaDoExe(const char* Par0)
 /************************/
 int main(int argc,const char* argv[])
 {
-cout<<endl; //POCZ¥TEK "TABLICZKI ZNAMIONOWEJ" NA KONSOLI TEKSTOWEJ PROGRAMU
+cout<<endl; //POCZï¿½TEK "TABLICZKI ZNAMIONOWEJ" NA KONSOLI TEKSTOWEJ PROGRAMU
 cout<<_LPL("      SYMULACJA TRANSFERU TECHNOLOGII       \n",
 		   "       TECHNOLOGY TRANSFER SIMULATION       \n")
 	<<_LPL("              wersja ISS 1.0b               \n",
@@ -114,17 +117,17 @@ cout<<_LPL("      SYMULACJA TRANSFERU TECHNOLOGII       \n",
 cout<<     "============================================\n";
 cout<<_LPL("    wykonana na zamowienie OPI przez        \n",
 		   "           made for OPI by                  \n");
-//cout<<_LPL("  Oœrodek Badania Uk³adów Z³o¿onych ISS UW  \n",
+//cout<<_LPL("  Oï¿½rodek Badania Ukï¿½adï¿½w Zï¿½oï¿½onych ISS UW  \n",
 cout<<_LPL("  Osrodek Badania Ukladow Zlozonych ISS UW  \n",
 		   "    Center for Complex Systems ISS UW       \n");
 cout<<     "============================================\n";
-//cout<<_LPL("    Programowa³ Wojciech Borkowski          \n",
+//cout<<_LPL("    Programowaï¿½ Wojciech Borkowski          \n",
 cout<<_LPL("     Programowal Wojciech Borkowski          \n",
 		   "     Programmed by Wojciech Borkowski        \n");
 cout<<     "    www.iss.uw.edu.pl ,  www.opi.org.pl      \n"<<endl<<endl;
 
 WB_error_enter_before_clean=0;
-czytaj_parametry(argc,argv); //Odczytanie parametrów wywo³ania innych ni¿ zaczynaj¹ce siê od -
+czytaj_parametry(argc,argv); //Odczytanie parametrï¿½w wywoï¿½ania innych niï¿½ zaczynajï¿½ce siï¿½ od -
 
 {//SPRAWDZANIE AKTUALNEGO KATALOGU
  char cCurrentPath[FILENAME_MAX];
@@ -144,13 +147,13 @@ RANDOMIZE();  //Dla generatora liczb losowych
 if(!Swiat::Inicjalizacja(PlikWejsciowy,DelimiterDanych))
 			{ cerr<<endl<<_LPL("Nieudana inicjalizacja!","Initialisation failed!");goto FINAL;}
 
-//Ustawienie parametrów okna wizualizacji i jego otwarcie
-set_background(NumerKoloruTla);// Jaki kolor t³a
-fix_size(0);       // Czy okno o sta³ym rozmiarze
+//Ustawienie parametrï¿½w okna wizualizacji i jego otwarcie
+set_background(NumerKoloruTla);// Jaki kolor tï¿½a
+fix_size(0);       // Czy okno o staï¿½ym rozmiarze
 buffering_setup(1);// Czy wlaczona animacja
 mouse_activity(1);  // Czy potrzebna jest mysz
 
-shell_setup(_LPL("TRANSFER TECHNOLOGII w SPS-Frame","TECHNOLOGY TRANSFER in SPS-Frame"),argc,argv); //Szuka parametrów symshella (tych zaczynaj¹cych siê od - )
+shell_setup(_LPL("TRANSFER TECHNOLOGII w SPS-Frame","TECHNOLOGY TRANSFER in SPS-Frame"),argc,argv); //Szuka parametrï¿½w symshella (tych zaczynajï¿½cych siï¿½ od - )
 
 if(!init_plot(hor,ver,0,0))
 {
@@ -160,23 +163,23 @@ if(!init_plot(hor,ver,0,0))
 }
 else
 {
-	WB_error_enter_before_clean=1;  // Dla close_plot() - czy zamykac od razu czy ze "stopem"
-	cout<<endl<<_LPL("Podreczne sterowanie z klawiatury:","")<<endl;
+	WB_error_enter_before_clean=1;  // Dla close_plot() - czy zamyka od razu czy ze "stopem"?
+	cout<<endl<<_LPL("Podstawowe sterowanie z klawiatury:","")<<endl;
 	cout<<_LPL("q,Q - zatrzymaj; a - start, p - pauza, ESC - zmiana\n",
 			   "q,Q - for stop; a - start, p - pause, ESC - swith\n")<<endl;
-    MarkujWszystkieTypy(); //Markery przy wszystkich typach w menu bo domyœlnie sa widoczne
+    MarkujWszystkieTypy(); //Markery przy wszystkich typach w menu, bo domyÅ›lnie sÄ… widoczne
 }
 
 //if(!testy_graficzne()) {cerr<<endl<<"Nieudane testy grafiki!";goto FINAL;}
-//Tak naprawdê po inicjalizacji - czyli krok 0
-if(!Swiat::Wizualizacja_po_kroku()){ cerr<<endl<<"Nieudana pierwsza wizualizacja!";goto FINAL;}
-if(!Swiat::Statystyka_po_kroku())  { cerr<<endl<<"Nieudane pierwsze liczenie statystyk!";goto FINAL;}
+//Tak naprawdÄ™ zaraz po inicjalizacji - czyli krok 0
+if(!Swiat::Wizualizacja_po_kroku()){ cerr<<endl<<"Nieudana pierwsza wizualizacja!"; goto FINAL;}
+if(!Swiat::Statystyka_po_kroku())  { cerr<<endl<<"Nieudane pierwsze liczenie statystyk!"; goto FINAL;}
 flush_plot();
 
-{
-ssh_menu_handle MainMenu=ssh_main_menu(); // Daje uchwyt do g³ównego menu
-int cont=1; //Ze wzglêdu na GOTO nie mo¿e byæ bez okreœlenia zasiêgu
-while(cont)//Petla zdarzen na czas pracy algorytmu
+{ int cont=1; //Ze wzglÄ™du na GOTO nie moÅ¼e byÄ‡ bez okreÅ›lenia zasiÄ™gu
+ssh_menu_handle MainMenu=ssh_main_menu(); // Daje uchwyt do gÅ‚Ã³wnego menu
+
+while(cont) //Petla zdarzen na czas pracy algorytmu
 {
 	if(input_ready())
 	{
@@ -222,13 +225,13 @@ while(cont)//Petla zdarzen na czas pracy algorytmu
 			 ssh_menu_mark_item(MainMenu,symuluj,_SPS_RUN_);
 			 ssh_realize_menu(MainMenu);
 			 break;
-		case _LOG_MORE_DET_:				//MENUITEM "Logowanie dok³adniejsze",
-					//extern int		wbrtm::wb_smartlog::log_level;//=0;   POZIOM LOGOWANIA PLIKU LOG U¯YWANEGO SPS
+		case _LOG_MORE_DET_:				//MENUITEM "Logowanie dokï¿½adniejsze",
+					//extern int		wbrtm::wb_smartlog::log_level;//=0;   POZIOM LOGOWANIA PLIKU LOG Uï¿½YWANEGO SPS
 					wbrtm::wb_smartlog::log_level++;
 					cout<<endl<<_LPL("Domyslny poziom logowania zmieniony na","Default log level set to")<<' '<<dec<<wbrtm::wb_smartlog::log_level<<endl;
 					TLOG( 0 , <<_LPL("!!! Domyslny poziom logowania zmieniony na","Default log level set to")<<' '<<dec<<wbrtm::wb_smartlog::log_level   )
 					break;
-		case _LOG_LESS_DET_:				//MENUITEM "Mniej dok³adne logowanie",
+		case _LOG_LESS_DET_:				//MENUITEM "Mniej dokï¿½adne logowanie",
 					wbrtm::wb_smartlog::log_level--;
 					if(wbrtm::wb_smartlog::log_level<0)wbrtm::wb_smartlog::log_level=0;
 					cout<<endl<<_LPL("Domyslny poziom logowania zmieniony na","Default log level set to")<<' '<<dec<<wbrtm::wb_smartlog::log_level<<endl;
@@ -383,13 +386,13 @@ while(cont)//Petla zdarzen na czas pracy algorytmu
 			//unsigned czekaj_ms=0, co_ile_krokow_wizualizacja=1;
 			if(czekaj_ms>0)
 			{
-				czekaj_ms/=2; //Czas przez pó³
+				czekaj_ms/=2; //Czas przez pï¿½
 			}
 			else
 			{
 				 co_ile_krokow_wizualizacja*=2;
 			}
-			//cout. ioflags   //Z jakiegoœ powodu (ustawienia flag?) bez rzutu na double wyœwietla b³êdnie
+			//cout. ioflags   //Z jakiegoï¿½ powodu (ustawienia flag?) bez rzutu na double wyï¿½wietla bï¿½ï¿½dnie
 			cout<<endl<<_LPL("Wizualizacja co ","Visualisation every ")<< double(co_ile_krokow_wizualizacja) <<_LPL(" krok(ow)"," step(s)")
 				<<", "<<_LPL("z opoznieniem ","with delay ")<< double(czekaj_ms) <<"ms"<<endl;
 			break;
@@ -421,8 +424,8 @@ while(cont)//Petla zdarzen na czas pracy algorytmu
 			 ssh_menu_mark_item(MainMenu,symuluj,_SPS_RUN_);
 			 ssh_realize_menu(MainMenu);
 			 break;
-		case _SPS_CLEAN_ ://Czyœæ z menu jest dwuznaczne wiêc nie tylko prze³acza
-				Swiat::Ten.Wymazuj();//Ale i czyœci
+		case _SPS_CLEAN_ ://Czyï¿½ï¿½ z menu jest dwuznaczne wiï¿½c nie tylko przeï¿½acza
+				Swiat::Ten.Wymazuj();//Ale i czyï¿½ci
 				Swiat::Wizualizacja_po_kroku();//oraz odrysowuje
 				flush_plot();
 		case 'c':czyscciagle=!czyscciagle;break;
@@ -436,7 +439,7 @@ while(cont)//Petla zdarzen na czas pracy algorytmu
 				break;
 		};
 	}
-	else //W³aœciwe robienie kroku
+	else //Wï¿½aï¿½ciwe robienie kroku
 	if(symuluj)
 	{
 	   if(czyscciagle) Swiat::Ten.Wymazuj();
@@ -456,7 +459,7 @@ while(cont)//Petla zdarzen na czas pracy algorytmu
 		   && Swiat::Wizualizacja_po_kroku()
 		   && Swiat::Status_po_kroku() )
 		{
-		  //OK - mo¿na potwierdziæ                                                      unsigned =0;
+		  //OK - moï¿½na potwierdziï¿½                                                      unsigned =0;
 		  flush_plot();
 		  cout<<'\r'<<Swiat::NumerKroku()<<_LPL(". krok","-th step")<<"         ";
 		  TLOG(1, <<Swiat::NumerKroku()<<_LPL(". krok","-th step")        )
@@ -464,15 +467,15 @@ while(cont)//Petla zdarzen na czas pracy algorytmu
 		}
 		else
 		{
-			//Licznik kroków jest w œrodku
+			//Licznik krokï¿½w jest w ï¿½rodku
 			flush_plot();
-			cerr<<endl<<"Awaria wyœwietlania po kroku "<<Swiat::NumerKroku()<<endl;
+			cerr<<endl<<"Awaria wyï¿½wietlania po kroku "<<Swiat::NumerKroku()<<endl;
 			goto FINAL;
 		}
 	}
 }} //while(cont)
 
-close_plot(); //Normalne zamkniêcie grafiki
+close_plot(); //Normalne zamkniï¿½cie grafiki
 cout<<endl<<_LPL("Koniec poprawny.","Finished correctly")<<endl;
 TLOG(  0, <<_LPL("Koniec poprawny.","Finished correctly")  )
 return 0;
@@ -501,7 +504,7 @@ bool obsluz_mouse_click()
 
 void MarkujWszystkieTypy()
 {
-	ssh_menu_handle MainMenu=ssh_main_menu(); // Daje uchwyt do g³ównego menu
+	ssh_menu_handle MainMenu=ssh_main_menu(); // Daje uchwyt do gï¿½ï¿½wnego menu
 
  //	ssh_menu_mark_item(MainMenu,WIDOCZNE,MenuId);   //MENUITEM " * OFF"
 	ssh_menu_mark_item(MainMenu,1,_SOCIAL_INFO_ONOFF);// 		40100
@@ -543,7 +546,7 @@ void MarkujWszystkieTypy()
 }
 
 
-//Ró¿ne  testy graficzne przed w³aœciwym modelem
+//Rï¿½ne  testy graficzne przed wï¿½aï¿½ciwym modelem
 //bool testy_graficzne();
 
 

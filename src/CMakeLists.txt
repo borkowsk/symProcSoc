@@ -5,8 +5,8 @@ cmake_minimum_required(VERSION 3.6)
 project(SymProcSoc)
 
 #Te ścieżki trzeba ustawić ręcznie.
-set( WBRTM    "/data/wb/SCC/public/symShell2andRTM/RTM/")
-set( SYMSHELL "/data/wb/SCC/public/SymShellLight/")
+set( WBRTM     "/home/borkowsk/SCC/public/symShell2andRTM/RTM/" )
+set( SYMSHELL  "/home/borkowsk/SCC/public/SymShellLight/" )
 
 include_directories( "${WBRTM}/"
 		      "${WBRTM}INCLUDE/" 

@@ -12,9 +12,10 @@
 #include "spsParaLink.h"
 #include "spsGenInfo.h"
 #include "spsMatrixNode.h"
-#include "INCLUDE/platform.hpp"
-#include "INCLUDE/wb_ptr.hpp"
-#include "INCLUDE/wb_bits.h"
+
+#include "compatyb.h"
+#include "wb_ptr.hpp"
+#include "wb_bits.h"
 using namespace wbrtm;
 
 #include <stdlib.h>

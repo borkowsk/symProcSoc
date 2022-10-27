@@ -1,14 +1,14 @@
 // Transfer technologii 2011
 ////////////////////////////////////////////////////////////////////////////////
-// Testowa dynamika dla obiektów generycznych - wêz³ów i linków. Komunikaty s¹
-// z definicji bierne - "p³yn¹" nios¹c informacje. Mo¿na to co prawda zmieniæ,
+// Testowa dynamika dla obiektï¿½w generycznych - wï¿½zï¿½ï¿½w i linkï¿½w. Komunikaty sï¿½
+// z definicji bierne - "pï¿½ynï¿½" niosï¿½c informacje. Moï¿½na to co prawda zmieniï¿½,
 // ale dopiero w klasach potomnych.
 ////////////////////////////////////////////////////////////////////////////////
-// Klasy generyczne takie jak GenericNode czy GenericLink powinny mieæ swoj¹
-// domyœln¹ dynamikê odpowiedni¹ do badanego modelu. W³aœciwie ¿eby
-// stworzyæ najprostrzy model wystarczy po prostu reimplementowac ten plik
-// W przypadku modelu OPI klasy s¹ tak pomyœlane, ¿eby wykonywa³y procesy
-// i przesy³a³y komunikaty z namno¿eniem.
+// Klasy generyczne takie jak GenericNode czy GenericLink powinny mieï¿½ swojï¿½
+// domyï¿½lnï¿½ dynamikï¿½ odpowiedniï¿½ do badanego modelu. Wï¿½aï¿½ciwie ï¿½eby
+// stworzyï¿½ najprostrzy model wystarczy po prostu reimplementowac ten plik
+// W przypadku modelu OPI klasy sï¿½ tak pomyï¿½lane, ï¿½eby wykonywaï¿½y procesy
+// i przesyï¿½aï¿½y komunikaty z namnoï¿½eniem.
 ////////////////////////////////////////////////////////////////////////////////
 #include "spsModel.h"
 #include "spsGenNode.h"
@@ -16,39 +16,39 @@
 #include "spsGenLink.h"
 #include "spsGenInfo.h"
 #include "spsMatrixNode.h"
-#include "INCLUDE/wb_ptr.hpp"
-#include "INCLUDE/wb_smartlog.h"
+#include "wb_ptr.hpp"
+#include "wb_smartlog.hpp"
 using namespace wbrtm;
 
-float GENERYCZNY_POZIOM_PRZECIEKOW=0.01;//Jak czesto domyslny komunikat leci dalej ni¿ do odbiorcy
+float GENERYCZNY_POZIOM_PRZECIEKOW=0.01;//Jak czesto domyslny komunikat leci dalej niï¿½ do odbiorcy
 
 void GenerycznyWezelSieci::InterpretujKomunikat(Komunikat* Co)
-//Najpierw proponuje do obróbki swoim procesom, a jak siê nie uda to z rzadka
-//"brodkastuje" komunikat losowo do dwu  lub wiêcej s¹siadów o ile ma
+//Najpierw proponuje do obrï¿½bki swoim procesom, a jak siï¿½ nie uda to z rzadka
+//"brodkastuje" komunikat losowo do dwu  lub wiï¿½cej sï¿½siadï¿½w o ile ma
 //co najmniej dwa polaczenia.
 {
-	if(_KomunikatDoProcesow(Co)) //Jeœli któryœ z procesów obrobi³
-				return ; //To ju¿ nic nie robimy
-	//Ta funkcja jest dosyæ kosztowna i intensywnie namna¿a komunikaty
+	if(_KomunikatDoProcesow(Co)) //Jeï¿½li ktï¿½ryï¿½ z procesï¿½w obrobiï¿½
+				return ; //To juï¿½ nic nie robimy
+	//Ta funkcja jest dosyï¿½ kosztowna i intensywnie namnaï¿½a komunikaty
 	if(DRAND()<GENERYCZNY_POZIOM_PRZECIEKOW) //Wiec robimy to z rzadka
 		_KomunikatPrzekazLosowo(Co,GENERYCZNY_POZIOM_PRZECIEKOW);//Przekazuje dalej, jeszcze rzadziej dwu odbiorcom
 	//return; //DEBUG!!!!!!!!!!!!!!!!!!!!!
 }
 
 void WezelMacierzowy::InterpretujKomunikat(Komunikat* Co)
-//Interpretuje komunikat  -  odpowiada dziedzin¹ losowego elementu
-//albo mo¿e sprawdzaæ czy pytanie o konkretny wêze³
-//albo mo¿e by szuka³ najbardziej podobnego do Col komunikatu?
+//Interpretuje komunikat  -  odpowiada dziedzinï¿½ losowego elementu
+//albo moï¿½e sprawdzaï¿½ czy pytanie o konkretny wï¿½zeï¿½
+//albo moï¿½e by szukaï¿½ najbardziej podobnego do Col komunikatu?
 {
-	if(_KomunikatDoProcesow(Co)) //Jeœli któryœ z procesów obrobi³
-				return ; //To ju¿ nic nie robimy - tak jak generic
+	if(_KomunikatDoProcesow(Co)) //Jeï¿½li ktï¿½ryï¿½ z procesï¿½w obrobiï¿½
+				return ; //To juï¿½ nic nie robimy - tak jak generic
 
-	//Losowe zapamiêtanie w maciezy
+	//Losowe zapamiï¿½tanie w maciezy
 	unsigned Gdzie=RANDOM(this->Szerokosc*this->Wysokosc);
 	Tablica[Gdzie]=Co->PodajDziedzine();
 
 	//Na inne zazwyczaj odpowiadamy na podstawie losowo wybranego elementu
-	if(DRAND()<(1-GENERYCZNY_POZIOM_PRZECIEKOW) //Czasem zamiast odwpowiadaæ rozsy³a dalej domyslnym algorytmem
+	if(DRAND()<(1-GENERYCZNY_POZIOM_PRZECIEKOW) //Czasem zamiast odwpowiadaï¿½ rozsyï¿½a dalej domyslnym algorytmem
 		&& Tablica)
 	{
 		_OdpowiedzLosowymBitem(Co,Swiat::INVINDEX,true);//ostatnie to AND_OR
@@ -58,25 +58,25 @@ void WezelMacierzowy::InterpretujKomunikat(Komunikat* Co)
 }
 
 void GenerycznyWezelSieci::ChwilaDlaCiebie()
-//Daje mu szanse na endogenne zmiany stanów
+//Daje mu szanse na endogenne zmiany stanï¿½w
 {
 	this->ZarzadcaProcesowPrymitywny();
 }
 
 void WezelMacierzowy::ChwilaDlaCiebie()
-//Daje jakies szanse na endogenne zmiany stanów
+//Daje jakies szanse na endogenne zmiany stanï¿½w
 {
-	//Mo¿e nap. mieæ w³asn¹ dynamikê
-	//Ale te¿ powinien robiæ coœ jak klasa macie¿ysta - np. popychaæ procesy
-	//GenerycznyWezelSieci::ChwilaDlaCiebie(); //Likwidacja chwilowo zbêdnego wywo³ania
-	this->ZarzadcaProcesowPrymitywny();//Tu jest ta sama zawartoœæ!!!
+	//Moï¿½e nap. mieï¿½ wï¿½asnï¿½ dynamikï¿½
+	//Ale teï¿½ powinien robiï¿½ coï¿½ jak klasa macieï¿½ysta - np. popychaï¿½ procesy
+	//GenerycznyWezelSieci::ChwilaDlaCiebie(); //Likwidacja chwilowo zbï¿½dnego wywoï¿½ania
+	this->ZarzadcaProcesowPrymitywny();//Tu jest ta sama zawartoï¿½ï¿½!!!
 }
 
 void GenerycznePowiazanie::ChwilaDlaCiebie()
-//Mo¿e daj mu szanse na endogenne zmiany stanów
+//Moï¿½e daj mu szanse na endogenne zmiany stanï¿½w
 {
 	//Tu jednak nie robi nic...
-	//bo niby co mia³by robiæ co jest sensowne dla ka¿dego potomnego typu!?!?
+	//bo niby co miaï¿½by robiï¿½ co jest sensowne dla kaï¿½dego potomnego typu!?!?
 }
 
 
@@ -96,16 +96,16 @@ void GenerycznePowiazanie::ChwilaDlaCiebie()
 		 //i losowa zmiana komunikatu
 		 DziedzKol D=Klon->PodajDziedzine();
 
-		 //Przejêcie informacji
-		 unsigned Bit=RANDOM(24); //Który bit
+		 //Przejï¿½cie informacji
+		 unsigned Bit=RANDOM(24); //Ktï¿½ry bit
 		 Bit=1<<Bit;
 		 if(Bit&D.ARGB)    //Bierze stan tego bitu
-			Col.ARGB|=Bit; //i nak³ada go jeœli 1
-			else //Kasuje jeœli 0
+			Col.ARGB|=Bit; //i nakï¿½ada go jeï¿½li 1
+			else //Kasuje jeï¿½li 0
 			Col.ARGB&=~Bit;
 
 		 //Teraz mutacja komunikatu
-		 Bit=RANDOM(64);//Ma spore szanse ¿e siê w ogóle nie zmieni
+		 Bit=RANDOM(64);//Ma spore szanse ï¿½e siï¿½ w ogï¿½le nie zmieni
 		 if(Bit<32)
 		 {
 			Bit=1<<Bit;

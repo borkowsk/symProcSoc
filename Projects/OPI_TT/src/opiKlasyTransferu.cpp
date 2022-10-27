@@ -3,18 +3,18 @@
 // ***TODO!!!!-->
 // Implementacja akcji klas w³aœciwego modelu bezpoœrednio zwi¹zanych z TT
 // na poziomie rynkowym (BOTT) i naukowym (UOTT) i odpowiednie procesy oraz komunikaty
-// (bez technikaliów obslugi interfaceu )
+// (bez technikaliów obs³ugi interface-u )
 // //////////////////////////////////////////////////////////////////////////////
 
 #include "opiKlasyWersja.hpp"
-#include "INCLUDE/wb_smartlog.h"
+#include "wb_smartlog.hpp"
 using namespace wbrtm;
 
 double OTT_FANTAZJA=0.05; //Jak czêsto OTT bez kontaktu z rynkiem "zapuszcza" sobie proces TT.
 					//Oczywiscie przy zachowaniu innych uwarunkowañ
 bool   PROMUJ_SKOMPLIKOWANE_ROZWIAZANIA=false;
-double ILE_RAZY_PROTOTYP_DROZSZY_NIZ_TOWAR=2; //Na razie nieznacznie bo nie ma finansowania zewnetrznego
-extern double ILE_RAZY_BADANIA_DROZSZE_NIZ_TOWAR; //Na razie nieznacznie bo nie ma finansowania zewnetrznego
+double ILE_RAZY_PROTOTYP_DROZSZY_NIZ_TOWAR=2; //Na razie nieznacznie bo nie ma finansowania zewnêtrznego
+extern double ILE_RAZY_BADANIA_DROZSZE_NIZ_TOWAR; //Na razie nieznacznie bo nie ma finansowania zewnêtrznego
 extern const char* const  KONTO; //Marker komunikatu finansowego z przep³ywem
 
 static const int LOCLOG=0; //Na jakim poziomie logowania domyœlnie zapisywaæ problemy z tego pliku

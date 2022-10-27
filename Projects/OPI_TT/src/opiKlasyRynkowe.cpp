@@ -6,7 +6,8 @@
 // //////////////////////////////////////////////////////////////////////////////
 
 #include "opiKlasyWersja.hpp"
-#include "INCLUDE/wb_smartlog.h"
+#include "wb_smartlog.hpp"
+#include "lingo.hpp"
 using namespace wbrtm;
 
 const char* const KONTO="Ruch konta"; //Marker komunikatu finansowego z przep³ywem
