@@ -358,7 +358,7 @@ void GenerycznePowiazanie::Narysuj()
 	   Arr.Zakresy(MiX,MiY,MaX,MaY,cR);
 	   Skala=(grubosc*1.66)/cR;
 	   Arr.Skaluj(Skala,Skala);
-	   Arr.ObrocORad(Rad);
+        Arr.ObracajORad(Rad);
 	   Arr.Rysuj((SkalaX*Koniec->X()+SkalaX*Start->X())/2.0,
 				 (SkalaY*Koniec->Y()+SkalaY*Start->Y())/2.0,
 				 R*0.75,G*0.75,B*0.75);
@@ -442,7 +442,7 @@ void PowiazaniePaboliczne::Narysuj()
 	   Arr.Zakresy(MiX,MiY,MaX,MaY,cR);
 	   Skala=(grubosc*2)/cR;  //Takie s� zwykle cie�sze?
 	   Arr.Skaluj(Skala,Skala);
-	   Arr.ObrocORad(Rad);
+        Arr.ObracajORad(Rad);
 	   Arr.Rysuj(SkalaX*Xp,
 				 SkalaY*Yp,
 				 R*0.85,G*0.85,B*0.85);
@@ -589,7 +589,7 @@ bool testy_graficzne()
  Test.Rysuj(hor/2,ver/2,128);
  Ostrze.Centruj();
  //Ostrze.Skaluj(0.2,0.4);
- Ostrze.ObrocORad(M_PI/2);
+    Ostrze.ObracajORad(M_PI / 2);
  Ostrze.Rysuj(hor/4,ver/2,32,128,32);
 
  return true;
