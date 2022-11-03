@@ -1,33 +1,35 @@
-////////////////////////////////////////////////////////////////////////////////
-// Symulator Procesów Sieciowych/Spolecznych (c) Instytut Studiów Spo³ecznych
-// Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-////////////////////////////////////////////////////////////////////////////////
-// Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-////////////////////////////////////////////////////////////////////////////////
-//
-//Klasa bazowa definiuj¹ca najbardziej podstawowy interfejs do elementów modelu
-// G³ównie chodzi o wizualizacje i inicjalizacje z pliku
-////////////////////////////////////////////////////////////////////////////////
-//------------------------------------------------------------------------------
+/// \file
+/// \brief Klasa bazowa definiujÄ…ca najbardziej podstawowy interfejs do elementÃ³w modelu
+///        -----------------------------------------------------------------------------
+///
+/// \details
+///              GÅ‚Ã³wnie chodzi o wizualizacje i inicjalizacjÄ™ z pliku
+///     ## (c)
+///     Symulator ProcesÃ³w Sieciowych/SpoÅ‚ecznych (c) Instytut StudiÃ³w SpoÅ‚ecznych
+///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
+/// \date
+///     2022.11.03 (last updated)
+// //////////////////////////////////////////////////////////////////////////////
+
 #ifndef spsElementH
 #define spsElementH
 
-#include <string> //Musi byæ bo u¿ywany w deklaracjach
+#include <string> //Musi byÄ‡ bo uÅ¼ywany w deklaracjach
 
 //Pomocnicza unia do manipulacji kolorami/dziedzinami elementow
 union DziedzinaWKolorze
 {
 	unsigned ARGB;
-	struct{     //Naiwna kolejnoœæ ARGB nie koniecznie musi dzia³ac
+	struct{     //Naiwna kolejnoÅ›Ä‡ ARGB nie koniecznie musi dziaÅ‚ac
 		unsigned B:8;
 		unsigned G:8;
 		unsigned R:8;
 		unsigned A:8;
 	};
-	float F; //Jakby kto chcia³ widzieæ to jako Float
+	float F; //Jakby kto chciaÅ‚ widzieÄ‡ to jako Float
 	bool operator == (const DziedzinaWKolorze& s) { return this->ARGB==s.ARGB;}
 	void operator = (unsigned ARGB) { this->ARGB=ARGB;} // explicit
-	unsigned IleBitow(); //Zwraca liczbê bitów 1 w tych danych
+	unsigned IleBitow(); //Zwraca liczbÄ™ bitÃ³w 1 w tych danych
 };
 typedef DziedzinaWKolorze DziedzKol;
 
@@ -35,48 +37,48 @@ class Swiat; //Zapowiedz Swiata
 
 class ElementModelu
 {
-	void operator = (const ElementModelu&); //Blokada bezpoœredniego przypisywania
+	void operator = (const ElementModelu&); //Blokada bezpoÅ›redniego przypisywania
  public:
-	unsigned MojID(); //Zwraca Indeks ustawiony przez Œwiat albo jakiœ innych identyfikator wobec swiata
+	unsigned MojID(); //Zwraca Indeks ustawiony przez Åšwiat albo jakiÅ› innych identyfikator wobec swiata
 
-	ElementModelu();//Konstruktor domyœlny
+	ElementModelu();//Konstruktor domyÅ›lny
 
-	virtual ~ElementModelu();//Destruktor wirtualny, bo bêd¹ metody wirtualne
-	virtual bool   Poprawny()=0; //true jeœli jest dobrze zdefiniowany. Jak nie to mo¿e zostaæ usuniêty!
-	virtual double Waznosc() { return 1; } //Zwraca wspólczynnik wa¿noœci obiektu. Np. wagê wêz³a lub linku, priorytet procesu, etc.
+	virtual ~ElementModelu();//Destruktor wirtualny, bo bÄ™dÄ… metody wirtualne
+	virtual bool   Poprawny()=0; //true jeÅ›li jest dobrze zdefiniowany. Jak nie to moÅ¼e zostaÄ‡ usuniÄ™ty!
+	virtual double Waznosc() { return 1; } //Zwraca wspÃ³lczynnik waÅ¼noÅ›ci obiektu. Np. wagÄ™ wÄ™zÅ‚a lub linku, priorytet procesu, etc.
 
-	//WSPARCIE WEJSCIA WYJSCIA i dostêpu do danych tekstowych
-	//Metoda pobiera wszystkie potrzebne dane z listy stringów. Jak blad to IlePol podaje ktora pozycja listy
-	//Jak bez b³edu to IlePol podaje pierwsze pole za list¹
+	//WSPARCIE WEJSCIA WYJSCIA i dostÄ™pu do danych tekstowych
+	//Metoda pobiera wszystkie potrzebne dane z listy stringÃ³w. Jak blad to IlePol podaje ktora pozycja listy
+	//Jak bez bÅ‚edu to IlePol podaje pierwsze pole za listÄ…
 	virtual bool ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& IlePol)=0;
-	//Jak ma jakieœ dane to mo¿na przeczytaæ - i np. zwizualizowaæ, oraz zmieniæ
-	virtual unsigned 	IlePolDanych();  //Ile jest w tej chwili pól
+	//Jak ma jakieÅ› dane to moÅ¼na przeczytaÄ‡ - i np. zwizualizowaÄ‡, oraz zmieniÄ‡
+	virtual unsigned 	IlePolDanych();  //Ile jest w tej chwili pÃ³l
 	virtual const char* NazwaPola(unsigned Ktore);
 	virtual const char* WartoscPola(unsigned Ktore);
 	virtual bool 		UstawPole(unsigned Ktore,const char* NowaWartosc);
-	//Metoda aktualizuj¹ca zapis stanu obiektu na jego liœcie danych. Po jej wykonaniu
-	//pobierane pola musz¹ byæ ju¿ poprawne i mo¿na siê nimi pos³u¿yæ do zapisu do pliku
-	//W szczególnoœci mo¿e realokowaæ listê "Dane", jeœli nie mia³a wczeœniej poprawnego rozmiaru
+	//Metoda aktualizujÄ…ca zapis stanu obiektu na jego liÅ›cie danych. Po jej wykonaniu
+	//pobierane pola muszÄ… byÄ‡ juÅ¼ poprawne i moÅ¼na siÄ™ nimi posÅ‚uÅ¼yÄ‡ do zapisu do pliku
+	//W szczegÃ³lnoÅ›ci moÅ¼e realokowaÄ‡ listÄ™ "Dane", jeÅ›li nie miaÅ‚a wczeÅ›niej poprawnego rozmiaru
 	virtual void AktualizujListeDanych();
 
-	//Wspólny interfejs wizualizacji
+	//WspÃ³lny interfejs wizualizacji
 	virtual void Narysuj()=0;
 	virtual void Wymazuj()=0;
-	virtual bool Trafiony(float X,float Y) { return false;} //Np. do inspekcji myszk¹
+	virtual bool Trafiony(float X,float Y) { return false;} //Np. do inspekcji myszkÄ…
 
 
-	virtual void ChwilaDlaCiebie()=0; //Daje mu szanse na endogenne zmiany stanów
+	virtual void ChwilaDlaCiebie()=0; //Daje mu szanse na endogenne zmiany stanÃ³w
 
-	//Kolor czyli "dziedzinê" musi miec kazdy obiekt w u¿ywany w SPS
-	//Mo¿e on znaczyæ ró¿ne rzeczy, ale przede wszystkim jest potrzebny w ka¿dej wizualizacji
-	//Jego czytanie i pisanie mo¿na obudowaæ w klasach potomnych w razie potrzeby
+	//Kolor czyli "dziedzinÄ™" musi miec kazdy obiekt w uÅ¼ywany w SPS
+	//MoÅ¼e on znaczyÄ‡ rÃ³Å¼ne rzeczy, ale przede wszystkim jest potrzebny w kaÅ¼dej wizualizacji
+	//Jego czytanie i pisanie moÅ¼na obudowaÄ‡ w klasach potomnych w razie potrzeby
 	virtual DziedzKol	PodajDziedzine();
 	virtual void 	UstawDziedzine(const DziedzinaWKolorze& D);
 	virtual void 	UstawDziedzine(unsigned R,unsigned G, unsigned B,unsigned A=0);
 
  public:
- //Klasa pomocnicza obslugujaca zarz¹dzanie danymi tekstowymi obiektów modelu
- //a mog¹ca te¿ przej¹c zarz¹dzanie ich konwersjami i przekszta³cenie w warianty
+ //Klasa pomocnicza obslugujaca zarzÄ…dzanie danymi tekstowymi obiektÃ³w modelu
+ //a mogÄ…ca teÅ¼ przejÄ…c zarzÄ…dzanie ich konwersjami i przeksztaÅ‚cenie w warianty
  class DaneLokalne
  {
 	std::string* Dane;
@@ -88,15 +90,15 @@ class ElementModelu
 
 	void InicjujWgListy(const std::string* Lista,unsigned Ile);
 	void InicjujZDanych(const DaneLokalne& Wzor);
-	void Realokuj(unsigned Ile);//Rozbudowuje lub skraca listê
+	void Realokuj(unsigned Ile);//Rozbudowuje lub skraca listÄ™
 	//Akcesory
 	unsigned Ile() const { return IleDanych;}
 	std::string& operator [] (unsigned index) const ;
 	//Przypisania i konwersje na elementy listy
-	//Zwracaj¹ true jak siê uda³o
+	//ZwracajÄ… true jak siÄ™ udaÅ‚o
 	bool PrzypiszZ(unsigned gdzie,double co);
 	bool PrzypiszZ(unsigned gdzie,long   co);
-	//Zwracaj¹ indeks znaku który nie pasowa³ lub -1 jako sukces
+	//ZwracajÄ… indeks znaku ktÃ³ry nie pasowaÅ‚ lub -1 jako sukces
 	int KonwertujDo(unsigned zkad,float& naco);
 	int KonwertujDo(unsigned zkad,double& naco);
 	int KonwertujDo(unsigned zkad,int& naco);
@@ -104,38 +106,38 @@ class ElementModelu
  };
 
  public:
-// Interface konieczny do elastycznego wczytywania z tablicy stringów lub pliku
-// !!! Ale nie róbcie tego sami w domu :-)
- class WirtualnyKonstruktor   //Klasa bazowa wirtualnych konstruktorów
+// Interface konieczny do elastycznego wczytywania z tablicy stringÃ³w lub pliku
+// !!! Ale nie rÃ³bcie tego sami w domu :-)
+ class WirtualnyKonstruktor   //Klasa bazowa wirtualnych konstruktorÃ³w
  {
   protected:
-	static void Zarejestruj(const char* NazwaKlasyKonstruowanej,WirtualnyKonstruktor* ); //Obiekt musi istnieæ puki jest potrzebny
-	static void Wyrejestruj(const char* NazwaKlasyKonstruowanej,WirtualnyKonstruktor* ); //A potem mo¿na wyrejestrowaæ
+	static void Zarejestruj(const char* NazwaKlasyKonstruowanej,WirtualnyKonstruktor* ); //Obiekt musi istnieÄ‡ puki jest potrzebny
+	static void Wyrejestruj(const char* NazwaKlasyKonstruowanej,WirtualnyKonstruktor* ); //A potem moÅ¼na wyrejestrowaÄ‡
 
   public:
-	static const char* 			 ListaNazwTypow(void); //Generuje przegl¹dow¹ listê nazw zarejestrowanych typów elementów
+	static const char* 			 ListaNazwTypow(void); //Generuje przeglÄ…dowÄ… listÄ™ nazw zarejestrowanych typÃ³w elementÃ³w
 	static WirtualnyKonstruktor* DajWirtualnyKonstruktor(const char* NazwaKlasy); //Znajduje wg. zarejestrowanej nazwy typu
 
-	virtual  const char* NazwaTypu()=0; //Nazwa typu dla tego obiektu konstruuj¹cego
-	virtual  unsigned 	 IleNazwPol();//Dwa pola s¹ obslugiwane nawet jak nie ma nazw!
-	virtual  const char* NazwaPola(unsigned i);//Bezpieczniejsze w u¿yciu, a najlepiej uzywac "nazwy pola" z ElementModelu
+	virtual  const char* NazwaTypu()=0; //Nazwa typu dla tego obiektu konstruujÄ…cego
+	virtual  unsigned 	 IleNazwPol();//Dwa pola sÄ… obslugiwane nawet jak nie ma nazw!
+	virtual  const char* NazwaPola(unsigned i);//Bezpieczniejsze w uÅ¼yciu, a najlepiej uzywac "nazwy pola" z ElementModelu
 
-	virtual  unsigned&    Flagi()=0; //32 bity na jakieœ nieprzewidziane wczeœniej informacje konfiguracyjne
+	virtual  unsigned&    Flagi()=0; //32 bity na jakieÅ› nieprzewidziane wczeÅ›niej informacje konfiguracyjne
 	static const unsigned VFLAG=0x3; //Najmlodsze bity zarezerwowany na tryb wizualizacji
-									 //* 0 nie powinien pokazywaæ obiektów danej klasy!
+									 //* 0 nie powinien pokazywaÄ‡ obiektÃ³w danej klasy!
 									 //* 1 tylko kropki
-									 //* 2 domyslny sposób uproszczony
+									 //* 2 domyslny sposÃ³b uproszczony
 									 //* 3 sposob wirtualny, zwykle graficznie rozbudowany
 
-	//NAJWA¯NIEJSZY ELEMENT -  TWORZENIE OBIEKTU ODPOWIEDNIEGO TYPU POCHODNEGO OD Element
+	//NAJWAÅ»NIEJSZY ELEMENT -  TWORZENIE OBIEKTU ODPOWIEDNIEGO TYPU POCHODNEGO OD Element
 	virtual  ElementModelu*  KonstruktorWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad)=0;
 
   public:
-	DaneLokalne Nazwy; //Nazwy pól, s¹ te¿ dostêpne bezpoœrednio, ale mog¹ byæ puste!!!
+	DaneLokalne Nazwy; //Nazwy pÃ³l, sÄ… teÅ¼ dostÄ™pne bezpoÅ›rednio, ale mogÄ… byÄ‡ puste!!!
  };
 
-//Kazda klasa potomna musi mieæ klasê pe³ni¹ca rolê wirtualnego konstruktora tworz¹cego takie obiekty na stercie
-//Obiekt takiego szablonu trzeba zadeklarowaæ i zainicjowac jako pole static ka¿dej klasy  potomnej dla "Element"
+//Kazda klasa potomna musi mieÄ‡ klasÄ™ peÅ‚niÄ…ca rolÄ™ wirtualnego konstruktora tworzÄ…cego takie obiekty na stercie
+//Obiekt takiego szablonu trzeba zadeklarowaÄ‡ i zainicjowac jako pole static kaÅ¼dej klasy  potomnej dla "Element"
  template<class JakiElement>
  class KonstruktorElementowModelu:public  WirtualnyKonstruktor
  {
@@ -159,37 +161,38 @@ class ElementModelu
 	}
  };
 
- // POLA chronione i publiczne stanowi¹ce dane klasy Element
+ // POLA chronione i publiczne stanowiÄ…ce dane klasy Element
  ///////////////////////////////////////////////////////////////////////////////
  protected:
-	friend class Swiat; //Ma dostêp do pól prywatnych - zw³aszcza do zapisu indeksu
+	friend class Swiat; //Ma dostÄ™p do pÃ³l prywatnych - zwÅ‚aszcza do zapisu indeksu
 
 	unsigned _MojIndeks;//Pole jest ustawiane przez Swiat(!!!)
-				//Pozwala siê obiektowi zlokalizowaæ w strukturach Œwiata
+				//Pozwala siÄ™ obiektowi zlokalizowaÄ‡ w strukturach Åšwiata
 
-	DziedzKol Col; //Ka¿dy "Element" SPS musi mieæ swój g³ówny kolor, który mo¿e znaczyæ ró¿ne rzeczy
-				// ale przede wszystkim jest potrzebny w ka¿dej wizualizacji
+	DziedzKol Col; //KaÅ¼dy "Element" SPS musi mieÄ‡ swÃ³j gÅ‚Ã³wny kolor, ktÃ³ry moÅ¼e znaczyÄ‡ rÃ³Å¼ne rzeczy
+				// ale przede wszystkim jest potrzebny w kaÅ¼dej wizualizacji
  public:
-	//Obsluga danych tekstowych - jako udostêpniony obiekt, co nie jest zbyt bezpieczne (!)
+	//Obsluga danych tekstowych - jako udostÄ™pniony obiekt, co nie jest zbyt bezpieczne (!)
 	DaneLokalne Dane; //I kazdy ElementModelu ma taki jeden obiekt  danych tekstowych
 
 	//Obsluga wirtualnego kreowania
-	//Dla usprawnienia klasa potomna mo¿e zwracaæ adres swojego wirtualnego konstruktora
-	//albo NULL oznaczaj¹cy ¿e trzeba go szukaæ wg. zarejestrowanej nazwy
-	//lub ¿e go nie ma ... (co mo¿e stanowiæ problem)
+	//Dla usprawnienia klasa potomna moÅ¼e zwracaÄ‡ adres swojego wirtualnego konstruktora
+	//albo NULL oznaczajÄ…cy Å¼e trzeba go szukaÄ‡ wg. zarejestrowanej nazwy
+	//lub Å¼e go nie ma ... (co moÅ¼e stanowiÄ‡ problem)
 	virtual WirtualnyKonstruktor* VKonstruktor();
-	virtual unsigned              VWidocznosc(); //Bazuj¹ca na FLAGS informacja o widocznosci
+	virtual unsigned              VWidocznosc(); //BazujÄ…ca na FLAGS informacja o widocznoÅ›ci
 };
 
-/********************************************************************/
-/*			          SPS  version 2011                             */
-/********************************************************************/
-/*           THIS CODE IS DESIGNED & COPYRIGHT  BY:                 */
-/*            W O J C I E C H   B O R K O W S K I                   */
-/*    Instytut Studiow Spolecznych Uniwersytetu Warszawskiego       */
-/*        WWW:  http://wwww.iss.uw.edu.pl/borkowski/                */
-/*                                                                  */
-/*                               (Don't change or remove this note) */
-/********************************************************************/
+/* *******************************************************************/
+/*			            SPS  version 2022                            */
+/* *******************************************************************/
+/*             THIS CODE IS DESIGNED & COPYRIGHT  BY:                */
+/*              W O J C I E C H   B O R K O W S K I                  */
+/*     Instytut StudiÃ³w SpoÅ‚ecznych Uniwersytetu Warszawskiego       */
+/*        RG:https://www.researchgate.net/profile/Wojciech-Borkowski */
+/*        GitHub: https://github.com/borkowsk                        */
+/*                                                                   */
+/*                               (Don't change or remove this note)  */
+/* *******************************************************************/
 #endif    // opiElementH
 
