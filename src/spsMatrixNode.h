@@ -1,12 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Symulator Procesów Sieciowych/Spolecznych (c) Instytut Studiów Spo³ecznych
+// Symulator ProcesÃ³w Sieciowych/Spolecznych (c) Instytut StudiÃ³w SpoÅ‚ecznych
 // Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
 ////////////////////////////////////////////////////////////////////////////////
 // Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Definicje matrycowego typu wêz³a - czyli zawieraj¹cego tablicê "dziedin"
-// która jest wizualizowana jako obrazek i mo¿e byæ obrazkiem zainicjowana
+// Definicje matrycowego typu wÄ™zÅ‚a - czyli zawierajÄ…cego tablicÄ™ "dziedin"
+// ktÃ³ra jest wizualizowana jako obrazek i moÅ¼e byÄ‡ obrazkiem zainicjowana
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef spsMatrixNodeH
 #define spsMatrixNodeH
@@ -19,37 +19,37 @@ class WezelMacierzowy:public GenerycznyWezelSieci
 	//Konstruktor  ustawia domyslne
 	WezelMacierzowy();
 	static KonstruktorElementowModelu<WezelMacierzowy> WirtualnyKonstruktor;
-	//Metoda pobiera wszystkie potrzebne dane z listy stringów. Jak blad to podaje ktora pozycja
+	//Metoda pobiera wszystkie potrzebne dane z listy stringÃ³w. Jak blad to podaje ktora pozycja
 	virtual bool ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad);
 	virtual ~WezelMacierzowy();//Destruktor wirtualny
 	virtual void Narysuj();
 	virtual void Wymazuj();
 	//Proste akcesory
-	virtual bool Trafiony(float X,float Y);//Np. do inspekcji myszk¹
-	virtual double R(double Angle); //Promieñ otaczaj¹cego okrêgu lub elipsy itp...
+	virtual bool Trafiony(float X,float Y);//Np. do inspekcji myszkÄ…
+	virtual double R(double Angle); //PromieÅ„ otaczajÄ…cego okrÄ™gu lub elipsy itp...
 	virtual void InterpretujKomunikat(Komunikat* Co);//Interpretuje komunikat
-	virtual void ChwilaDlaCiebie(); //Daje jakies szanse na endogenne zmiany stanów - tu koloru
-	virtual DziedzKol& operator() (unsigned x,unsigned y); //Dostêp do danych macierzy
+	virtual void ChwilaDlaCiebie(); //Daje jakies szanse na endogenne zmiany stanÃ³w - tu koloru
+	virtual DziedzKol& operator() (unsigned x,unsigned y); //DostÄ™p do danych macierzy
   protected:
 	//DziedzKol  		Col;   //Dziedziczony z ElementModelu
 	//Dane;				//Dziedziczony z  GenerycznyWezelSieci
 	//double    		W,_X,_Y,_Z; //j.w.
-	//Wielobok* 		Ksztalt; //U¿ywany do wyœwietlania pojedynczego "piksela"
+	//Wielobok* 		Ksztalt; //UÅ¼ywany do wyÅ›wietlania pojedynczego "piksela"
 	DziedzinaWKolorze*  Tablica;
 	unsigned 			Wysokosc;
 	unsigned 			Szerokosc;
-	//Procedury pomocnicze przydatne te¿ dla klas potomnych
+	//Procedury pomocnicze przydatne teÅ¼ dla klas potomnych
 	//////////////////////////////////////////////////////////////////////////
-	virtual bool _ZaladujKoloryZPliku(const char* Nazwa,const char* TekstPomocniczy=NULL);//Procedura ³aduj¹ca dane
-				//zwraca "true" jeœli siê uda, false jak nie (komunikat mo¿e byæ na perror)
-				//z plików DAT (tab delimited), i ewentualnie graficznym PBM
-				// - jest w osobnym Ÿródle wiêc mo¿na przeimplementowaæ
-				//TekstPomocniczy to dane po gwiazdce (*) w komórce poprzedzajacej nazwê
-	//Funkcja przeszukiwania "bazy danych". Mo¿e losowo, albo liniowo, ale potomne mog¹ zaiplementowac coœ lepszego
+	virtual bool _ZaladujKoloryZPliku(const char* Nazwa,const char* TekstPomocniczy=NULL);//Procedura Å‚adujÄ…ca dane
+				//zwraca "true" jeÅ›li siÄ™ uda, false jak nie (komunikat moÅ¼e byÄ‡ na perror)
+				//z plikÃ³w DAT (tab delimited), i ewentualnie graficznym PBM
+				// - jest w osobnym ÅºrÃ³dle wiÄ™c moÅ¼na przeimplementowaÄ‡
+				//TekstPomocniczy to dane po gwiazdce (*) w komÃ³rce poprzedzajacej nazwÄ™
+	//Funkcja przeszukiwania "bazy danych". MoÅ¼e losowo, albo liniowo, ale potomne mogÄ… zaiplementowac coÅ› lepszego
 	virtual DziedzinaWKolorze _ZnajdzNajpodobniejszy(DziedzinaWKolorze D,unsigned& Indeks,double& WzglednePobienstwo,unsigned IleProb=Swiat::INVINDEX);
-	//...Element bêd¹cy podstw¹ mo¿e byæ wskazany lub losowy
+	//...Element bÄ™dÄ…cy podstwÄ… moÅ¼e byÄ‡ wskazany lub losowy
 	virtual bool _OdpowiedzLosowymBitem(Komunikat* Pyt,unsigned Ktory=Swiat::INVINDEX,bool AND_OR=true);
-	//MOZE BYÆ KOSZTOWNA! Jak nie podano liczby prób to przegl¹da ca³¹ zawartoœæ!!!
+	//MOZE BYÄ† KOSZTOWNA! Jak nie podano liczby prÃ³b to przeglÄ…da caÅ‚Ä… zawartoÅ›Ä‡!!!
 	virtual bool _OdpowiedzNajpodobniejszym(Komunikat* Pyt,unsigned IleProb=-1);
 };
 
