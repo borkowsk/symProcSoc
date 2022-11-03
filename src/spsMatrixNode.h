@@ -46,9 +46,9 @@ class WezelMacierzowy:public GenerycznyWezelSieci
 				// - jest w osobnym źródle więc można przeimplementować
 				//TekstPomocniczy to dane po gwiazdce (*) w komórce poprzedzajacej nazwę
 	//Funkcja przeszukiwania "bazy danych". Może losowo, albo liniowo, ale potomne mogą zaiplementowac coś lepszego
-	virtual DziedzinaWKolorze _ZnajdzNajpodobniejszy(DziedzinaWKolorze D,unsigned& Indeks,double& WzglednePobienstwo,unsigned IleProb=Swiat::INVINDEX);
+	virtual DziedzinaWKolorze _ZnajdzNajpodobniejszy(DziedzinaWKolorze D,unsigned& Indeks,double& WzglednePobienstwo,unsigned IleProb=Swiat::INV_INDEX);
 	//...Element będący podstwą może być wskazany lub losowy
-	virtual bool _OdpowiedzLosowymBitem(Komunikat* Pyt,unsigned Ktory=Swiat::INVINDEX,bool AND_OR=true);
+	virtual bool _OdpowiedzLosowymBitem(Komunikat* Pyt,unsigned Ktory=Swiat::INV_INDEX,bool AND_OR=true);
 	//MOZE BYĆ KOSZTOWNA! Jak nie podano liczby prób to przegląda całą zawartość!!!
 	virtual bool _OdpowiedzNajpodobniejszym(Komunikat* Pyt,unsigned IleProb=-1);
 };
