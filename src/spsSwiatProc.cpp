@@ -91,7 +91,7 @@ unsigned Swiat::WstawProc(Proces* Jaki,unsigned KtoryWezel)
 Proces*		Swiat::Proc(unsigned Ktory,unsigned KtoryWezel/*=-1*/)
 //Zwi�zane z wez�ami   - jak nie ma w�z�a to k�opot
 {
-	if(KtoryWezel==INVINDEX)
+	if(KtoryWezel == INV_INDEX)
 	{
 		assert("Wariant nie zaimplemetowany"=="Swiat::Proc()");
 		return NULL;//Na razie nic z tym nie umie zrobic
@@ -122,7 +122,7 @@ unsigned     Swiat::NajpilniejszyProc(unsigned KtoryWezel,unsigned* IleRealnie,b
 	if(!Posortuj)
 	{
 		double PriorMax=-DBL_MAX;
-		unsigned Ktory=Swiat::INVINDEX;
+		unsigned Ktory=Swiat::INV_INDEX;
 		unsigned Licznik=0;
 		for(unsigned i=0;i<Procesy[KtoryWezel].Tab.get_size();i++)
 		{
@@ -157,13 +157,13 @@ unsigned     Swiat::NajpilniejszyProc(unsigned KtoryWezel,unsigned* IleRealnie,b
 			double Prior=Pr->Priorytet(); //Debug
 			return 0; //Jak sortowanie to najpilniejszy znajdzie si� na pocz�tku
 		}
-		else return Swiat::INVINDEX; //Nie ma nic
+		else return Swiat::INV_INDEX; //Nie ma nic
 	}
 }
 
 void 	 Swiat::UsunProc(unsigned Ktory,unsigned KtoryWezel/*=-1*/)
 {
-	if(KtoryWezel==INVINDEX)
+	if(KtoryWezel == INV_INDEX)
 	{
 		assert("Wariant nie zaimplemetowany"=="Swiat::UsunProc()");
 	}
@@ -185,7 +185,7 @@ unsigned Swiat::UsunProc(Proces* Jaki,unsigned KtoryWezel/*=-1*/)    //Dlaczego 
 unsigned Swiat::IleProcesow(unsigned KtoryWezel/*=-1*/)
 //jak -1 to ogolnie, jak numer w�z�a to lokalnie
 {
-	if(KtoryWezel==INVINDEX)
+	if(KtoryWezel == INV_INDEX)
 	{
 		assert("Wariant nie zaimplemetowany"=="Swiat::IleProcesow()");
 		return -1;//Na razie nic z tym nie umie zrobic
@@ -199,7 +199,7 @@ unsigned Swiat::IleProcesow(unsigned KtoryWezel/*=-1*/)
 unsigned Swiat::IleMoznaProcesow(unsigned KtoryWezel/*=-1*/)
 //jak -1 to ogolnie, jak numer w�z�a to lokalnie
 {
-	if(KtoryWezel==INVINDEX)
+	if(KtoryWezel == INV_INDEX)
 	{
 		assert("Wariant nie zaimplemetowany"=="Swiat::IleMoznaProcesow()");
 		return -1;//Na razie nic z tym nie umie zrobic

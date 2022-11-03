@@ -120,7 +120,7 @@ bool GenerycznyProces::Poprawny()
 //true je�li jest dobrze zdefiniowany (wci�� istnieje procesor)
 {
 	unsigned procesorek=Procesor();
-	return procesorek!=Swiat::INVINDEX && Swiat::Wezel(procesorek)!=NULL;
+	return procesorek!=Swiat::INV_INDEX && Swiat::Wezel(procesorek) != NULL;
 }
 
 //Metoda pobiera wszystkie potrzebne dane z listy string�w. Jak blad to podaje ktora pozycja listy
@@ -140,7 +140,7 @@ bool GenerycznyProces::ZrobWgListy(const std::string* Lista,unsigned Ile,unsigne
 	if(!Dane.KonwertujDo(2,JakiProcesor))
 	{
 		JakiProcesor=Swiat::ZnajdzIndeksWezla(Dane[2].c_str());
-		if(JakiProcesor==Swiat::INVINDEX) { Blad=2;return false;}
+		if(JakiProcesor==Swiat::INV_INDEX) { Blad=2;return false;}
 	}
 	__ChceWezelNr(JakiProcesor);
 	//I reszta danych

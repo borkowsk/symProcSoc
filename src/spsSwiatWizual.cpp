@@ -307,7 +307,7 @@ void WezelMacierzowy::Narysuj()
 
 void GenerycznePowiazanie::Narysuj()
 {
-	if(_S==Swiat::INVINDEX || _T==Swiat::INVINDEX)
+	if(_S==Swiat::INV_INDEX || _T == Swiat::INV_INDEX)
 			cerr<<endl<<"Niezainicjowany link"<<endl;
 	WezelSieci* Start=Swiat::Wezel(_S);
 	if(Start==NULL)//Ups
@@ -376,7 +376,7 @@ void GenerycznePowiazanie::Narysuj()
 
 void PowiazaniePaboliczne::Narysuj()
 {
-	if(_S==Swiat::INVINDEX || _T==Swiat::INVINDEX)
+	if(_S==Swiat::INV_INDEX || _T == Swiat::INV_INDEX)
 			{ cerr<<endl<<"Niezainicjowany link"<<endl;  return;}
 	WezelSieci* Start=Swiat::Wezel(_S);
 	if(Start==NULL)//Ups
@@ -461,7 +461,7 @@ void PowiazaniePaboliczne::Narysuj()
 void GeneryczneInfo::Narysuj()
 {
 	Powiazanie* Lacze;
-	if(Link==Swiat::INVINDEX)
+	if(Link==Swiat::INV_INDEX)
 		return; //Nierysowalny
 	if((Lacze=Swiat::Lacze(Link))==NULL) return; //Te� nierysowalny
 	if((Swiat::Wezel(Lacze->Poczatek()))==NULL) return; //Ten te� nierysowalny
@@ -530,7 +530,7 @@ void GeneryczneInfo::Wymazuj()
 {
 	//NumerKoloruTla
 	Powiazanie* Lacze;
-	if(Link==Swiat::INVINDEX)
+	if(Link==Swiat::INV_INDEX)
 		return; //Nierysowalny
 	if((Lacze=Swiat::Lacze(Link))==NULL) return; //Te� nierysowalny
 	if((Swiat::Wezel(Lacze->Poczatek()))==NULL) return; //Ten te� nierysowalny

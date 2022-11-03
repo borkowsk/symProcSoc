@@ -46,7 +46,7 @@ bool GeneryczneInfo::Poprawny()
 //true je�li kanal jest dobrze zdefiniowany (wci�� istnieje link, nadawca i odbiorca)
 {
 	Powiazanie* Lacze;
-	return (Link!=Swiat::INVINDEX)
+	return (Link!=Swiat::INV_INDEX)
 		&& (0<Predkosc && Predkosc<=1)
 		&& (Lacze=Swiat::Lacze(Link))!=NULL
 		&& (Swiat::Wezel(Lacze->Poczatek())!=NULL)
@@ -130,10 +130,10 @@ bool 	GeneryczneInfo::ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned
 	else    //Gdy musi poszuka�
 	{
 		unsigned _S=Swiat::ZnajdzIndeksWezla(Dane[1].c_str());
-		if(_S==Swiat::INVINDEX)
+		if(_S==Swiat::INV_INDEX)
 			{ Blad=1; return false;}
 		unsigned _T=Swiat::ZnajdzIndeksWezla(Dane[2].c_str());
-		if(_T==Swiat::INVINDEX)
+		if(_T==Swiat::INV_INDEX)
 			{ Blad=2; return false;}
 		unsigned ll=LicznikZycia; //Bo si� zmieni w funkcji
 		if(!Zaadresuj(_S,_T,Predkosc))

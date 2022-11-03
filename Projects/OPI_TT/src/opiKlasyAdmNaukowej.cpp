@@ -125,7 +125,7 @@ bool ProcesRaportowany::_WyslijRaportOdbiorcy()
 		Odbiorca=Swiat::ZnajdzIndeksWezla(WartoscPola(8));
 	}
 
-	if(Odbiorca!=Swiat::INVINDEX)
+	if(Odbiorca!=Swiat::INV_INDEX)
 	{
 	   if(! KO->Zaadresuj(Procesor(),Odbiorca,0.05))
 	   {
@@ -150,7 +150,7 @@ bool ProcesRaportowany::_WyslijRaportOdbiorcy()
 				break;
 		}
 
-		if(Kanal!=Swiat::INVINDEX) //Kana? znaleziony, mo?na wysla?
+		if(Kanal!=Swiat::INV_INDEX) //Kana? znaleziony, mo?na wysla?
 		  if(! KO->Zaadresuj(Kanal,true,0.05) )
 		  {
 			  WezelSieci* Adresat=Swiat::Wezel(LN->Koniec());   	assert(Adresat!=NULL);
@@ -160,7 +160,7 @@ bool ProcesRaportowany::_WyslijRaportOdbiorcy()
 		  }
 	}
 
-	if(Swiat::WstawInfo(KO)!=Swiat::INVINDEX)
+	if(Swiat::WstawInfo(KO)!=Swiat::INV_INDEX)
 	{
 	   IFTL(LOCLOG+1) clog<<endl<<_LPL("Wyslano raport o ","Sending report about ")<<Dane[1]<<_LPL(" z "," from ")<<MojProcesor->Nazwa()<<_LPL(" do "," to ")<<'"'<<WartoscPola(8)<<'"'<<endl;
 	   TLOG(LOCLOG ,      <<_LPL("Wyslano raport o ","Sending report about ")<<Dane[1]<<_LPL(" z "," from ")<<MojProcesor->Nazwa()<<_LPL(" do "," to ")<<'"'<<WartoscPola(8)<<'"'  )
@@ -214,7 +214,7 @@ void AdministracjaNaukowa::InterpretujKomunikat(Komunikat* Co)
 		KomunikacjaFinansowa* KFI=new KomunikacjaFinansowa(KONTO,JEDNOSTKOWA_WYPLATA);
 		this->FinanseSwobodne-=JEDNOSTKOWA_WYPLATA;
 		if(KFI->Zaadresuj(iKan,!Co->KierunekZgodny(),0.07)
-		   &&  (Swiat::WstawInfo(KFI)!=Swiat::INVINDEX)  )
+		   &&  (Swiat::WstawInfo(KFI)!=Swiat::INV_INDEX)  )
 				; //OK
 				else
 				{
@@ -232,8 +232,8 @@ void AdministracjaNaukowa::InterpretujKomunikat(Komunikat* Co)
 			if(P!=NULL && P->Poczatek()==MojID())
 					{Kanal=i;break;}
 	   }
-	   if(Kanal!=Swiat::INVINDEX && NKO->Zaadresuj(Kanal,true,0.07)
-		  && (Swiat::WstawInfo(NKO)!=Swiat::INVINDEX) )
+	   if(Kanal!=Swiat::INV_INDEX && NKO->Zaadresuj(Kanal, true, 0.07)
+          && (Swiat::WstawInfo(NKO)!=Swiat::INV_INDEX) )
 				 ;//OK
 				 else
 				 TLOG(LOCLOG, <<"\""<<Nazwa()<<"\" nie mo?e przes?a? raportu dalej" )

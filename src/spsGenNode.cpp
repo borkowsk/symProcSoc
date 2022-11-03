@@ -149,7 +149,7 @@ void GenerycznyWezelSieci::_RuszProcesPriorytetowy()
 {
 	unsigned ile=Swiat::IleProcesow(MojID());
 	unsigned ktory=Swiat::NajpilniejszyProc(MojID(),NULL);
-	if(ktory==Swiat::INVINDEX) //Nie ma nic do roboty
+	if(ktory==Swiat::INV_INDEX) //Nie ma nic do roboty
 			return; //To wychodzimy z pracy :-);
 
 	Proces* Roboczy=Swiat::Proc(ktory,MojID());
@@ -171,19 +171,19 @@ void GenerycznyWezelSieci::_RuszKazdyProces()
 
 bool GenerycznyWezelSieci::_KomunikatDoProcesow(Komunikat* Co)
 //Obrobienie komunikatu przez pierwszy ch�tny proces
-{                                           					assert(Co->Kanal()!=Swiat::INVINDEX);
+{                                           					assert(Co->Kanal()!=Swiat::INV_INDEX);
 	unsigned NID=MojID();
 	unsigned ile=Swiat::IleProcesow(NID);
 	Proces*  Pr=NULL;
 	for(unsigned i=0;i<ile;i++)
 	  if((Pr=Swiat::Proc(i,NID))!=NULL)
-	  {                                                         assert(Co->Kanal()!=Swiat::INVINDEX);
+	  {                                                         assert(Co->Kanal()!=Swiat::INV_INDEX);
 		 if(Pr->InterpretujKomunikat(Co) )
 		 {              //Tu ju� komunikat mo�e by� ziszczony
 			return true;//Jak kt�ry� proces uzna� obr�bk� za zako�czon�
 		 }
 	  }
-																assert(Co->Kanal()!=Swiat::INVINDEX);
+																assert(Co->Kanal()!=Swiat::INV_INDEX);
 	return false; //Zaden si� nie przyzna�
 }
 
@@ -221,7 +221,7 @@ void GenerycznyWezelSieci::_KomunikatPrzekazLosowo(Komunikat* Co,double P)
 	{
 	  unsigned a=RANDOM(IlePowFakt);
 										assert(a<IlePowFakt);
-	  if(ListaPow[a]==Swiat::INVINDEX)
+	  if(ListaPow[a]==Swiat::INV_INDEX)
 				continue; //Trafiony ju� u�ywany slot
 
 	  Powiazanie* Pom=Swiat::Lacze(ListaPow[a]);
@@ -231,10 +231,10 @@ void GenerycznyWezelSieci::_KomunikatPrzekazLosowo(Komunikat* Co,double P)
 	  if( Pom->Akceptacja( Klon.get_ptr_val() )  )  //Jawnie sprawdza akceptacje
 	  {
 		 //cout<<Pom->Poczatek()<<"->"<<Pom->Koniec()<<' '<<Kierunek<<endl;
-		 if(Swiat::WstawInfo(Klon.give())!=Swiat::INVINDEX)
+		 if(Swiat::WstawInfo(Klon.give())!=Swiat::INV_INDEX)
 				wyslano++;//OK. Wstawi� klon komunikatu trac�c z "zarz�du"
 
-		 ListaPow[a]=Swiat::INVINDEX;//Blokada tego ��cza
+		 ListaPow[a]=Swiat::INV_INDEX;//Blokada tego ��cza
 
 		 if( DRAND()<P )
 			Klon.take(Co->Klonuj()); //B�dzie potrzebna kolejna kopia

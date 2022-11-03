@@ -58,7 +58,7 @@ static unsigned _WolneInformacje=0;
 // czyli np. "usmierconego" slotu w tablicy
 WezelSieci* Swiat::Wezel(unsigned Ktory)
 {            						assert(_Wezly!=NULL);
-									assert(Ktory!=Swiat::INVINDEX);
+									assert(Ktory!=Swiat::INV_INDEX);
 	if(Ktory<_UzyteWezly)
 		return _Wezly[Ktory];
 		else
@@ -67,7 +67,7 @@ WezelSieci* Swiat::Wezel(unsigned Ktory)
 
 Powiazanie* Swiat::Lacze(unsigned Ktory)
 {            						assert(_Polaczenia!=NULL);
-									assert(Ktory!=Swiat::INVINDEX);
+									assert(Ktory!=Swiat::INV_INDEX);
 	if(Ktory<_UzytePolaczenia)
 		return _Polaczenia[Ktory];
 		else
@@ -76,7 +76,7 @@ Powiazanie* Swiat::Lacze(unsigned Ktory)
 
 Komunikat* Swiat::Info(unsigned Ktory)
 {            						assert(_Informacje!=NULL);
-									assert(Ktory!=Swiat::INVINDEX);
+									assert(Ktory!=Swiat::INV_INDEX);
 	if(Ktory<_UzyteInformacje)
 		return _Informacje[Ktory];
 		else
@@ -217,7 +217,7 @@ unsigned Swiat::WstawInfo(Komunikat* Co,unsigned propozycja/*=-1*/)
 	//Musi sprawdzi� czy komunikat jest OK. Nieco redundantne
 	//bo nawet je�li ju� takie sprawdzenie wykona� kod zlecaj�cy
 	unsigned Kanal=Co->Kanal();
-	if(Kanal==INVINDEX)
+	if(Kanal == INV_INDEX)
 		  {	goto ERROR2; } //Jakby niezainicjowany - bez informacji na log/cerr
 	if(Kanal>=_UzytePolaczenia)
 		  {	goto ERROR;  }//Nie ma takiego po�aczenia/kana�u/

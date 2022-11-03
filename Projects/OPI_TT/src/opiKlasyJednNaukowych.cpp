@@ -102,7 +102,7 @@ void ProcesBadawczy::ChwilaDlaCiebie()
    if(DRAND()<GENERYCZNY_POZIOM_PRZECIEKOW*Zaawansowanie*Zaawansowanie) //Prezentuje dopiero bli?ej ko?ca
 		this->_WyslijInformacje();//Co jaki? czas opowiada czym si? zajmuje. Nie s? to pe?ne wyniki, ale...
 
-   if( ZaplOdbiorca==Swiat::INVINDEX
+   if( ZaplOdbiorca==Swiat::INV_INDEX
    && ZaplanowanyEfekt==NIEWIEM
    && Zaawansowanie>0.75
    && DRAND()<0.333) //Od po po?owie bada? pr?bujemy ustali? jak je spo?ytkowa? cho? nie od razu
@@ -144,7 +144,7 @@ void ProcesBadawczy::ChwilaDlaCiebie()
 				else goto ZAMROZ;//... a jak nie
 	   break;
 	   case RAPORT:
-			if(ZaplOdbiorca!=Swiat::INVINDEX)
+			if(ZaplOdbiorca!=Swiat::INV_INDEX)
 				if(this->_WyslijRaport())
 					break;//Jak si? uda?o
 			goto ZAMROZ;//... a jak nie
@@ -152,7 +152,7 @@ void ProcesBadawczy::ChwilaDlaCiebie()
 	   case NIEWIEM:
 	   default: //Gdy nie jest jasne co pocz??, mrozimy proces w oczekiwaniu
 			if(ZaplanowanyEfekt==RAPORT && DRAND()<0.2) //Czasem dajemy szanse na zmiane decyzji
-					{  ZaplanowanyEfekt=NIEWIEM;ZaplOdbiorca=Swiat::INVINDEX;}
+					{  ZaplanowanyEfekt=NIEWIEM;ZaplOdbiorca=Swiat::INV_INDEX;}
 			//A zawsze przed?u?amy proces w stanie ma?ych wymaga?
 			IFTL(LOCLOG) clog<<endl<<"Wezel \""<<Proc->Nazwa()<<"\" ODWLEKL proces badawczy \""<<this->Nazwa()<<"\" D:"<<hex<<PodajDziedzine().ARGB<<" W/Po terminie ("<<dec<<this->DoKonca()<<")"<<endl;
 			TLOG(LOCLOG, <<"Wezel \""<<Proc->Nazwa()<<"\" ODWLEK? proces badawczy\t\""<<this->Nazwa()<<"\"\tD:\t"<<hex<<PodajDziedzine().ARGB<<"\tW/Po terminie\t"<<dec<<this->DoKonca()   )
@@ -175,7 +175,7 @@ void ProcesBadawczy::ChwilaDlaCiebie()
 bool ProcesBadawczy::InterpretujKomunikat(Komunikat* Co)
 //Przyjmowanie komunikat?w - zwi?zane g??wnie z procesem TT
 //bo tu mo?e zosta? ustalony jaki? odbiorca wyprodukowanej informacji
-{                                            	assert(Co->Kanal()!=Swiat::INVINDEX);
+{                                            	assert(Co->Kanal()!=Swiat::INV_INDEX);
 	if(Co->Rodzaj()=="?SZUKAM.BADAN")
 	{
 		DziedzinaWKolorze D=this->PodajDziedzine();
@@ -185,7 +185,7 @@ bool ProcesBadawczy::InterpretujKomunikat(Komunikat* Co)
 		if(D.IleBitow()>0            //Jakies wspolne bity
 		&& _ZespolRoboczy::_PodobienstwoDziedzin(D,PodajDziedzine())>DRAND())    //I ewentualnie prawdopodobienstwo
 		{
-			Komunikat* Klon=Co->Klonuj();     				assert(Klon->Kanal()!=Swiat::INVINDEX);
+			Komunikat* Klon=Co->Klonuj();     				assert(Klon->Kanal()!=Swiat::INV_INDEX);
 			Klon->UstawRodzaj("MAM.BADANIA!");
 			D.A=Co->PodajDziedzine().A;//Numer produktu b?dzie ten sam
 			Klon->UstawDziedzine(D);   //A w reszcie tylko obiecane bity
@@ -198,13 +198,13 @@ bool ProcesBadawczy::InterpretujKomunikat(Komunikat* Co)
 
 				wb_ptr<KontaktTowarzyski>  Nowy( new KontaktTowarzyski(Procesor(),IndInny,WAGA_NA_DZIENDOBRY,DRAND())  );
 				Nowy->UstawDziedzine(D); //Lacze pokazuje jakie bity byly
-				unsigned Kanal=Swiat::WstawLacze(Nowy.give());       		assert(Kanal!=Swiat::INVINDEX);
+				unsigned Kanal=Swiat::WstawLacze(Nowy.give());       		assert(Kanal!=Swiat::INV_INDEX);
 				Klon->Zaadresuj(Kanal,true,0.1);		//Tu si? b??du juz nie spodziewam...
 			}
 
 			KomunikacjaTowarzyska* KlonT=dynamic_cast<KomunikacjaTowarzyska*>(Klon);
 			if(KlonT) KlonT->OKimTaGadka()=Procesor(); //Informuje ?e gada o sobie :-)
-			if(Swiat::WstawInfo(Klon)==Swiat::INVINDEX)
+			if(Swiat::WstawInfo(Klon)==Swiat::INV_INDEX)
 					TLOG(0,<<"ODPOWIEDZ NIE WYSLANA" )
 					else
 					return true;  //Czyli obsluzyl?
@@ -213,7 +213,7 @@ bool ProcesBadawczy::InterpretujKomunikat(Komunikat* Co)
 	else
 	if( Co->Rodzaj()=="ZAMOWIENIE!"
 		&& //Jak jeszcze nie ma zaplanowanego konkretnego odbiorcy
-	  (  this->ZaplOdbiorca==Swiat::INVINDEX
+	  (  this->ZaplOdbiorca==Swiat::INV_INDEX
 	  || this->ZaplOdbiorca==unsigned(-2)
 	  || this->ZaplOdbiorca==_ZespolRoboczy::DajUrzadPatentowy()
 	  || this->ZaplOdbiorca==_ZespolRoboczy::DajPublikator()
@@ -239,7 +239,7 @@ bool ProcesBadawczy::InterpretujKomunikat(Komunikat* Co)
 			}
 		}
 	}
-															assert(Co->Kanal()!=Swiat::INVINDEX);
+															assert(Co->Kanal()!=Swiat::INV_INDEX);
 	return false;
 }
 
@@ -345,7 +345,7 @@ void JednostkaBadawcza::ChwilaDlaCiebie()
 				double NaIleOsob=0.5*(1.0+IleEtatow*DRAND());//Jeden p?-etat lub wi?cej, czasem sporo wi?cej  *DRAND_LOOP(-3)
 				Nowy->WymaganaIloscPracy=IleDni*NaIleOsob;
 
-				if(Swiat::WstawProc(Nowy.give(),this->MojID())!=Swiat::INVINDEX)
+				if(Swiat::WstawProc(Nowy.give(),this->MojID())!=Swiat::INV_INDEX)
 				{
 					this->PrzyjmijKase( - KosztyBadan); //Na pocz?tku kasuje, bo potem mo?e nie mie?
 					IFTL(LOCLOG+1) clog<<endl<<"Wezel \""<<Nazwa()<<"\" uruchomil nowy proces badawczy. Dni "<<IleDni<<". Etatow "<<double(NaIleOsob)<<endl;
@@ -364,19 +364,19 @@ bool ProcesBadawczy::_WyslijPublikacje()
 {
   //if(DRAND()<0.1) return false;//DEBUG
   unsigned Publikator;
-  if(ZaplOdbiorca!=-2 && ZaplOdbiorca!=Swiat::INVINDEX)
+  if(ZaplOdbiorca!=-2 && ZaplOdbiorca!=Swiat::INV_INDEX)
 	  Publikator=ZaplOdbiorca;
 	  else
 	  Publikator=_ZespolRoboczy::DajPublikator();
-  if(Publikator==Swiat::INVINDEX) //Nie ma gdzie publikowa?
+  if(Publikator==Swiat::INV_INDEX) //Nie ma gdzie publikowa?
   {
-	 ZaplOdbiorca=Swiat::INVINDEX;
+	 ZaplOdbiorca=Swiat::INV_INDEX;
 	 if(DRAND()>0.8) ZaplanowanyEfekt=PATENT;//Zmieniamy plan na patentowanie
 		else  ZaplanowanyEfekt=RAPORT;//Albo jaki? raport
 	 return false;
   }
   //Jest publikator
-  unsigned KoopLinkInd=Swiat::INVINDEX;
+  unsigned KoopLinkInd=Swiat::INV_INDEX;
   Powiazanie* Link=NULL;
   unsigned IleLinkow=Swiat::IlePowiazan();
   for(unsigned i=0;i<IleLinkow;i++)
@@ -388,10 +388,10 @@ bool ProcesBadawczy::_WyslijPublikacje()
 	)
 	{   KoopLinkInd=i; break; }
 
-  if(KoopLinkInd==Swiat::INVINDEX)
+  if(KoopLinkInd==Swiat::INV_INDEX)
   {
 	 wb_ptr<FormalnaKooperacja>  NewKoop(  new FormalnaKooperacja(Procesor(),Publikator,0.25)  );
-	 if((KoopLinkInd=Swiat::WstawLacze(NewKoop.give()))!=Swiat::INVINDEX)
+	 if((KoopLinkInd=Swiat::WstawLacze(NewKoop.give()))!=Swiat::INV_INDEX)
 			;//OK
 			else
 			return false; //Nie uda?o si? utworzy?
@@ -410,7 +410,7 @@ bool ProcesBadawczy::_WyslijPublikacje()
 	Kierunek=false;
   if(!KO->Zaadresuj(KoopLinkInd,Kierunek,0.01+DRAND()*0.03)) //Zwykle true jest OK ale...
 								return false; //Nie uda?o si? zaadresowa????
-  if(Swiat::WstawInfo(KO.give())==Swiat::INVINDEX)
+  if(Swiat::WstawInfo(KO.give())==Swiat::INV_INDEX)
 								return false; //Nie uda?o si?  wys?a?
   return true;
 }
@@ -421,19 +421,19 @@ bool ProcesBadawczy::_WyslijPatent()
 {
   //if(DRAND()<0.1) return false;//DEBUG
   unsigned Patentowy;
-  if(ZaplOdbiorca!=-2 && ZaplOdbiorca!=Swiat::INVINDEX)
+  if(ZaplOdbiorca!=-2 && ZaplOdbiorca!=Swiat::INV_INDEX)
 	  Patentowy=ZaplOdbiorca;
 	  else
 	  Patentowy=_ZespolRoboczy::DajUrzadPatentowy();
-  if(Patentowy==Swiat::INVINDEX) //Nie ma gdzie publikowa?
+  if(Patentowy==Swiat::INV_INDEX) //Nie ma gdzie publikowa?
   {
-	 ZaplOdbiorca=Swiat::INVINDEX;
+	 ZaplOdbiorca=Swiat::INV_INDEX;
 	 if(DRAND()>0.8) ZaplanowanyEfekt=PATENT;//Zmieniamy plan na patentowanie
 		else  ZaplanowanyEfekt=RAPORT;//Albo jaki? raport
 	 return false;
   }
   //Jest publikator
-  unsigned KoopLinkInd=Swiat::INVINDEX;
+  unsigned KoopLinkInd=Swiat::INV_INDEX;
   Powiazanie* Link=NULL;
   unsigned IleLinkow=Swiat::IlePowiazan();
   for(unsigned i=0;i<IleLinkow;i++)
@@ -445,10 +445,10 @@ bool ProcesBadawczy::_WyslijPatent()
 	)
 	{   KoopLinkInd=i; break; }
 
-  if(KoopLinkInd==Swiat::INVINDEX)
+  if(KoopLinkInd==Swiat::INV_INDEX)
   {
 	 wb_ptr<FormalnaKooperacja>  NewKoop(  new FormalnaKooperacja(Procesor(),Patentowy,0.25)  );
-	 if((KoopLinkInd=Swiat::WstawLacze(NewKoop.give()))!=Swiat::INVINDEX)
+	 if((KoopLinkInd=Swiat::WstawLacze(NewKoop.give()))!=Swiat::INV_INDEX)
 			;//OK
 			else
 			return false; //Nie uda?o si? utworzy?
@@ -468,7 +468,7 @@ bool ProcesBadawczy::_WyslijPatent()
 	Kierunek=false;
   if(!KO->Zaadresuj(KoopLinkInd,Kierunek,0.01+DRAND()*0.03)) //Zwykle true jest OK ale...
 								return false; //Nie uda?o si? zaadresowa????
-  if(Swiat::WstawInfo(KO.give())==Swiat::INVINDEX)
+  if(Swiat::WstawInfo(KO.give())==Swiat::INV_INDEX)
 								return false; //Nie uda?o si?  wys?a?
   return true;
 }
@@ -476,7 +476,7 @@ bool ProcesBadawczy::_WyslijPatent()
 bool ProcesBadawczy::_WyslijRaport()
 //Pomocnicza procedura raportowania - do odbiorcy albo administracji jak brak
 {
-	if(this->ZaplOdbiorca==Swiat::INVINDEX)
+	if(this->ZaplOdbiorca==Swiat::INV_INDEX)
 					return false; //Nie jest jasne komu ten raport wysla?
 
 	KomunikacjaOficjalna* KO=new KomunikacjaOficjalna("RAPORT.BADANIA",Procesor());
@@ -488,7 +488,7 @@ bool ProcesBadawczy::_WyslijRaport()
 	if(this->ZaplOdbiorca==-2)//Domyslny odbiorca
 	{
 		//Domyslny odbiorca - dosy? skomplikowane szukanie adresata raportu.
-		unsigned Kanal=Swiat::INVINDEX;
+		unsigned Kanal=Swiat::INV_INDEX;
 		for(unsigned i=0;i<Swiat::IlePowiazan();i++)
 		{
 			PodlegloscOrganizacyjna* P=dynamic_cast<PodlegloscOrganizacyjna*>(Swiat::Lacze(i));
@@ -499,7 +499,7 @@ bool ProcesBadawczy::_WyslijRaport()
 			}
 		}
 
-		if(  Kanal==Swiat::INVINDEX  )
+		if(  Kanal==Swiat::INV_INDEX  )
 		{
 		   IFTL(LOCLOG+1) clog<<endl<<"Proces "<<Nazwa()<<" na \""<<MojProcesor->Nazwa()<<"\"nie ma kanalu do jednostki nadrzednej administracyjnie"<<endl;
 		   TLOG(LOCLOG, <<"Proces "<<Nazwa()<<" na \""<<MojProcesor->Nazwa()<<"\"nie ma kanalu do jednostki nadrzednej administracyjnie")
@@ -523,7 +523,7 @@ bool ProcesBadawczy::_WyslijRaport()
 	}
 
 	//Wysylanie
-	if(Swiat::WstawInfo(KO)!=Swiat::INVINDEX)
+	if(Swiat::WstawInfo(KO)!=Swiat::INV_INDEX)
 	{
 	   IFTL(LOCLOG+1) clog<<_LPL("Wyslano raport o ","Sending report about ")<<Nazwa()<<" D:"<<hex<<PodajDziedzine().ARGB<<dec<<_LPL(" z "," from ")<<MojProcesor->Nazwa()<<_LPL(" do nr "," to n# ")<<dec<<ZaplOdbiorca<<endl;
 	   TLOG(LOCLOG ,      <<_LPL("Wyslano raport o ","Sending report about ")<<Nazwa()<<" D:"<<hex<<PodajDziedzine().ARGB<<dec<<_LPL(" z "," from ")<<MojProcesor->Nazwa()<<_LPL(" do nr "," to n# ")<<dec<<ZaplOdbiorca<<'"'  )
@@ -542,12 +542,12 @@ bool ProcesBadawczy::_WyslijInformacje(unsigned link/*=-1*/)
 //Do rozsylania informacji ?e si? czyms takim zajmujemy - socjalna lub oficjalna
 {
   Powiazanie* LNK;
-  if(link!=Swiat::INVINDEX && (LNK=Swiat::Lacze(link))!=NULL )
+  if(link!=Swiat::INV_INDEX && (LNK=Swiat::Lacze(link)) != NULL )
   {
 	  if(LNK->Poczatek()!=Procesor())//Trzeba szuka? symetrycznego ??cza towarzyskiego
 	  {
 		 link=ProcesSpoleczny::_JestPowiazanySocjalnie(Procesor(),LNK->Poczatek());
-		 if(link==Swiat::INVINDEX) //Nie ma?
+		 if(link==Swiat::INV_INDEX) //Nie ma?
 				return false;  //Mog?by tworzy?
 	  }
 	  //A w przeciwnym wypadku jest chyba OK, cho? mo?e by? to ??cze jako? "upierdliwe"? (nie przepuszczalne)
@@ -569,13 +569,13 @@ bool ProcesBadawczy::_WyslijInformacje(unsigned link/*=-1*/)
 	 //...
   }
   //GOTOWY:
-  if(link!=Swiat::INVINDEX)//Nie znalaz? takiego!
+  if(link!=Swiat::INV_INDEX)//Nie znalaz? takiego!
   {
 	wb_ptr<KomunikacjaOficjalna> KT( new  KomunikacjaOficjalna("PREZENTACJA",Procesor())  );
 	KT->UstawDziedzine(this->PodajDziedzine());
 	if(KT->Zaadresuj(link,true,0.05)) //Jak si? uda zaadresowa?
 	{
-	 if(Swiat::WstawInfo(KT.give())!=Swiat::INVINDEX)
+	 if(Swiat::WstawInfo(KT.give())!=Swiat::INV_INDEX)
 				{ return true;}
 				else
 				{

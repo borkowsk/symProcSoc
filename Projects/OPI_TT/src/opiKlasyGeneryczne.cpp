@@ -51,7 +51,7 @@ void WezelMacierzowy::InterpretujKomunikat(Komunikat* Co)
 	if(DRAND()<(1-GENERYCZNY_POZIOM_PRZECIEKOW) //Czasem zamiast odwpowiada� rozsy�a dalej domyslnym algorytmem
 		&& Tablica)
 	{
-		_OdpowiedzLosowymBitem(Co,Swiat::INVINDEX,true);//ostatnie to AND_OR
+		_OdpowiedzLosowymBitem(Co, Swiat::INV_INDEX, true);//ostatnie to AND_OR
 	}
 	//Rozsylanie ...
 	else _KomunikatPrzekazLosowo(Co,GENERYCZNY_POZIOM_PRZECIEKOW);//Przekazuje dalej, z rzadka dwum odbiorcom

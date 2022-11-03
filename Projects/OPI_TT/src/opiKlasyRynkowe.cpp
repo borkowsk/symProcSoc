@@ -182,7 +182,7 @@ void ProcesProdukcyjny::ChwilaDlaCiebie()
 			IFTL(LOCLOG+1) clog<<endl<<"\""<<MojProcesor->Nazwa()<<"\" "<<_LPL("ustalil nowy proces","set new proc.")<<' '<<Nowy->Dane[1]<<':'<<hex<<Nowy->PodajDziedzine().ARGB<<" Zapotrz.:"<<dec<<Nowy->Zapotrzebowanie<<" Zaang.:"<<Zaangazowanie<<endl;
 			TLOG(LOCLOG, <<"\""<<MojProcesor->Nazwa()<<"\" "<<_LPL("ustalil nowy proces","set new proc.")<<'\t'<<Nowy->Dane[1]<<":\t"<<hex<<Nowy->PodajDziedzine().ARGB<<"\tZapotrz.:\t"<<dec<<Nowy->Zapotrzebowanie<<"\tZaang.:\t"<<Zaangazowanie )
 
-			if(Swiat::WstawProc(Nowy.give(),Procesor())!=Swiat::INVINDEX) //I procesor te¿...
+			if(Swiat::WstawProc(Nowy.give(),Procesor())!=Swiat::INV_INDEX) //I procesor te¿...
 							;//Uda³o sie
 				else
 				TLOG(LOCLOG, <<"Nie udane odpalenie procesu na "<<"\""<<MojProcesor->Nazwa()<<"\" " )
@@ -225,7 +225,7 @@ bool ProcesProdukcyjny::InterpretujKomunikat(Komunikat * Co)
 			 Zwrot->Ile=1; //Nie da³o siê podzieliæ zawartoœci
 		Komunikat* PaP=Zwrot->Klonuj(); //Dziedzina z klonowania  paczki
 		PaP->Zwrotnie(0.012);//Powinno zadzia³aæ
-		if(Swiat::WstawInfo(PaP)!=Swiat::INVINDEX && Zwrot->Ile>1) //Jak zosta³a druga porcja
+		if(Swiat::WstawInfo(PaP)!=Swiat::INV_INDEX && Zwrot->Ile > 1) //Jak zosta³a druga porcja
 		{
 		  PaP=Zwrot->Klonuj(); //Dziedzina z klonowania  paczki
 		  PaP->Zwrotnie(0.015);
@@ -275,7 +275,7 @@ bool ProcesProdukcyjny::_WyslijProduktyNaRynek()
 		NazwaOdbiorcy=WartoscPola(8);
 
 	unsigned Odbiorca=Swiat::ZnajdzIndeksWezla(NazwaOdbiorcy.c_str());
-	if(Odbiorca==Swiat::INVINDEX)
+	if(Odbiorca==Swiat::INV_INDEX)
 	{
 		//Nie ma ju¿ dostêpnego odbiorcy!!!   PaP usunie paczkê na koncu metody
 		IFTL(LOCLOG) clog<<endl<<"Proces \""<<Nazwa()<<"\" utracil odbiorce \""<<NazwaOdbiorcy.c_str()<<"\""<<endl;
@@ -288,7 +288,7 @@ bool ProcesProdukcyjny::_WyslijProduktyNaRynek()
 	}
 
 	if(PaP->Zaadresuj(NID,Odbiorca,0.02) //Jak siê uda poprawnie zaadresowaæ
-	   &&  (Swiat::WstawInfo(PaP.give())!=Swiat::INVINDEX) )    //To wysy³amy...
+	   &&  (Swiat::WstawInfo(PaP.give())!=Swiat::INV_INDEX) )    //To wysy³amy...
 					;//OK
 			else //Mo¿e siê np. zdarzyæ gdy system uleg³ zawa³owi komunikatów
 			{
@@ -302,7 +302,7 @@ bool ProcesProdukcyjny::_WyslijProduktyNaRynek()
 
 void Firma::InterpretujKomunikat(Komunikat* Co)
 //Przyjmowanie komunikatów
-{                                                                         assert(Co->Kanal()!=Swiat::INVINDEX);
+{                                                                         assert(Co->Kanal()!=Swiat::INV_INDEX);
 	KomunikacjaFinansowa* KFI=dynamic_cast<KomunikacjaFinansowa*>(Co);
 	if(KFI!=NULL)
 	{
@@ -346,20 +346,20 @@ void Firma::InterpretujKomunikat(Komunikat* Co)
 
 				wb_ptr<KontaktTowarzyski>  Nowy( new KontaktTowarzyski(MojID(),IndInny,WAGA_NA_DZIENDOBRY,DRAND())  );
 				Nowy->UstawDziedzine(D);
-				unsigned Kanal=Swiat::WstawLacze(Nowy.give());       		assert(Kanal!=Swiat::INVINDEX);
+				unsigned Kanal=Swiat::WstawLacze(Nowy.give());       		assert(Kanal!=Swiat::INV_INDEX);
 				Klon->Zaadresuj(Kanal,true,0.1);		//Tu siê b³êdu juz nie spodziewam...
 			}
 
 			KomunikacjaTowarzyska* KlonT=dynamic_cast<KomunikacjaTowarzyska*>(Klon);
 			if(KlonT) KlonT->OKimTaGadka()=MojID();
-			if(Swiat::WstawInfo(Klon)==Swiat::INVINDEX)
+			if(Swiat::WstawInfo(Klon)==Swiat::INV_INDEX)
 					TLOG(0,<<"ODPOWIEDZ NIE WYSLANA" )
 					else
 					return ;  //Czyli obsluzyl?
 		}
 	}
 	else
-	{                             										assert(Co->Kanal()!=Swiat::INVINDEX);
+	{                             										assert(Co->Kanal()!=Swiat::INV_INDEX);
 	//Obróbka domyœlna
 	GenerycznyWezelSieci::InterpretujKomunikat(Co);
 	}
@@ -430,7 +430,7 @@ void RynekZbytu::InterpretujKomunikat(Komunikat* Co)
 		Zaplata->UstawDziedzine(Paka->PodajDziedzine()); //Za jaki produkt ta faktura
 
 		if(Zaplata->Zaadresuj(Co->Kanal(),!Co->KierunekZgodny(),0.03)
-			&& (Swiat::WstawInfo(Zaplata)!=Swiat::INVINDEX) )
+			&& (Swiat::WstawInfo(Zaplata)!=Swiat::INV_INDEX) )
 				;//OK
 				else
 				{
@@ -441,7 +441,7 @@ void RynekZbytu::InterpretujKomunikat(Komunikat* Co)
 		{
 			Komunikat* Zwrot=Paka->Klonuj();//Mog³by jakoœ zaznaczaæ ¿e t zwrot?
 			if(Zwrot->Zwrotnie()
-			 && Swiat::WstawInfo(Zwrot)!=Swiat::INVINDEX)
+			 && Swiat::WstawInfo(Zwrot)!=Swiat::INV_INDEX)
 				;//OK
 				else
 				TLOG(1, <<"Nie uda³o siê wys³aæ zap³aty za paczkê "<<hex<<Co->PodajDziedzine().ARGB<<" Do "<<Co->Nadawca()  )
@@ -459,7 +459,7 @@ void RynekZbytu::InterpretujKomunikat(Komunikat* Co)
 			ODP->UstawRodzaj("TEST.OK");
 			ODP->UstawDziedzine(D);
 			if(ODP->Zwrotnie()
-			 && Swiat::WstawInfo(ODP)!=Swiat::INVINDEX)
+			 && Swiat::WstawInfo(ODP)!=Swiat::INV_INDEX)
 			 ;
 			 else
 			 TLOG(1, <<"Nie uda³o siê wys³aæ odpowiedzi na TEST rynkowy D:"<<hex<<Co->PodajDziedzine().ARGB<<" Do "<<Co->Nadawca()  )
@@ -493,7 +493,7 @@ void Firma::_RozeslijNaleznosci(DziedzinaWKolorze Produkt,float& wplyw)
 		Zaplata->UstawDziedzine(Produkt); //Za jaki produkt ta kasiora
 		bool Kierunek=FK->Poczatek()==MojID();
 		if(Zaplata->Zaadresuj(i,Kierunek,0.03)
-		&& (Swiat::WstawInfo(Zaplata)!=Swiat::INVINDEX) )
+		&& (Swiat::WstawInfo(Zaplata)!=Swiat::INV_INDEX) )
 			{    //Posz³o chyba?
 				if(IleWydane>WartoscZaplaty)//Placiæ trzeba, nawet jak zabraknie bo umowa g³upia
 					IleWydane-=WartoscZaplaty;

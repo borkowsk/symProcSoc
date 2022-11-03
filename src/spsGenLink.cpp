@@ -128,11 +128,11 @@ void  GenerycznePowiazanie::PodajPozycje(double D,bool KierunekZwykly,double& X,
 		 { Blad=5; return false;}
 
 	_S=Swiat::ZnajdzIndeksWezla(Dane[1].c_str());
-	if(_S==Swiat::INVINDEX)
+	if(_S==Swiat::INV_INDEX)
 		{ Blad=1; return false;}
 
 	_T=Swiat::ZnajdzIndeksWezla(Dane[2].c_str());
-	if(_T==Swiat::INVINDEX)
+	if(_T==Swiat::INV_INDEX)
 		{ Blad=2; return false;}
 
 	Blad=6;//Uda�o si� wczyta� do indeksu 5

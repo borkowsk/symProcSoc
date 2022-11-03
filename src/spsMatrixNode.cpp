@@ -70,7 +70,7 @@ DziedzinaWKolorze WezelMacierzowy::_ZnajdzNajpodobniejszy(DziedzinaWKolorze D,
 //ale potomne mog� zaiplementowac co� lepszego
 {
 	//static
-	Indeks=Swiat::INVINDEX; //Jakby nie znalza�
+	Indeks=Swiat::INV_INDEX; //Jakby nie znalza�
 	WzglednePobienstwo=0;//Podobienstwo mniejsze ni� 0 by� nie mo�e
 	DziedzinaWKolorze Wynik;//Na rezultat
 	double IleBitowWzorca=D.IleBitow();  //Zeby tego ci�gle nie powtarza�, ale czy potrzebne
@@ -237,14 +237,14 @@ bool WezelMacierzowy::_OdpowiedzLosowymBitem(Komunikat* Pyt,unsigned Ktory,bool 
 		{
 			DziedzKol Pom=Pyt->PodajDziedzine();//Jaka jest dziedzina komunikatu
 			unsigned i=Ktory;
-			if(i==Swiat::INVINDEX)
+			if(i==Swiat::INV_INDEX)
 						RANDOM(Szerokosc*Wysokosc); //Jaki� losowy element
 			if(AND_OR)
 				Pom.ARGB=Tablica[i].ARGB & Pom.ARGB;// Cz�� wsp�lna pytania i odpowiedzi
 			else
 				Pom.ARGB=Tablica[i].ARGB | Pom.ARGB;// Suma logiczna pytania i odpowiedzi
 			Klon->UstawDziedzine(Pom);
-			return Swiat::WstawInfo(Klon.give())!=Swiat::INVINDEX;//Wstawi� klon komunikatu - trac�c z "zarz�du"
+			return Swiat::WstawInfo(Klon.give())!=Swiat::INV_INDEX;//Wstawi� klon komunikatu - trac�c z "zarz�du"
 		}
 	return false;
 }
@@ -261,7 +261,7 @@ bool WezelMacierzowy::_OdpowiedzNajpodobniejszym(Komunikat* Pyt,unsigned IleProb
 	ODP->UstawRodzaj(Pom.c_str());
 	ODP->UstawDziedzine(D);
 	if(ODP->Zwrotnie()
-		&& Swiat::WstawInfo(ODP)!=Swiat::INVINDEX)
+		&& Swiat::WstawInfo(ODP)!=Swiat::INV_INDEX)
 			 return true;
 		else
 		TLOG(1, <<"Nie uda�o si� wys�a� odpowiedzi na komunikat rodzaju \""<<Pyt->Rodzaj()<<"\" D:"<<hex<<Pyt->PodajDziedzine().ARGB<<" Do "<<Pyt->Nadawca()  )

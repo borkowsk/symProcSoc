@@ -51,7 +51,7 @@ void ProcesSpoleczny::ChwilaDlaCiebie()
 //Tworzenie nowych kontaktów i podtrzymywanie starych
 
 {
-	unsigned    MPRNID=this->Procesor();     					assert(MPRNID!=Swiat::INVINDEX);
+	unsigned    MPRNID=this->Procesor();     					assert(MPRNID!=Swiat::INV_INDEX);
 	WezelSieci* MojProcesor=Swiat::Wezel(MPRNID);
 	if(this->PodajDziedzine().ARGB==0) //Skopiowanie dziedziny gdy jej nie ma
 				this->UstawDziedzine(MojProcesor->PodajDziedzine());
@@ -73,12 +73,12 @@ void ProcesSpoleczny::ChwilaDlaCiebie()
 
 		float Podob;
 		if( (Podob=_ZespolRoboczy::_PodobienstwoDziedzin( PodajDziedzine() , PtrInny->PodajDziedzine() )) > DRAND()
-			&& _JestPowiazanySocjalnie(MPRNID,IndInny)==Swiat::INVINDEX
+			&& _JestPowiazanySocjalnie(MPRNID,IndInny)==Swiat::INV_INDEX
 			)
 			{
 			   double Waznosc=PtrInny->Waznosc();
 			   unsigned Kanal=_StworzKanal(IndInny,Podob*pow(Waznosc,0.5)*WAGA_NA_DZIENDOBRY,0);//Parametr==0 czyli losowana krzywizna
-			   if(Kanal!=Swiat::INVINDEX)
+			   if(Kanal!=Swiat::INV_INDEX)
 					_WyslijAutoprezentacje(Kanal,true);//Pierwsza zawiera ca³¹ informacje o dziedzinie wez³a
 			}
 	   }
@@ -160,7 +160,7 @@ bool ProcesSpoleczny::InterpretujKomunikat(Komunikat* Co)
 //Ewentualnie odpowiada na komunikat. Ale nie tak czy inaczej  (czasem???)
 //nie uznaje za obrobiony wiêc mo¿e zostaæ jeszcze jakoœ przetworzony
 //przez inne procesy. Np. zapamiêtany.
-{                                                                       assert(Co->Kanal()!=Swiat::INVINDEX);
+{                                                                       assert(Co->Kanal()!=Swiat::INV_INDEX);
 	KomunikacjaTowarzyska* Info=dynamic_cast<KomunikacjaTowarzyska*>(Co);
 	if(Info!=NULL)
 	{   //Jeœli uznamy za warty odpowiedzi to próbujemy odpowiedzieæ
@@ -176,7 +176,7 @@ bool ProcesSpoleczny::InterpretujKomunikat(Komunikat* Co)
 		   Tmp->Zwrotnie();    //W zwrotnie dla Kom. spoelcznych jest to zaimlementowane
 		   unsigned Kanal=Tmp->Kanal();//... odczytac go ...
 
-		   if(Kanal==Swiat::INVINDEX)//I jeœli nie uda sie adresowanie zwrotne
+		   if(Kanal==Swiat::INV_INDEX)//I jeœli nie uda sie adresowanie zwrotne
 		   {
 			 //To trzeba stworzyæ nowy link. Info jest ju¿ niepoprawne...
 			 WezelSieci* PtrInny=Swiat::Wezel(IndInny);
@@ -185,11 +185,11 @@ bool ProcesSpoleczny::InterpretujKomunikat(Komunikat* Co)
 			 if(KT) Parametr=KT->DajWygiecie(); //Takie samo wygiecie, ale link w drug¹ stronê
 			 double Waznosc=PtrInny->Waznosc();
 			 Kanal=_StworzKanal(IndInny,Podob*pow(Waznosc,0.5)*WAGA_NA_DZIENDOBRY,Parametr);
-			 if(Kanal!=Swiat::INVINDEX)
+			 if(Kanal!=Swiat::INV_INDEX)
 					_WyslijAutoprezentacje(Kanal,true);//Otwieraj¹ca zawiera ca³¹ informacje o dziedzinie wez³a
 
 			 //GDY ZNISZCZYL KOMUNIKAT TO GO NIKT INNY NIE MOZE OBRABIAÆ!
-			 if(Co->Kanal()==Swiat::INVINDEX)//Zabezpieczenie po b³êdzie
+			 if(Co->Kanal()==Swiat::INV_INDEX)//Zabezpieczenie po b³êdzie
 					return true;
 		   }
 		   else //Adresowanie zwrotne siê uda³o - ktoœ kogo ju¿ znamy
@@ -197,7 +197,7 @@ bool ProcesSpoleczny::InterpretujKomunikat(Komunikat* Co)
 			if(DRAND()>0.5) //Nawet ciekawe konwersacje w koncu wygasaj¹. Inaczej zrobi nat³ok informacji!!!
 			  _WyslijAutoprezentacje(Kanal,false); //Wysy³amy jeden bit ze swojej dziedziny - co i tak jest du¿¹ iloœci¹ informacji
 		   }
-		}																assert(Co->Kanal()!=Swiat::INVINDEX);
+		}																assert(Co->Kanal()!=Swiat::INV_INDEX);
 	}
 	else
 	{   //Podgladanie o autorstwa i proba nawiazania kontaktu
@@ -213,7 +213,7 @@ bool ProcesSpoleczny::InterpretujKomunikat(Komunikat* Co)
 			if(IndInny==Info->Nadawca())
 					return false;//Interesuja nas tylko sytuacje poœrednie
 			unsigned Zwrotny;
-			if((Zwrotny=_JestPowiazanySocjalnie(Procesor(),IndInny))==Swiat::INVINDEX) //Nie ma takiego polaczenia
+			if((Zwrotny=_JestPowiazanySocjalnie(Procesor(),IndInny))==Swiat::INV_INDEX) //Nie ma takiego polaczenia
 			{
 			 //Trzena stworzyæ nowy kana³ spo³eczny. Komunikacja oficjalna mog³a nie przyjœæ po linku spo³ecznym
 			 WezelSieci* PtrInny=Swiat::Wezel(IndInny);
@@ -222,18 +222,18 @@ bool ProcesSpoleczny::InterpretujKomunikat(Komunikat* Co)
 			 if(KT) Parametr=KT->DajWygiecie(); //Dziedziczy wygiecie po przekazicielu
 			 double Waznosc=PtrInny->Waznosc();                   //Waga na "DZIEN DOBRY" zale¿y od wagi linku ktorym przysz³o
 			 unsigned NowyKanal=_StworzKanal(IndInny,Podob*pow(Waznosc,0.5)*(KT?KT->Waznosc():WAGA_NA_DZIENDOBRY),Parametr);
-			 if(NowyKanal!=Swiat::INVINDEX)
+			 if(NowyKanal!=Swiat::INV_INDEX)
 					_WyslijAutoprezentacje(NowyKanal,true);//Otwieraj¹ca zawiera ca³¹ informacje o dziedzinie wez³a
 			}
 			else //Ju¿ siê znamy...
-			{                                         assert(Zwrotny!=Swiat::INVINDEX);
+			{                                         assert(Zwrotny!=Swiat::INV_INDEX);
 				//Mo¿na by przytakn¹æ....
 			  //	if(DRAND()>0.3) //Ale czy zawsze? Bo od podtrzymywania linków jest normalny proces spoleczny
 					_WyslijAutoprezentacje(Zwrotny,false);
 			}
-		}                                                           assert(Co->Kanal()!=Swiat::INVINDEX);
+		}                                                           assert(Co->Kanal()!=Swiat::INV_INDEX);
 	}
-																	assert(Co->Kanal()!=Swiat::INVINDEX);
+																	assert(Co->Kanal()!=Swiat::INV_INDEX);
 	return false; // mo¿e zostaæ jeszcze jakoœ przetworzony dalej
 }
 
@@ -260,7 +260,7 @@ unsigned ProcesSpoleczny::_JestPowiazanySocjalnie(unsigned Startowy,unsigned Doc
   //Zadnego spe³niaj¹cego wymaganie nie znaleziono
   IFTL(LOGSOC)clog<<endl<<"Brak  powiazania "<<Startowy<<"-//->"<<Docelowy<<endl;
   TLOG(LOGSOC, <<"Brak  powiazania "<<Startowy<<"-//->"<<Docelowy      )
-  return Swiat::INVINDEX;
+  return Swiat::INV_INDEX;
 }
 
 bool ProcesSpoleczny::_WyslijAutoprezentacje(unsigned kanal,bool wszystko)
@@ -300,7 +300,7 @@ bool ProcesSpoleczny::_WyslijAutoprezentacje(unsigned kanal,bool wszystko)
 	IFTL(LOGSOC)clog<<endl<<"Wysylam info "<<unsigned(Info->Nadawca())<<"====>"<<unsigned(Info->Odbiorca())<<" "<<hex<<Info->PodajDziedzine().ARGB<<dec<<' ';
 	TLOG(LOGSOC, <<"Wysylam info "<<unsigned(Info->Nadawca())<<"====>"<<unsigned(Info->Odbiorca())<<" "<<hex<<Info->PodajDziedzine().ARGB<<dec<<' ' )
 
-	bool Result=Swiat::WstawInfo(Info.give())!=Swiat::INVINDEX; //Zwroci true jak wys³a³
+	bool Result=Swiat::WstawInfo(Info.give())!=Swiat::INV_INDEX; //Zwroci true jak wys³a³
 
 	IFTL(LOGSOC)clog<<(Result?"OK":"Upsss!!!")<<endl;
 	TLOG(LOGSOC, <<(Result?"OK":"Upsss!!!")     )
@@ -312,12 +312,12 @@ unsigned ProcesSpoleczny::_StworzKanal(unsigned IndInny,float Waga,float Paramet
 {
 	WezelSieci* PtrInny=Swiat::Wezel(IndInny);
 	if(PtrInny==NULL) //Przestal istnieæ?!?!
-			return Swiat::INVINDEX;
+			return Swiat::INV_INDEX;
 
 	DziedzinaWKolorze Nowa;
 	Nowa.ARGB=PtrInny->PodajDziedzine().ARGB & PodajDziedzine().ARGB;
 	if(Nowa.A==0 && Nowa.R==0 && Nowa.G==0 && Nowa.B==0)
-			return Swiat::INVINDEX;  //0 wspólnych tematów, o czym mieliby gadaæ????
+			return Swiat::INV_INDEX;  //0 wspólnych tematów, o czym mieliby gadaæ????
 
 	//Nowa.A=0; //Alfa nieistotna ???
 	if(Waga>1) Waga=1;
@@ -379,7 +379,7 @@ bool KontaktTowarzyski::Akceptacja(Komunikat * Co)
 }
 
 bool KomunikacjaTowarzyska::Zwrotnie(float _Szybkosc)
-{                                          							assert(Link!=Swiat::INVINDEX);
+{                                          							assert(Link!=Swiat::INV_INDEX);
 	Powiazanie* P=Swiat::Lacze(this->Link);
 	if(P==NULL)//£¹cze w miêdzyczasie przesta³o istnieæ wiêc nie ma sk¹d wzi¹æ informacji o nim
 		   {  this->Link=-1; return false; }
@@ -393,7 +393,7 @@ bool KomunikacjaTowarzyska::Zwrotnie(float _Szybkosc)
 	unsigned ile=Swiat::IlePowiazan(); KontaktTowarzyski* Debugowy=NULL;
 	unsigned Startowy=P->Koniec();  //Szukamy wiêc takiego którego poczatek bedzie koncem
 	unsigned Docelowy=P->Poczatek();//a koniec pocz¹tkiem
-	unsigned indx=Swiat::INVINDEX; //Na indx wychodzi informacja gdy siê znajdzie
+	unsigned indx=Swiat::INV_INDEX; //Na indx wychodzi informacja gdy siê znajdzie
 	for(unsigned i=0;i<ile;i++)
 	{
 	 Powiazanie* Lacze;
@@ -409,7 +409,7 @@ bool KomunikacjaTowarzyska::Zwrotnie(float _Szybkosc)
 	  }
 	 }
 	}
-	if(indx==Swiat::INVINDEX) //Nie uda³o siê znaleŸæ
+	if(indx==Swiat::INV_INDEX) //Nie uda³o siê znaleŸæ
 		   {  this->Link=-1; return false; }
 	//UDALO SIE
 	Zrodlowy->ZmienWage(1+TEMPO_WZROSTU_LINKU);//Jak udana adresowanie zwrotne to podwy¿szamy wagê linku
