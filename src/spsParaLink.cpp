@@ -21,13 +21,13 @@ using namespace std;
 using namespace wbrtm;
 
 //---------------------------------------------------------------------------
-PowiazaniePaboliczne::KonstruktorElementowModelu<PowiazaniePaboliczne>
-						PowiazaniePaboliczne::WirtualnyKonstruktor("ParaLink");
-PowiazaniePaboliczneSkierowane::KonstruktorElementowModelu<PowiazaniePaboliczneSkierowane>
-			PowiazaniePaboliczneSkierowane::WirtualnyKonstruktor("DirParaLink");
+PowiazanieParaboliczne::KonstruktorElementowModelu<PowiazanieParaboliczne>
+						PowiazanieParaboliczne::WirtualnyKonstruktor("ParaLink");
+PowiazanieParaboliczneSkierowane::KonstruktorElementowModelu<PowiazanieParaboliczneSkierowane>
+			PowiazanieParaboliczneSkierowane::WirtualnyKonstruktor("DirParaLink");
 
 
-bool PowiazaniePaboliczne::Poprawny()
+bool PowiazanieParaboliczne::Poprawny()
 {
 	if(fabs(parametr)>10)
 			{
@@ -37,26 +37,26 @@ bool PowiazaniePaboliczne::Poprawny()
 	return GenerycznePowiazanie::Poprawny();
 }
 
-PowiazaniePaboliczne::~PowiazaniePaboliczne()
+PowiazanieParaboliczne::~PowiazanieParaboliczne()
 {
    //Nie musi robi� nic - robot� wykonuje destruktor klasy bazowej
 }
 
-PowiazaniePaboliczne::PowiazaniePaboliczne()
+PowiazanieParaboliczne::PowiazanieParaboliczne()
 //Domyslny konstruktor ustawiaj�cy pusty link
 {
 	parametr=1;		krokow=0;
 	Xa=Ya=Xb=Yb=Promien=alfa=0;
 }
 
-PowiazaniePaboliczne::PowiazaniePaboliczne(double par)
+PowiazanieParaboliczne::PowiazanieParaboliczne(double par)
 //Domyslny konstruktor ustawiaj�cy pusty link Z PARAMETREM
 {
 	parametr=par;	krokow=0;
 	Xa=Ya=Xb=Yb=Promien=alfa=0;
 }
 
-void PowiazaniePaboliczne::UstawWygiecie(double par)
+void PowiazanieParaboliczne::UstawWygiecie(double par)
 //Zmienia parametr wi�c i pomocnicze zmienne si� musz� zmienic
 {
 	parametr=par;	krokow=0;
@@ -64,7 +64,7 @@ void PowiazaniePaboliczne::UstawWygiecie(double par)
 }
 
 //Metoda pobiera wszystkie potrzebne dane z listy string�w. Jak blad to podaje ktora pozycja
-bool PowiazaniePaboliczne::ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad)
+bool PowiazanieParaboliczne::ZrobWgListy(const std::string* Lista, unsigned Ile, unsigned& Blad)
 {
    if(!GenerycznePowiazanie::ZrobWgListy(Lista,Ile,Blad))
 						 return false;
@@ -77,7 +77,7 @@ bool PowiazaniePaboliczne::ZrobWgListy(const std::string* Lista,unsigned Ile,uns
 
 const double Eps=1;
 
-void PowiazaniePaboliczne::_PoliczParametryLuku()//Liczy parametry �uku dla danej wartosci parametru
+void PowiazanieParaboliczne::_PoliczParametryLuku()//Liczy parametry �uku dla danej wartosci parametru
 //Pomocnicze pola zawieraj�ce niezb�dne parametry �uku
 //	double Xa,Ya,Xb,Yb,Xo,Yo,Promien,alfa,beta;
 {
@@ -127,7 +127,7 @@ void PowiazaniePaboliczne::_PoliczParametryLuku()//Liczy parametry �uku dla da
 
 //Tak naprawd� to r�ni si� tylko sposobem rysowania
 //Kt�ry zalezy od funkcji licz�cej punkty na �uku
-void PowiazaniePaboliczne::PodajPozycje(double D,bool KierunekZwykly,double& X,double& Y,Komunikat* Messg)
+void PowiazanieParaboliczne::PodajPozycje(double D, bool KierunekZwykly, double& X, double& Y, Komunikat* Messg)
 //Przelicza polozenia wdluz linku
 {
    WezelSieci* Pocz=Swiat::Wezel(_S);

@@ -374,7 +374,7 @@ void GenerycznePowiazanie::Narysuj()
 	}
 }
 
-void PowiazaniePaboliczne::Narysuj()
+void PowiazanieParaboliczne::Narysuj()
 {
 	if(_S==Swiat::INV_INDEX || _T == Swiat::INV_INDEX)
 			{ cerr<<endl<<"Niezainicjowany link"<<endl;  return;}
@@ -550,7 +550,7 @@ void GeneryczneInfo::Wymazuj()
 }
 
 
-void PowiazaniePaboliczne::Wymazuj()
+void PowiazanieParaboliczne::Wymazuj()
 {
    //NumerKoloruTla
 }

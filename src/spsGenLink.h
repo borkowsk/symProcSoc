@@ -8,7 +8,7 @@
 ///     Symulator Procesów Sieciowych/Społecznych (c) Instytut Studiów Społecznych
 ///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
 /// \date
-///     2022.11.03 (last updated)
+///     2022.11.07 (last updated)
 //*////////////////////////////////////////////////////////////////////////////////
 
 #ifndef spsGenLinkH
@@ -19,11 +19,12 @@
 /// \brief link ogólny, symetryczny, rysowanego jako linia
 class GenerycznePowiazanie:public Powiazanie
 {
+    static KonstruktorElementowModelu<GenerycznePowiazanie> WirtualnyKonstruktor;
   public:
-	GenerycznePowiazanie(); ///< Domyslny konstruktor ustawiający pusty link
     /// \brief Powiązany obiekt wirtualnego konstruktora
-	static KonstruktorElementowModelu<GenerycznePowiazanie> WirtualnyKonstruktor;
-	ElementModelu::WirtualnyKonstruktor* VKonstruktor() { return &WirtualnyKonstruktor;}
+    ElementModelu::WirtualnyKonstruktor* VKonstruktor() { return &WirtualnyKonstruktor;}
+
+	GenerycznePowiazanie(); ///< Domyślny konstruktor ustawiający pusty link
 
     /// \brief   Czytanie danych obiektu
     /// \details Metoda pobiera wszystkie potrzebne dane z listy stringów. Jak błąd to podaje która pozycja

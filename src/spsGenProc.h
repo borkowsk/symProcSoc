@@ -1,60 +1,86 @@
-////////////////////////////////////////////////////////////////////////////////
-// Symulator Procesów Sieciowych/Spolecznych (c) Instytut Studiów Spo³ecznych
-// Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-////////////////////////////////////////////////////////////////////////////////
-// Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-////////////////////////////////////////////////////////////////////////////////
-//
-//---------------------------------------------------------------------------
+/// \file
+/// \brief Klasa generycznego procesu realizujÄ…cego interface Proces
+///        ---------------------------------------------------------
+///
+/// \details
+///              G...
+///     ## (c)
+///     Symulator ProcesÃ³w Sieciowych/SpoÅ‚ecznych (c) Instytut StudiÃ³w SpoÅ‚ecznych
+///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
+/// \date
+///     2022.11.07 (last updated)
+// ///////////////////////////////////////////////////////////////////////////////////////
+
 #ifndef spsGenProcH
 #define spsGenProcH
-//---------------------------------------------------------------------------
-#include "spsModel.h" //Tu s¹ deklaracje potrzebnych typow
 
+#include "spsModel.h" //Tu sÄ… deklaracje potrzebnych typÃ³w
+
+/// \brief Klasa generycznego procesu realizujÄ…cego interface Proces
 class GenerycznyProces:public Proces
 {
 	static KonstruktorElementowModelu<GenerycznyProces> WirtualnyKonstruktor;
   public:
-	GenerycznyProces();//Konstruktor musi tylko zapewniæ sensowne powstanie
-	GenerycznyProces(const GenerycznyProces* Wzor);
-	GenerycznyProces(const char* Nazwa,float KoniecznaPraca,float DoDeadlinu);//I do tworzenia normalnie
-	virtual ElementModelu::WirtualnyKonstruktor* VKonstruktor() { return &WirtualnyKonstruktor;}
-	virtual ~GenerycznyProces();//Destruktor wirtualny, bo bêd¹ metody wirtualne
-	virtual bool Poprawny(); //true jeœli jest dobrze zdefiniowany (wci¹¿ istnieje procesor)
-	virtual double  Waznosc() { return Prior; }  //Po prostu priorytet innymi s³owy
-	virtual const char* Nazwa();
-  //Metoda pobiera wszystkie potrzebne dane z listy stringów. Jak blad to podaje ktora pozycja listy
+    virtual ElementModelu::WirtualnyKonstruktor* VKonstruktor() { return &WirtualnyKonstruktor;}
+
+    /// \brief Konstruktor do tworzenia normalnie
+    GenerycznyProces(const char* Nazwa,     ///< Nazwa procesu
+                     float KoniecznaPraca,  ///< Ile pracy do wykonania
+                     float DoDeadlinu       ///< Ile czasu na to
+    );
+
+    GenerycznyProces(); ///< \brief Konstruktor domyÅ›lny musi tylko zapewniÄ‡ sensowne powstanie
+	GenerycznyProces(const GenerycznyProces* Wzor); ///< \brief Konstruktor "kopiujÄ…cy ze wskaÅºnika"
+	virtual ~GenerycznyProces(); ///< \brief Destruktor wirtualny, bo sÄ… metody wirtualne
+
+    // Akcesory
+    // ////////
+    virtual bool Poprawny(); ///< \brief Test poprawnoÅ›ci \return true jeÅ›li jest dobrze zdefiniowany (wciÄ…Å¼ istnieje procesor)
+	virtual double  Waznosc() { return Prior; }  ///< \brief Po prostu priorytet innymi sÅ‚owy
+	virtual const char* Nazwa(); ///< \brief Po prostu nazwa procesu
+
+    /// \brief Metoda pobiera wszystkie potrzebne dane z listy stringÃ³w. \return Jak bÅ‚Ä…d to podaje, ktÃ³ra pozycja listy
 	virtual bool ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad);
-  //REYSOWANIE ITP.
-	virtual void Narysuj();
-	virtual void Wymazuj();
-	virtual void ChwilaDlaCiebie(); //Daje mu procesowi mo¿liwoœæ zmiany stanów - zrobienia czegoœ
-  //Specyficzne dla Procesu-projektu
-	virtual double   JakPracochlonny(){return  WymaganaIloscPracy;}
-	virtual double   Priorytet(); //Im wy¿szy tym proces wiêcej dziala
-	virtual double   JakZaawansowany();//0 po starcie, jak 1 to ju¿ zrobiony. PROCES_NAD_ZAAWANSOWANY - gotowy do usuniecia
-	virtual void     UznajZaZakonczony() { TmpPorcjaPracy=-1; }
+
+    // Do wizualizacji
+    // ///////////////
+	virtual void Narysuj();           ///< \brief RYSOWANIE STANU PROCESU
+	virtual void Wymazuj();           ///< \brief Czyszczenie miejsca po rysunku stanu
+
+    // DZIAÅANIE
+    // /////////
+	virtual void ChwilaDlaCiebie();   ///< \brief Daje mu procesowi moÅ¼liwoÅ›Ä‡ zmiany stanÃ³w - zrobienia czegoÅ›
+
+    // Specyficzne dla Procesu-projektu
+    // //////////////////////////////////
+	virtual double   JakPracochlonny() {return  WymaganaIloscPracy;} ///< \brief RobotoÅ¼ernoÅ›Ä‡ procesu
+	virtual double   Priorytet();                                    ///< \brief Im wyÅ¼szy tym proces wiÄ™cej dziaÅ‚a
+	virtual double   JakZaawansowany();                              ///< \return 0 po starcie, jak 1 to juÅ¼ zrobiony.
+                                                                     ///< PROCES_NAD_ZAAWANSOWANY - gotowy do usuniÄ™cia
+	virtual void     UznajZaZakonczony() { TmpPorcjaPracy=-1; } ///< WSTAWIENIE TU WARTOÅšCI UJEMNEJ (<0) OZNACZA KONIEC.
+
   protected:
-	float WymaganaIloscPracy;//Ile "roboczogodzin" musi dzia³aæ ¿eby byæ gotowy
-	float PracaDotychczasowa;//Ile ju¿ zrobiono
+	float WymaganaIloscPracy; ///< Ile "roboczogodzin" musi dziaÅ‚aÄ‡, Å¼eby byÄ‡ gotowy
+	float PracaDotychczasowa; ///< Ile juÅ¼ zrobiono
   public:
-	float  Prior;//Jaki ma priorytet dzia³ania (mial  w poprzednim obliczeniu)
-				//ale te¿ mo¿na "rêcznie" zmniejszaæ lub zwiêkszaæ jak potrzeba
-	float  TmpPorcjaPracy;//O ile "roboczogodzin" posuwa siê w ka¿dym kroku czasu
-						  //- zamiast parametru do ChwilaDlaCiebie()
-						  //WSTAWIENIE TU WARTOSÆI UJEMNEJ (<0) OZNACZA KONIEC:
-						  //JakZaawansowany() zwraca wtedy wartoœæ PROCES_NAD_ZAAWANSOWANY
+	float  Prior;   ///< Jaki ma priorytet dziaÅ‚ania (miaÅ‚  w poprzednim obliczeniu),
+				    ///< ale teÅ¼ moÅ¼na "rÄ™cznie" zmniejszaÄ‡ lub zwiÄ™kszaÄ‡ jak potrzeba
+
+	float  TmpPorcjaPracy; ///< O ile "roboczogodzin" posuwa siÄ™ w kaÅ¼dym kroku czasu.
+						   ///< Zamiast parametru do ChwilaDlaCiebie()
+						   ///< WSTAWIENIE TU WARTOÅšCI UJEMNEJ (<0) OZNACZA KONIEC:
+						   ///< JakZaawansowany() zwraca wtedy wartoÅ›Ä‡ PROCES_NAD_ZAAWANSOWANY.
 };
 
-
-/********************************************************************/
-/*			          SPS  version 2011                             */
-/********************************************************************/
-/*           THIS CODE IS DESIGNED & COPYRIGHT  BY:                 */
-/*            W O J C I E C H   B O R K O W S K I                   */
-/*    Instytut Studiow Spolecznych Uniwersytetu Warszawskiego       */
-/*        WWW:  http://wwww.iss.uw.edu.pl/borkowski/                */
-/*                                                                  */
-/*                               (Don't change or remove this note) */
-/********************************************************************/
+/* *******************************************************************/
+/*			            SPS  version 2022                            */
+/* *******************************************************************/
+/*             THIS CODE IS DESIGNED & COPYRIGHT  BY:                */
+/*              W O J C I E C H   B O R K O W S K I                  */
+/*     Instytut StudiÃ³w SpoÅ‚ecznych Uniwersytetu Warszawskiego       */
+/*        RG:https://www.researchgate.net/profile/Wojciech-Borkowski */
+/*        GitHub: https://github.com/borkowsk                        */
+/*                                                                   */
+/*                               (Don't change or remove this note)  */
+/* *******************************************************************/
 #endif

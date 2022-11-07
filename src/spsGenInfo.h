@@ -1,66 +1,107 @@
-////////////////////////////////////////////////////////////////////////////////
-// Symulator Procesów Sieciowych/Spolecznych (c) Instytut Studiów Spo³ecznych
-// Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-////////////////////////////////////////////////////////////////////////////////
-// Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-////////////////////////////////////////////////////////////////////////////////
-//
-//---------------------------------------------------------------------------
+/// \file
+/// \brief Klasa podstawowego komunikatu realizujÄ…ca interface Komunikat
+///        -------------------------------------------------------------
+///
+/// \details
+///
+///     ## (c)
+///     Symulator ProcesÃ³w Sieciowych/SpoÅ‚ecznych (c) Instytut StudiÃ³w SpoÅ‚ecznych
+///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
+/// \date
+///     2022.11.07 (last updated)
+// //////////////////////////////////////////////////////////////////////////////
+
 #ifndef spsGenInfoH
 #define spsGenInfoH
-//---------------------------------------------------------------------------
-#include "spsModel.h" //Tu s¹ deklaracje potrzebnych typow
 
+#include "spsModel.h" //Tu sÄ… deklaracje potrzebnych typÃ³w
+
+/// \brief Klasa podstawowego komunikatu realizujÄ…ca interface Komunikat
 class GeneryczneInfo:public Komunikat
 {
+    static KonstruktorElementowModelu<GeneryczneInfo> WirtualnyKonstruktor;
   public:
-	GeneryczneInfo(); //Generyczny konstruktor tworz¹cy pusty komunikat
-	static KonstruktorElementowModelu<GeneryczneInfo> WirtualnyKonstruktor;
-	ElementModelu::WirtualnyKonstruktor* VKonstruktor() { return &WirtualnyKonstruktor;}
-	virtual const std::string& Rodzaj();//"???" - klasy potomne mog¹ mieæ rózne rodzaje interpretacji DziedzinyWKolorze komunikatu
-	virtual bool  UstawRodzaj(const char* );
-	virtual bool Poprawny(); //true jeœli kanal jest dobrze zdefiniowany (wci¹¿ istnieje link, nadawca i odbiorca etc...
-	virtual double  Waznosc() { return Predkosc; }  //Po prostu jak szybko ma dotrzeæ. Trochê jak priorytet.
-	//Metoda pobiera wszystkie potrzebne dane z listy stringów. Jak blad to podaje ktora pozycja
-	virtual bool ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad);
-	virtual ~GeneryczneInfo();//Destruktor wirtualny, bo s¹ metody wirtualne
-	virtual void Narysuj();
-	virtual void Wymazuj();
-	virtual void ChwilaDlaCiebie(); //Daje jakies szanse na endogenne zmiany stanów - np. zbli¿a do dostawy
-  //Specyficzne dla Komunikatu (Message)
-	virtual unsigned  Kanal() { return Link;} //Po ktorym po³¹czeniu czyli linku
-	virtual bool 	  KierunekZgodny(){return Kierunek;}//Czy idzie zgodnie z nominalnym kierunkiem linku czy pod pr¹d
-	virtual unsigned  Nadawca(); //Od kogo ...
-	virtual unsigned Odbiorca(); //... do kogo.
-	virtual float  JakDostawa(); //0 po starcie, jak 1 to ju¿ dotar³
-	virtual float  JakiTermin();//W ile kroków powinien zostaæ dostarczony?
-	//Specyficzne dla generycznego komunikatu
-	virtual Komunikat* Klonuj(); //Robi na stercie kopie komunikatu do przechowania lub wstawienia
-	bool 	Zwrotnie(float _Szybkosc=0);//Mo¿na odwróciæ komunikat - zw³aszcza jak jest to klon
-	bool  	Zaadresuj(unsigned _Nadawca,unsigned _Odbiorca,float _Szybkosc=0); //Zwracaj¹ true jak jest
-	bool  	Zaadresuj(unsigned _Powiazanie,bool KierunekZwykly,float _Szybkosc=0);//...poprawny kana³ komunikacji
+    ElementModelu::WirtualnyKonstruktor* VKonstruktor() { return &WirtualnyKonstruktor;}
+
+	GeneryczneInfo();             ///< DomyÅ›lny  konstruktor tworzÄ…cy pusty komunikat
+    virtual ~GeneryczneInfo();    ///< Destruktor wirtualny, bo sÄ… metody wirtualne
+    virtual bool ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad); ///< WypeÅ‚nianie z listy stringÃ³w
+                                                          ///< Metoda pobiera wszystkie potrzebne dane z listy stringÃ³w.
+                                                          ///< Jak bÅ‚Ä…d to podaje ktÃ³ra pozycja
+
+	virtual bool Poprawny();                             ///< \brief test poprawnoÅ›ci
+                                                         ///< \return true jeÅ›li kanaÅ‚ jest dobrze zdefiniowany
+                                                         ///< (wciÄ…Å¼ istnieje link, nadawca i odbiorca etc...
+
+    /// \brief Po prostu jak szybko ma dotrzeÄ‡. TrochÄ™ jak priorytet.
+	virtual double  Waznosc() { return Predkosc; }
+
+
+    // Wizualizacja
+    // ////////////
+	virtual void Narysuj();     ///< \brief Rysowanie reprezentacji graficznej komunikatu
+	virtual void Wymazuj();     ///< \brief Wymazanie miejsca po rysunku komunikatu
+
+    /// \brief PrzydziaÅ‚ czasu obliczeniowego \note Daje szanse na endogenne zmiany stanÃ³w - np. zbliÅ¼a do dostarczenia
+	virtual void ChwilaDlaCiebie();
+
+    // Specyficzne dla Komunikatu (Message)
+    // ////////////////////////////////////
+
+    /// \brief Tekstowe okreÅ›lenie rodzaju komunikatu
+    /// \note klasy potomne mogÄ… mieÄ‡ rÃ³Å¼ne rodzaje interpretacji DziedzinyWKolorze komunikatu
+    virtual bool  UstawRodzaj(const char* );
+
+    /// \brief Sprawdzenie rodzaju komunikatu ustawionego za pomocÄ… UstawRodzaj()
+    virtual const std::string& Rodzaj();
+
+    // Akcesory danych komunikatu
+    // //////////////////////////
+	virtual unsigned  Kanal() { return Link;} /// \brief Po ktÃ³rym poÅ‚Ä…czeniu czyli linku idzie komunikat
+	virtual bool 	  KierunekZgodny(){return Kierunek;} /// \brief Czy idzie zgodnie z nominalnym kierunkiem linku czy pod prÄ…d
+	virtual unsigned  Nadawca(); /// \brief  Od kogo komunikat \return identyfikator wÄ™zÅ‚a
+	virtual unsigned Odbiorca(); /// \brief  Do kogo komunikat \return identyfikator wÄ™zÅ‚a
+	virtual float  JakDostawa(); /// \brief PostÄ™p dostarczania \return 0 po starcie, jak 1 to juÅ¼ dotarÅ‚
+	virtual float  JakiTermin(); /// \brief W ile krokÃ³w powinien zostaÄ‡ dostarczony?
+
+	// Specyficzne dla generycznego komunikatu
+    // ///////////////////////////////////////
+	virtual Komunikat* Klonuj(); ///< \brief Robi na stercie kopie komunikatu do przechowania lub wstawienia
+	bool 	Zwrotnie(float _Szybkosc=0);///< \brief MoÅ¼na odwrÃ³ciÄ‡ komunikat - zwÅ‚aszcza jak jest to klon
+
+	/// \brief Adresowanie komunikatu z podaniem nadawcy i odbiorcy \return true jak jest to poprawne
+	bool  	Zaadresuj(unsigned _Nadawca,unsigned _Odbiorca,float _Szybkosc=0);
+    /// \brief Adresowanie komunikatu z podaniem kanaÅ‚u czyli powiÄ…zania \return true jak poprawny kanaÅ‚ komunikacji
+	bool  	Zaadresuj(unsigned _Powiazanie,bool KierunekZwykly,float _Szybkosc=0);
+
   protected:
-	//Rysowanie kszta³tu zale¿nego od typu potomnego, ale z uwzglêdnieniem wielkoœci i koloru)
+	/// Rysowanie ksztaÅ‚tu zaleÅ¼nego od typu potomnego, ale z uwzglÄ™dnieniem wielkoÅ›ci i koloru)
 	virtual void RysujKsztalt(float X,float Y,float Rad,unsigned R,unsigned G,unsigned B);
-	GeneryczneInfo(const GeneryczneInfo* Wzor);  //Kopiuj¹cy jest potrzebny tylko Klonuj(), ale tez w klasach potomnych
-		//Pola
-		//DziedzKol  		Col;   //Dziedziczony z ElementModelu
-		//DaneLokalne		Dane;
-		unsigned 	    Link;      //U¿ywany kana³ komunikacji
-		bool 			Kierunek;  //Czy zgodnie z kana³em czy "pod pr¹d"
-		unsigned 		LicznikZycia;
-		float			Predkosc; //Jak szybko ma dotrzeæ
+
+    /// \brief Chroniony konstruktor kopiujÄ…cy
+    /// \note jest potrzebny dla Klonuj(), ale tez dla klas potomnych
+	GeneryczneInfo(const GeneryczneInfo* Wzor);
+
+    // Pola
+    // /////
+    //DziedzKol  		Col;   //Dziedziczony z ElementModelu
+    //DaneLokalne		Dane;  //Dziedziczony z ElementModelu
+    unsigned 	    Link;      ///< UÅ¼ywany kanaÅ‚ komunikacji
+    bool 			Kierunek;  ///< Czy przekazywanie zgodnie z kanaÅ‚em czy "pod prÄ…d"
+    float			Predkosc;  ///< Jak szybko ma dotrzeÄ‡, czyli priorytet
+    unsigned 		LicznikZycia; ///< ???
 };
 
 
-/********************************************************************/
-/*			          SPS  version 2011                             */
-/********************************************************************/
-/*           THIS CODE IS DESIGNED & COPYRIGHT  BY:                 */
-/*            W O J C I E C H   B O R K O W S K I                   */
-/*    Instytut Studiow Spolecznych Uniwersytetu Warszawskiego       */
-/*        WWW:  http://wwww.iss.uw.edu.pl/borkowski/                */
-/*                                                                  */
-/*                               (Don't change or remove this note) */
-/********************************************************************/
+/* *******************************************************************/
+/*			            SPS  version 2022                            */
+/* *******************************************************************/
+/*             THIS CODE IS DESIGNED & COPYRIGHT  BY:                */
+/*              W O J C I E C H   B O R K O W S K I                  */
+/*     Instytut StudiÃ³w SpoÅ‚ecznych Uniwersytetu Warszawskiego       */
+/*        RG:https://www.researchgate.net/profile/Wojciech-Borkowski */
+/*        GitHub: https://github.com/borkowsk                        */
+/*                                                                   */
+/*                               (Don't change or remove this note)  */
+/* *******************************************************************/
 #endif
