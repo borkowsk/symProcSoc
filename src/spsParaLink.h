@@ -21,6 +21,9 @@ class PowiazanieParaboliczne: public GenerycznePowiazanie
 {
     static KonstruktorElementowModelu<PowiazanieParaboliczne> WirtualnyKonstruktor;
   public:
+    // \brief Powiązany obiekt wirtualnego konstruktora
+    //ElementModelu::WirtualnyKonstruktor* VKonstruktor() { return &WirtualnyKonstruktor;} //TODO CZY TO POTRZEBNE?
+
 	PowiazanieParaboliczne();             /// \brief Domyślny konstruktor ustawiający pusty link
 	PowiazanieParaboliczne(double par);   /// \brief Konstruktor z ustawieniem parametru
     virtual ~PowiazanieParaboliczne();    /// \brief Destruktor  wirtualny

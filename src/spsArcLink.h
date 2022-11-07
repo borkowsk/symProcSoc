@@ -8,7 +8,7 @@
 ///     Symulator Procesów Sieciowych/Społecznych (c) Instytut Studiów Społecznych
 ///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
 /// \date
-///     2022.11.03 (last updated)
+///     2022.11.07 (last updated)
 //*////////////////////////////////////////////////////////////////////////////////
 
 #ifndef spsArcLinkH
@@ -19,21 +19,20 @@
 /// \brief link ogólny, ale rysowanego jako łuk
 class PowiazanieZagiete:public GenerycznePowiazanie
 {
-  public:
-	PowiazanieZagiete();            ///< Domyślny konstruktor ustawiający pusty link
+    static KonstruktorElementowModelu<PowiazanieZagiete> WirtualnyKonstruktor;
+  public: // \brief Powiązany obiekt wirtualnego konstruktora
+    //ElementModelu::WirtualnyKonstruktor* VKonstruktor() { return &WirtualnyKonstruktor;} //TODO CZY TO POTRZEBNE?
+
+    PowiazanieZagiete();            ///< Domyślny konstruktor ustawiający pusty link
 	PowiazanieZagiete(double par);  ///< Konstruktor z ustawieniem parametru
-	/// \brief Powiązany obiekt wirtualnego konstruktora
-	static KonstruktorElementowModelu<PowiazanieZagiete> WirtualnyKonstruktor;
-    //ElementModelu::WirtualnyKonstruktor* VKonstruktor() { return &WirtualnyKonstruktor;} //TODO CZY TO POTRZBNE?
+    virtual ~PowiazanieZagiete();   ///< Destruktor
 
     /// \brief   Czytanie danych obiektu
 	/// \details Metoda pobiera wszystkie potrzebne dane z listy stringów. Jak błąd to podaje która pozycja
 	virtual bool ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad);
 
-    /// Destruktor
-	virtual ~PowiazanieZagiete();
 
-	/// \brief rysowanie \details Od zwykłego powiązania różni się tylko sposobem rysowania
+	/// \brief rysowanie \note Od zwykłego powiązania różni się tylko sposobem rysowania
 	virtual void Narysuj();
 
     /// \brief czyszczenie z ekranu
@@ -54,11 +53,11 @@ class PowiazanieZagiete:public GenerycznePowiazanie
     ///          więc i pomocnicze zmienne się zmieniają.
 	void UstawParametr(double par);
 
-	protected: //Pola i inne atrybuty rodzinne
-	void _PoliczParametryLuku();    // Liczy parametry łuku dla danej wartości parametru
+  protected: //Pola i inne atrybuty rodzinne
+	void _PoliczParametryLuku();    ///< Liczy parametry łuku dla danej wartości parametru
 	double parametr;                ///< Wartość decydująca o sposobie zagięcia
 
-private:
+  private:
 	//Pomocnicze pola zawierające niezbędne parametry łuku
 	double Xa,Ya,Xb,Yb,Xo,Yo,Promien,alfa,beta;
 	unsigned krokow; //Ile odcinków łuku przy rysowaniu ~ odległość PK/10 pix
