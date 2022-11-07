@@ -358,7 +358,7 @@ bool KontaktTowarzyski::Poprawny()
 	   return false;
 	}
 	else
-	   return PowiazaniePaboliczneSkierowane::Poprawny(); //Mo¿e byæ niepoprawne z innych powodów
+	   return PowiazanieParaboliczneSkierowane::Poprawny(); //Mo¿e byæ niepoprawne z innych powodów
 }
 
 void KontaktTowarzyski::ChwilaDlaCiebie()
@@ -370,7 +370,7 @@ void KontaktTowarzyski::ChwilaDlaCiebie()
 bool KontaktTowarzyski::Akceptacja(Komunikat * Co)
 //Przyjêcie komunikatu zwiêksza wagê ³¹cza
 {
-	 bool Wynik=PowiazaniePaboliczneSkierowane::Akceptacja(Co);
+	 bool Wynik=PowiazanieParaboliczneSkierowane::Akceptacja(Co);
 
 	 if(Wynik)//Komunikat przyjêty
 		ZmienWage(1+(TEMPO_WZROSTU_LINKU/10.0));  //Roœnie waga o trochê, 10 x wiêcej gdy zwrotny

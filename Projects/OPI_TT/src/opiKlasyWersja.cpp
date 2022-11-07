@@ -292,11 +292,11 @@ bool PodlegloscOrganizacyjna::ZrobWgListy(const std::string* Lista,unsigned Ile,
 }
 bool FormalnaKooperacja::ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad)
 {
-	return PowiazaniePaboliczne::ZrobWgListy(Lista,Ile,Blad);
+	return PowiazanieParaboliczne::ZrobWgListy(Lista, Ile, Blad);
 }
 bool KontaktTowarzyski::ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad)
 {
-	return PowiazaniePaboliczneSkierowane::ZrobWgListy(Lista,Ile,Blad);
+	return PowiazanieParaboliczneSkierowane::ZrobWgListy(Lista, Ile, Blad);
 }
 bool KomunikacjaTowarzyska::ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad)
 {
@@ -348,7 +348,7 @@ double _ZespolRoboczy::R(double KAT_NIEISTOTNY)
 
 void FormalnaKooperacja::Narysuj()
 {
-	PowiazaniePaboliczne::Narysuj();//Przechwycenie rysowania dla debugingu
+	PowiazanieParaboliczne::Narysuj();//Przechwycenie rysowania dla debugingu
 }
 
 void KomunikacjaTowarzyska::RysujKsztalt(float X,float Y,float Rad,unsigned R,unsigned G,unsigned B)

@@ -790,7 +790,7 @@ void UOTT::InterpretujKomunikat(Komunikat* Co)
 
 bool FormalnaKooperacja::Akceptacja(Komunikat* Co)
 //Selekcja komunikatów
-{    bool flaga=PowiazaniePaboliczne::Akceptacja(Co);
+{    bool flaga=PowiazanieParaboliczne::Akceptacja(Co);
 	 if(flaga )
 	 {
 		if(!this->CzyWykonany())
@@ -811,7 +811,7 @@ bool  FormalnaKooperacja::Poprawny()
 {
 	if(Termin<=0)
 			return false;
-	return PowiazaniePaboliczne::Poprawny();
+	return PowiazanieParaboliczne::Poprawny();
 }
 
 void FormalnaKooperacja::ChwilaDlaCiebie()

@@ -297,7 +297,7 @@ class PodlegloscOrganizacyjna:public GenerycznePowiazanie
 // Klasa kooperacji sformalizowanej - przepuszcza w raporty - efekty dzia³añ
 // oraz pieni¹dze
 ////////////////////////////////////////////////////////////////////////////////
-class FormalnaKooperacja:public PowiazaniePaboliczne
+class FormalnaKooperacja:public PowiazanieParaboliczne
 {  //Implementacja tego co musi byæ wg. interfejsu typu podstawowego linku
 	friend class KonstruktorElementowModelu<FormalnaKooperacja>;
 	static KonstruktorElementowModelu<FormalnaKooperacja> WirtKonstr;
@@ -330,7 +330,7 @@ class FormalnaKooperacja:public PowiazaniePaboliczne
 //informacji. Jak nie lubiê bo zazdroszczê, to mu nie powiem,
 //chocia¿ jesteœmy powi¹zani.
 ////////////////////////////////////////////////////////////////////////////////
-class KontaktTowarzyski:public PowiazaniePaboliczneSkierowane
+class KontaktTowarzyski:public PowiazanieParaboliczneSkierowane
 {  //Implementacja tego co musi byæ wg. interfejsu typu podstawowego linku
 	static KonstruktorElementowModelu<KontaktTowarzyski> WirtKonstr;
 	ElementModelu::WirtualnyKonstruktor* VKonstruktor() { return &WirtKonstr;}
