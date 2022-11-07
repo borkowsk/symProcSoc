@@ -1,12 +1,15 @@
-// //////////////////////////////////////////////////////////////////////////////
-// Symulator Proces�w Sieciowych/Spolecznych (c) Instytut Studi�w Spo�ecznych
-// Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-// //////////////////////////////////////////////////////////////////////////////
-// Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-// //////////////////////////////////////////////////////////////////////////////
-//
-// Definicje podstawowego typu realnego w�z�a (nie pure virtual jak WezelSieci) 27.10.2011
-// //////////////////////////////////////////////////////////////////////////////////////
+/// \file
+/// \brief Definicje podstawowego typu realnego węzła (nie pure virtual jak WezelSieci)
+///        -----------------------------------------------------------------------------
+///
+/// \details
+///              G...
+///     ## (c)
+///     Symulator Procesów Sieciowych/Społecznych (c) Instytut Studiów Społecznych
+///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
+/// \date
+///     2022.11.07 (last updated)
+// ///////////////////////////////////////////////////////////////////////////////////////
 #include <iostream>
 #include <cassert>
 #include <cfloat>
@@ -27,7 +30,7 @@ GenerycznyWezelSieci::KonstruktorElementowModelu<GenerycznyWezelSieci> Generyczn
 class GenerycznyWezelSieci:public WezelSieci
 {
   public:
-	//Konstruktor  pobiera wszystkie potrzebne dane z listy string�w
+	//Konstruktor  pobiera wszystkie potrzebne dane z listy stringów
 	GenerycznyWezelSieci(const std::string* Lista,unsigned Ile);
 
   //Specyficzne dla W�z�a
@@ -39,30 +42,32 @@ class GenerycznyWezelSieci:public WezelSieci
 };
 */
 
+/// \return `true` jeżeli jest dobrze zdefiniowany. Musi posiadać zdefiniowany `Ksztalt`
 bool GenerycznyWezelSieci::Poprawny()
-//true je�li jest dobrze zdefiniowany
 {
-    return Ksztalt!=NULL;//Kszta�t musi byc! I co jeszcze???
+    return Ksztalt!=NULL; //Kształt musi byc! I co jeszcze???
 }
 
-//Reszta to "technikalia"    ...
-/////////////////////////////////////////////////////////////////
+// Reszta to "technikalia"    ...
+// ///////////////////////////////////////////////////////////////
+
+/// Domyślny konstruktor ustala kolor  czarny a wszystkie parametry typu `float` na `-FLT_MAX`.
 GenerycznyWezelSieci::GenerycznyWezelSieci():Ksztalt(NULL)
 {
 	Col.ARGB=0;
 	Waga=_X=_Y=_Z=-FLT_MAX;
 }
 
+/// Interpretuje pola od 1 do 7 w `ZrobWgListy()`. Przykład danych do interpretacji poniżej:
+/// | 0			    |   1			 |	2				 |  3	 |	  4    |	5 |	6	| 7
+/// | typ(node/link)|	Nazwa/Zrodlo |	Wizualizacja/Cel |	Waga |	Kolor  | 	X |	Y	| Z	 | Pole1 | Pole2 | itd.
+/// | gennode		|	Badacz A	 |		6			 |	0.5	 |	00FF00 |  100 |	20	| 3
+/// ...
 bool GenerycznyWezelSieci::_PrzeniesDaneNaPola(unsigned& Pol)
-//Interpretuje pola od 1 do 7 w ZrobWgListy
 {
 	//double    W,X,Y,Z;
 	//DziedzinaWKolorze  Col;
 	//Wielobok* Ksztalt;
-	//	0					1				2				  3		  4 	5	6	7
-	//typ(node/link)	Nazwa/Zrodlo	Wizualizacja/Cel	Waga	Kolor 	X	Y	Z	Pole1	Pole2	Pole3	itd.
-	//gennode			Badacz A			6				0.5		00FF00	100	20	3
-	//...
 
 	//Waga=atof(Dane[3].c_str());if(Waga<=0)
 	if(Dane.KonwertujDo(3,Waga)!=-1) { Pol=3; return false;}
@@ -77,7 +82,6 @@ bool GenerycznyWezelSieci::_PrzeniesDaneNaPola(unsigned& Pol)
 	Col.ARGB=strtorgb(Dane[4].c_str(),&endptr);
 	if(endptr!=NULL && *endptr!='\0'){ Pol=4; return false;}
 
-
 	if(isdigit(Dane[2][0]))
 	{
 	  int Pom;// =atoi(Dane[2].c_str());
@@ -85,8 +89,8 @@ bool GenerycznyWezelSieci::_PrzeniesDaneNaPola(unsigned& Pol)
 					{ Pol=2; return false;}
 	  double RR=R(0);
 	  if(RR<1.0)
-			RR=1; //Jak za ma�e to chocia� "kropa"
-	  Ksztalt=new Wielobok(Pom,RR);//R co najmniej 1!
+			RR=1; //Jak za małe to chociaż "kropa"
+	  Ksztalt=new Wielobok(Pom,RR); //`R` co najmniej 1!
 	}
 	else
 	{
@@ -97,30 +101,31 @@ bool GenerycznyWezelSieci::_PrzeniesDaneNaPola(unsigned& Pol)
 		Ksztalt->Centruj();
 		double  mX,mY,mxX,mxY,R;
 		Ksztalt->Zakresy(mX,mY,mxX,mxY,R);
-		double Skala=this->R(0);  //Tyle powinno by�
-		Skala=Skala/R; //Czyli jak przeliczy� (zwi�kszy� czy zmniejszy�)
+		double Skala=this->R(0);  //Tyle powinno być
+		Skala=Skala/R; //Czyli jak przeliczyć (zwiększyć czy zmniejszyć)
 		Ksztalt->Skaluj(Skala,Skala);
 	}
 
-	Pol=8; //Uda�o si� wczyta� 7 pol! Wskazujemy na nastepne
+	Pol=8; //Udało się wczytać 7 pól! Wskazujemy na następne
 	return true;
 }
 
 bool GenerycznyWezelSieci::ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad)
 {
 	Dane.InicjujWgListy(Lista,Ile);
-	if(Dane.Ile()<7) { Blad=Ile; return false; } //Za ma�o danych. Pierwsza kom. za.
-	return _PrzeniesDaneNaPola(Blad);   //Interpretuje konieczne pola
+	if(Dane.Ile()<7) { Blad=Ile; return false; } // Za mało danych. Pierwsza kom. za.
+	return _PrzeniesDaneNaPola(Blad);   // Interpretuje konieczne pola
 }
 
+/// \return Promień otaczającego okręgu (lub elipsy przy nietypowym "aspect ratio")
 double GenerycznyWezelSieci::R(double)
-//Promie� otaczaj�cego okr�gu lub elipsy
 {
-	return 1+((JakieRwProcWidth/100)*ver*Waga); //R co najmniej 1!
+	return 1+((JakieRwProcWidth/100)*ver*Waga); //`R` co najmniej 1!
 }
 
+/// Oblicza trafienie w otaczające koło.
+/// Np. do inspekcji myszką.
 bool GenerycznyWezelSieci::Trafiony(float sX,float sY)
-//Np. do inspekcji myszk� - trafienie w otaczaj�ce ko�o
 {
 	double dist=distance(this->X(),sX,this->Y(),sY);
 	if(dist<=this->R(0))
@@ -129,14 +134,14 @@ bool GenerycznyWezelSieci::Trafiony(float sX,float sY)
 		return false;
 }
 
+/// Destruktor wirtualny usuwa Ksztalt.
 GenerycznyWezelSieci::~GenerycznyWezelSieci()
-//Destruktor wirtualny
 {
    if(Ksztalt) delete Ksztalt;
 }
 
+/// Musi posiadać jakaś nazwę. A jak jednak nie to zwracane jest "<NONAME>".
 const char* GenerycznyWezelSieci::Nazwa()
-//Musi posiada� jakas nazwe
 {
 	if(Dane.Ile()>0)
 	  return Dane[1].c_str();
@@ -144,8 +149,9 @@ const char* GenerycznyWezelSieci::Nazwa()
 	  return "<NONAME>";
 }
 
+/// Najprostszy sheduler priorytetowy.
+/// Posunięcie do przodu jedynie najpilniejszego z procesów.
 void GenerycznyWezelSieci::_RuszProcesPriorytetowy()
-//Posuni�cie do przodu najpilniejszego z proces�w
 {
 	unsigned ile=Swiat::IleProcesow(MojID());
 	unsigned ktory=Swiat::NajpilniejszyProc(MojID(),NULL);
@@ -158,8 +164,9 @@ void GenerycznyWezelSieci::_RuszProcesPriorytetowy()
 		Roboczy->ChwilaDlaCiebie(); //Popchnij
 }
 
+/// Sheduler w ogóle bezpriorytetowy.
+/// Daje szanse na ruch każdemu procesowi
 void GenerycznyWezelSieci::_RuszKazdyProces()
-//Daje szanse na ruch kazdemu procesowi
 {
 	unsigned NID=MojID();
 	unsigned ile=Swiat::IleProcesow(NID);
@@ -169,49 +176,52 @@ void GenerycznyWezelSieci::_RuszKazdyProces()
 		Pr->ChwilaDlaCiebie();
 }
 
+/// Obrobienie komunikatu przez pierwszy chętny proces.
+/// \return `false` jeśli żaden proces się nie przyznał do tego komunikatu
 bool GenerycznyWezelSieci::_KomunikatDoProcesow(Komunikat* Co)
-//Obrobienie komunikatu przez pierwszy ch�tny proces
-{                                           					assert(Co->Kanal()!=Swiat::INV_INDEX);
+{                                           					                  assert(Co->Kanal()!=Swiat::INV_INDEX);
 	unsigned NID=MojID();
 	unsigned ile=Swiat::IleProcesow(NID);
 	Proces*  Pr=NULL;
 	for(unsigned i=0;i<ile;i++)
 	  if((Pr=Swiat::Proc(i,NID))!=NULL)
-	  {                                                         assert(Co->Kanal()!=Swiat::INV_INDEX);
+	  {                                                                           assert(Co->Kanal()!=Swiat::INV_INDEX);
 		 if(Pr->InterpretujKomunikat(Co) )
-		 {              //Tu ju� komunikat mo�e by� ziszczony
-			return true;//Jak kt�ry� proces uzna� obr�bk� za zako�czon�
+		 {               //Tu już komunikat może być zniszczony
+			return true; //Jak któryś proces uzna obróbkę za zakończoną
 		 }
 	  }
-																assert(Co->Kanal()!=Swiat::INV_INDEX);
-	return false; //Zaden si� nie przyzna�
+																                  assert(Co->Kanal()!=Swiat::INV_INDEX);
+	return false; // Żaden się nie przyznał
 }
 
+/// Przekazuje komunikat losowo i z prawdopodobieństwem P namnaża go.
+/// Dosyć to kosztowne, ale "generic node" nie może mieć pomocniczych struktur
+/// bo jest bazą do dziedziczenia dla bardziej użytecznych typów węzłów.
 void GenerycznyWezelSieci::_KomunikatPrzekazLosowo(Komunikat* Co,double P)
-//Przekazuje komunikat losowo i z prawdopodobie�stwem P namna�a
-//Dosy� to kosztowne, ale "generic node" nie mo�e mie� pomocniczych struktur
-//bo jest baz� do dziedziczenia dla bardziej u�ytecznych typ�w w�z��w
 {
-	//Przygotowanie listy powi�za� zdatnych do przesy�ania
+	//Przygotowanie listy linków zdatnych do przesyłania
 	wb_dynarray<unsigned> ListaPow;
 	unsigned IlePowFakt=0;
 	ListaPow.alloc(Swiat::IlePowiazan());
-	//Przepisywanie na list�
+	//Przepisywanie na listy
 	for(unsigned i=0;i<Swiat::IlePowiazan();i++)
 	{
 		Powiazanie* Pom=Swiat::Lacze(i);
-		if( Pom!=NULL  //Mo�e by� pusty slot
-			&& ( (Swiat::Wezel(Pom->Poczatek())==this) //Gdzie jest pocz�tkiem
-			|| (!Pom->Kierunkowy() && Swiat::Wezel(Pom->Koniec())==this)) //Albo koncem linku obustronnego
+		if( Pom!=NULL  //Może być pusty slot
+			&& ( (Swiat::Wezel(Pom->Poczatek())==this) //Gdzie jest? Za początkiem???
+			|| (!Pom->Kierunkowy() && Swiat::Wezel(Pom->Koniec())==this)) //Albo końcem linku obustronnego
 			)
 			ListaPow[IlePowFakt++]=i;
 	}
 
-	if(IlePowFakt==0) //To s� tylko takie kt�rymi mo�na co� dosta�!!!
-			return; //To si� wys�a� nie da nic.
+	if(IlePowFakt==0) // To są tylko takie, którymi można coś sięgnąć!!!
+			return; //Nie ma którędy wysyłać
 
 
-	// PR�BY WYSY�ANIA
+	// PRÓBY WYSYŁANIA
+    // ////////////////
+
 	//cout<<endl<<"Wezel: "<<Dane[1]<<" Linkow: "<<IlePowFakt<<endl;
 	unsigned wyslano=0;
 	unsigned probowano=0;
@@ -222,7 +232,7 @@ void GenerycznyWezelSieci::_KomunikatPrzekazLosowo(Komunikat* Co,double P)
 	  unsigned a=RANDOM(IlePowFakt);
 										assert(a<IlePowFakt);
 	  if(ListaPow[a]==Swiat::INV_INDEX)
-				continue; //Trafiony ju� u�ywany slot
+				continue; //Trafiony już używany slot
 
 	  Powiazanie* Pom=Swiat::Lacze(ListaPow[a]);
 	  bool Kierunek=Swiat::Wezel(Pom->Poczatek())==this;
@@ -232,29 +242,30 @@ void GenerycznyWezelSieci::_KomunikatPrzekazLosowo(Komunikat* Co,double P)
 	  {
 		 //cout<<Pom->Poczatek()<<"->"<<Pom->Koniec()<<' '<<Kierunek<<endl;
 		 if(Swiat::WstawInfo(Klon.give())!=Swiat::INV_INDEX)
-				wyslano++;//OK. Wstawi� klon komunikatu trac�c z "zarz�du"
+				wyslano++; //OK. Wstawia klon komunikatu tracąc go z "zarządu"
 
-		 ListaPow[a]=Swiat::INV_INDEX;//Blokada tego ��cza
+		 ListaPow[a]=Swiat::INV_INDEX; //Chwilowa blokada tego łącza
 
 		 if( DRAND()<P )
-			Klon.take(Co->Klonuj()); //B�dzie potrzebna kolejna kopia
+			Klon.take(Co->Klonuj()); //Będzie potrzebna kolejna kopia
 			else
-			return; //Lub konczy...
+			return; //Lub kończy...
 	  }
-	  probowano++;
+	  probowano++; //zliczanie ile prób
 	}
 	while(probowano<IlePowFakt);
 }
 
+/* *******************************************************************/
+/*			            SPS  version 2022                            */
+/* *******************************************************************/
+/*             THIS CODE IS DESIGNED & COPYRIGHT  BY:                */
+/*              W O J C I E C H   B O R K O W S K I                  */
+/*     Instytut Studiów Społecznych Uniwersytetu Warszawskiego       */
+/*        RG:https://www.researchgate.net/profile/Wojciech-Borkowski */
+/*        GitHub: https://github.com/borkowsk                        */
+/*                                                                   */
+/*                               (Don't change or remove this note)  */
+/* *******************************************************************/
 
-/********************************************************************/
-/*			          SPS  version 2011                             */
-/********************************************************************/
-/*           THIS CODE IS DESIGNED & COPYRIGHT  BY:                 */
-/*            W O J C I E C H   B O R K O W S K I                   */
-/*    Instytut Studiow Spolecznych Uniwersytetu Warszawskiego       */
-/*        WWW:  http://wwww.iss.uw.edu.pl/borkowski/                */
-/*                                                                  */
-/*                               (Don't change or remove this note) */
-/********************************************************************/
 

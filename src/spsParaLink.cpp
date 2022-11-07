@@ -1,12 +1,16 @@
-////////////////////////////////////////////////////////////////////////////////
-// Symulator Proces�w Sieciowych/Spolecznych (c) Instytut Studi�w Spo�ecznych
-// Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-///////////////////////////////////////////////////////////////////////////////
-// Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-////////////////////////////////////////////////////////////////////////////////
-//
-// Deklaracja/Definicja linku og�lnego, ale rysowanego jako �uk
-////////////////////////////////////////////////////////////////////////////////
+/// \file
+/// \brief Definicja linku ogólnego, ale rysowanego jako łuk paraboliczny
+///        --------------------------------------------------------------
+///
+/// \details
+///              ...
+///     ## (c)
+///     Symulator Procesów Sieciowych/Społecznych (c) Instytut Studiów Społecznych
+///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
+/// \date
+///     2022.11.07 (last updated)
+//*////////////////////////////////////////////////////////////////////////////////
+
 
 #pragma hdrstop
 
@@ -20,7 +24,6 @@ using namespace std;
 #include "wb_smartlog.hpp"
 using namespace wbrtm;
 
-//---------------------------------------------------------------------------
 PowiazanieParaboliczne::KonstruktorElementowModelu<PowiazanieParaboliczne>
 						PowiazanieParaboliczne::WirtualnyKonstruktor("ParaLink");
 PowiazanieParaboliczneSkierowane::KonstruktorElementowModelu<PowiazanieParaboliczneSkierowane>
@@ -37,73 +40,77 @@ bool PowiazanieParaboliczne::Poprawny()
 	return GenerycznePowiazanie::Poprawny();
 }
 
+/// Nie musi robić nic - robotę wykonuje destruktor klasy bazowej
 PowiazanieParaboliczne::~PowiazanieParaboliczne()
 {
-   //Nie musi robi� nic - robot� wykonuje destruktor klasy bazowej
 }
 
+/// Domyślny konstruktor tworzący pusty link o parametrze =1.
 PowiazanieParaboliczne::PowiazanieParaboliczne()
-//Domyslny konstruktor ustawiaj�cy pusty link
 {
 	parametr=1;		krokow=0;
 	Xa=Ya=Xb=Yb=Promien=alfa=0;
 }
 
+/// Domyślny konstruktor ustawiający pusty link Z PARAMETREM
 PowiazanieParaboliczne::PowiazanieParaboliczne(double par)
-//Domyslny konstruktor ustawiaj�cy pusty link Z PARAMETREM
 {
 	parametr=par;	krokow=0;
 	Xa=Ya=Xb=Yb=Promien=alfa=0;
 }
 
+/// Zmienia parametr więc i pomocnicze zmienne się muszą zmienic, ale dzieje się to leniwie. Tu sa tylko zerowane.
 void PowiazanieParaboliczne::UstawWygiecie(double par)
-//Zmienia parametr wi�c i pomocnicze zmienne si� musz� zmienic
 {
 	parametr=par;	krokow=0;
 	Xa=Ya=Xb=Yb=Promien=alfa=0;
 }
 
-//Metoda pobiera wszystkie potrzebne dane z listy string�w. Jak blad to podaje ktora pozycja
+/// Metoda pobiera wszystkie potrzebne dane z listy stringów.
+/// Używa metody `GenerycznePowiazanie::ZrobWgListy` a potem tylko czyta pole 6. zawierające parametr łuku.
 bool PowiazanieParaboliczne::ZrobWgListy(const std::string* Lista, unsigned Ile, unsigned& Blad)
 {
-   if(!GenerycznePowiazanie::ZrobWgListy(Lista,Ile,Blad))
+   if(!(Lista,Ile,Blad))
 						 return false;
+
    //Teraz zostaje ustalenie parametru - jak jest zdefiniowany
    if(Dane.KonwertujDo(6,parametr)!=-1)
 				{ Blad=6 ;return false;}
-   Blad=7;//6 pole uda�o si� wczyta�
+
+   Blad=7; //6 pole udało się wczytać
    return true;
 }
 
 const double Eps=1;
 
-void PowiazanieParaboliczne::_PoliczParametryLuku()//Liczy parametry �uku dla danej wartosci parametru
-//Pomocnicze pola zawieraj�ce niezb�dne parametry �uku
-//	double Xa,Ya,Xb,Yb,Xo,Yo,Promien,alfa,beta;
+/// Liczy dane łuku dla danej wartości parametru.
+/// Pomocnicze pola zawierające niezbędne parametry łuku to:
+///	double Xa,Ya,Xb,Yb,Xo,Yo,Promien,alfa,beta;
+void PowiazanieParaboliczne::_PoliczParametryLuku()
 {
-   WezelSieci* Pocz=Swiat::Wezel(_S);          assert(Pocz!=NULL);
-   WezelSieci* Koni=Swiat::Wezel(_T);          assert(Koni!=NULL);
+   WezelSieci* Pocz=Swiat::Wezel(_S);                                                          assert(Pocz!=NULL);
+   WezelSieci* Koni=Swiat::Wezel(_T);                                                          assert(Koni!=NULL);
    Xa=Pocz->X();
    Ya=Pocz->Y();
    Xb=Koni->X();
    Yb=Koni->Y();
 
-   if(Xa==Xb && Ya==Yb) //Bardzo z�o�liwa sytuacja
-		{Promien=0;krokow=0; return;} //NIC SIE NIE DA ZROBIC
+   if(Xa==Xb && Ya==Yb) //Bardzo przykra sytuacja
+		{Promien=0;krokow=0; return;} //NIC SIĘ NIE DA ZROBIĆ
 
-   //Liczenie wsp�rz�dnych �rodka okr�gu z kt�rego bierzemy �uk
+   //Liczenie współrzędnych Środka okręgu, z którego bierzemy łuk
 
    if(fabs(Xa-Xb)<Eps)// tylko �e w pionie
    {
 		  if(Ya<Yb)	alfa=M_PI/2;
 		  else      alfa=1.5*M_PI;
    }
-   else //Jednak trzeba troch� bardziej policzy�
+   else //Jednak trzeba trochę bardziej policzyć
    {
-	   //alfa=atan2( (Xa-Xb),(Ya-Yb) );// nie dzia�a  ?????
-	   //alfa=atan2( (Xb-Xa),(Yb-Ya) );// nie dzia�a ?????
-	   //!!!! atan2( Y , X ) - funkcja wymaga najpierw Y, potem X!!!!!!!!!!!!!
-	   //Procedura do korekty, ale na razie dzia�a, cho� nie wiem dlaczego!
+	   //alfa=atan2( (Xa-Xb),(Ya-Yb) );// nie działa  ?????
+	   //alfa=atan2( (Xb-Xa),(Yb-Ya) );// nie działa ?????
+	   // !!! atan2( Y , X ) - funkcja wymaga najpierw Y, potem X!!!!!!!!!!!!!
+	   //Procedura do korekty, ale na razie działa, choć nie wiem dlaczego!
 											if((Xb-Xa)==0 && (Ya-Yb)==0)
 											{
 												clog<<"Zbyt krotki link? X1:"<<Xa<<" Y1"<<Ya<<endl;
@@ -120,27 +127,28 @@ void PowiazanieParaboliczne::_PoliczParametryLuku()//Liczy parametry �uku dla 
 
    cos_alfa=cos(alfa);
    sin_alfa=sin(alfa);
-   Promien=sqrt((Xa-Xb)*(Xa-Xb)+(Ya-Yb)*(Ya-Yb));   	assert(Promien>0);
+   Promien=sqrt((Xa-Xb)*(Xa-Xb)+(Ya-Yb)*(Ya-Yb));   	                                              assert(Promien>0);
    krokow=Promien/5;//Na razie tak zgrubnie
    if(krokow<3) krokow=3;
 }
 
-//Tak naprawd� to r�ni si� tylko sposobem rysowania
-//Kt�ry zalezy od funkcji licz�cej punkty na �uku
+/// Przelicza położenia wzdłuż linku.
+/// Tak naprawdę ta klas od klasy bazowej różni się tylko sposobem rysowania,
+/// który zależy właśnie od tej funkcji liczącej punkty na łuku.
 void PowiazanieParaboliczne::PodajPozycje(double D, bool KierunekZwykly, double& X, double& Y, Komunikat* Messg)
-//Przelicza polozenia wdluz linku
 {
    WezelSieci* Pocz=Swiat::Wezel(_S);
    WezelSieci* Koni=Swiat::Wezel(_T);
    if(Pocz->X()!=Xa || Pocz->Y()!=Ya || Koni->X()!=Xb || Koni->Y()!=Yb)
-		   _PoliczParametryLuku();//Kt�rys si� przesuna� albo zmienil si� parametr
-   if(krokow==0) //Co� si� chyba nie uda�o
+		   _PoliczParametryLuku(); //Któryś się przesunął albo zmienił się parametr
+
+   if(krokow==0) //Cos się chyba nie udało
    {
 	GenerycznePowiazanie::PodajPozycje(D,KierunekZwykly,X,Y,Messg);//RACZEJ TYMCZASOWO
 	return;
    }
 
-   //Wlasciwe obliczenie paraboli
+   // Właściwe obliczenie paraboli
    if(!KierunekZwykly)
 				D=1-D;
    X=Xa+D*Promien;
@@ -149,7 +157,7 @@ void PowiazanieParaboliczne::PodajPozycje(double D, bool KierunekZwykly, double&
    Y=Ya+(-Przeliczony*D*D+Przeliczony*0.25);
    //Y=Ya;
 
-   //Obr�t UWAGA! 90 stopni (alfa=M_PI) jest w d� a 270 w g�r�
+   //Obrót UWAGA! 90 stopni (alfa=M_PI) jest w dół a 270 w górę
 
    D=sqrt((Xa-X)*(Xa-X)+(Ya-Y)*(Ya-Y));
    X-=Xa;
@@ -161,16 +169,16 @@ void PowiazanieParaboliczne::PodajPozycje(double D, bool KierunekZwykly, double&
 
 }
 
-
-/********************************************************************/
-/*			          SPS  version 2011                             */
-/********************************************************************/
-/*           THIS CODE IS DESIGNED & COPYRIGHT  BY:                 */
-/*            W O J C I E C H   B O R K O W S K I                   */
-/*    Instytut Studiow Spolecznych Uniwersytetu Warszawskiego       */
-/*        WWW:  http://wwww.iss.uw.edu.pl/borkowski/                */
-/*                                                                  */
-/*                               (Don't change or remove this note) */
-/********************************************************************/
+/* *******************************************************************/
+/*			            SPS  version 2022                            */
+/* *******************************************************************/
+/*             THIS CODE IS DESIGNED & COPYRIGHT  BY:                */
+/*              W O J C I E C H   B O R K O W S K I                  */
+/*     Instytut Studiów Społecznych Uniwersytetu Warszawskiego       */
+/*        RG:https://www.researchgate.net/profile/Wojciech-Borkowski */
+/*        GitHub: https://github.com/borkowsk                        */
+/*                                                                   */
+/*                               (Don't change or remove this note)  */
+/* *******************************************************************/
 
 

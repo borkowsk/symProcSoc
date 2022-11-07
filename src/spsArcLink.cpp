@@ -1,12 +1,15 @@
-////////////////////////////////////////////////////////////////////////////////
-// Symulator Procesów Sieciowych/Spolecznych (c) Instytut Studiów Spo³ecznych
-// Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-///////////////////////////////////////////////////////////////////////////////
-// Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-////////////////////////////////////////////////////////////////////////////////
-//
-// Deklaracja/Definicja linku ogólnego, ale rysowanego jako ³uk
-////////////////////////////////////////////////////////////////////////////////
+/// \file
+/// \brief Definicje metod linku ogÃ³lnego, ale rysowanego jako Å‚uk
+///        -------------------------------------------------------
+///
+/// \details
+///              ...
+///     ## (c)
+///     Symulator ProcesÃ³w Sieciowych/SpoÅ‚ecznych (c) Instytut StudiÃ³w SpoÅ‚ecznych
+///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
+/// \date
+///     2022.11.07 (last updated)
+//*////////////////////////////////////////////////////////////////////////////////
 
 #pragma hdrstop
 
@@ -17,74 +20,76 @@ using namespace std;
 //---------------------------------------------------------------------------
 PowiazanieZagiete::KonstruktorElementowModelu<PowiazanieZagiete> PowiazanieZagiete::WirtualnyKonstruktor("arclink");
 
+/// Nie musi robiÄ‡ nic - robotÄ™ wykonuje destruktor klasy bazowej
 PowiazanieZagiete::~PowiazanieZagiete()
 {
-   //Nie musi robiæ nic - robotê wykonuje destruktor klasy bazowej
 }
 
+/// DomyÅ›lny konstruktor ustawiajÄ…cy pusty link z parametrem 1
 PowiazanieZagiete::PowiazanieZagiete()
-//Domyslny konstruktor ustawiaj¹cy pusty link
+
 {
 	parametr=1;		krokow=0;
 	Xa=Ya=Xb=Yb=Xo=Yo=Promien=alfa=beta=0;
 }
 
+/// Konstruktor ustawiajÄ…cy jeszcze pusty link ALE Z PARAMETREM
 PowiazanieZagiete::PowiazanieZagiete(double par)
-//Domyslny konstruktor ustawiaj¹cy pusty link Z PARAMETREM
 {
 	parametr=par;	krokow=0;
 	Xa=Ya=Xb=Yb=Xo=Yo=Promien=alfa=beta=0;
 }
 
+/// Zmienia parametr wiÄ™c i pomocnicze zmienne siÄ™ zmieniajÄ…
 void PowiazanieZagiete::UstawParametr(double par)
-//Zmienia parametr wiêc i pomocnicze zmienne siê zmieniaja
 {
 	parametr=par;	krokow=0;
 	Xa=Ya=Xb=Yb=Xo=Yo=Promien=alfa=beta=0;
 }
 
-//Metoda pobiera wszystkie potrzebne dane z listy stringów. Jak blad to podaje ktora pozycja
+/// Metoda pobiera wszystkie potrzebne dane z listy stringÃ³w. Jak blad to podaje ktora pozycja
 bool PowiazanieZagiete::ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad)
 {
    GenerycznePowiazanie::ZrobWgListy(Lista,Ile,Blad);
-   //Teraz zostaje ustalenie parametru - jak jest zdefiniowany
+   // Teraz zostaje ustalenie parametru - jak jest zdefiniowany
    if(!Dane.KonwertujDo(6,parametr)) { Blad=6 ;return false;}
    return true;
 }
 
 const double Eps=1;
 
-void PowiazanieZagiete::_PoliczParametryLuku()//Liczy parametry ³uku dla danej wartosci parametru
-//Pomocnicze pola zawieraj¹ce niezbêdne parametry ³uku
-//	double Xa,Ya,Xb,Yb,Xo,Yo,Promien,alfa,beta;
+/// Liczy parametry Å‚uku dla danej wartoÅ›ci parametru
+/// pomocnicze pola zawierajÄ…ce niezbÄ™dne parametry Å‚uku:
+///	double Xa,Ya,Xb,Yb,Xo,Yo,Promien,alfa,beta;
+void PowiazanieZagiete::_PoliczParametryLuku()
 {
-   WezelSieci* Pocz=Swiat::Wezel(_S);          assert(Pocz!=NULL);
-   WezelSieci* Koni=Swiat::Wezel(_T);          assert(Koni!=NULL);
+   WezelSieci* Pocz=Swiat::Wezel(_S);                                                          assert(Pocz!=NULL);
+   WezelSieci* Koni=Swiat::Wezel(_T);                                                          assert(Koni!=NULL);
    Xa=Pocz->X();
    Ya=Pocz->Y();
    Xb=Koni->X();
    Yb=Koni->Y();
 
-   if(Xa==Xb && Ya==Yb) //Bardzo z³oœliwa sytuacja
-		{Promien=0;krokow=0; return;} //NIC SIE NIE DA ZROBIC
+   if(Xa==Xb && Ya==Yb) //Bardzo zÅ‚oÅ›liwa sytuacja
+		{Promien=0;krokow=0; return;} //NIC SIÄ˜ NIE DA ZROBIÄ†
 
-   //Liczenie wspó³rzêdnych œrodka okrêgu z którego bierzemy ³uk
-   if(fabs(Ya-Yb)<Eps) //Mniej ni¿ minimalne czyli pixel - pewnie i tak nie bedzie widaæ róznicy
+   // Liczenie wspÃ³Å‚rzÄ™dnych Å›rodka okrÄ™gu, z ktÃ³rego bierzemy Å‚uk
+   if(fabs(Ya-Yb)<Eps) //Mniej niÅ¼ minimalne, czyli pixel. Pewnie i tak nie bÄ™dzie widaÄ‡ rÃ³Å¼nicy
    {
 	  Xo=(Xa+Xb)/2;
 	  Yo=(Ya+Yb)/2+parametr;
    }
    else
-   if(fabs(Xa-Xb)<Eps)// j.w tylko ¿e w pionie
+   if(fabs(Xa-Xb)<Eps) // j.w tylko, Å¼e w pionie
    {
 	   Yo=(Ya+Yb)/2;
 	   Xo=(Xa+Xb)/2+parametr;
    }
-   else //Jednak trzeba trochê bardziej policzyæ
+   else //Jednak trzeba trochÄ™ bardziej policzyÄ‡
    {
-															assert(Yb-Ya!=0);
-															assert(Xb-Xa!=0);
-	 double t=-(Xb-Xa)/(Yb-Ya); 							assert(t!=0);
+															                                           assert(Yb-Ya!=0);
+															                                           assert(Xb-Xa!=0);
+	 double t=-(Xb-Xa)/(Yb-Ya); 							                                           assert(t!=0);
 	 double Xs=(Xa+Xb)/2;
 	 double Ys=(Ya+Yb)/2;
 	 double b=Ys-t*Xs;
@@ -100,30 +105,32 @@ void PowiazanieZagiete::_PoliczParametryLuku()//Liczy parametry ³uku dla danej w
 		Yo=t*Xo+b;
 	 }
    }
-														assert(Xa!=Xo || Ya!=Yo);
-   Promien=sqrt((Xa-Xo)*(Xa-Xo)+(Ya-Yo)*(Ya-Yo));   	assert(Promien>0);
+														                                       assert(Xa!=Xo || Ya!=Yo);
+   Promien=sqrt((Xa-Xo)*(Xa-Xo)+(Ya-Yo)*(Ya-Yo));   	                                       assert(Promien>0);
    alfa=atan2( (Xa-Xo),(Ya-Yo) );
    beta=atan2( (Xb-Xo),(Yb-Yo) );
- //											assert(Xa==Xo+Promien*cos(alfa));    //NIE HALO :-(
- //											assert(Ya==Yo+Promien*sin(alfa));
-   krokow=Promien/10;//Na razie tak zgrubnie
+ //											                        assert(Xa==Xo+Promien*cos(alfa));    //NIE HALO :-(
+ //											                        assert(Ya==Yo+Promien*sin(alfa));
+   krokow=Promien/10; //Na razie tak zgrubnie
 }
 
-//Tak naprawdê to ró¿ni siê tylko sposobem rysowania
-//Który zalezy od funkcji licz¹cej punkty na ³uku
+/// Przelicza poÅ‚oÅ¼enia wzdÅ‚uÅ¼ linku:
+/// Tak naprawdÄ™ to rÃ³Å¼ni siÄ™ tylko sposobem rysowania,
+/// ktÃ³ry zaleÅ¼y od funkcji liczÄ…cej punkty na Å‚uku
 void PowiazanieZagiete::PodajPozycje(double D,bool KierunekZwykly,double& X,double& Y,Komunikat* Messg)
-//Przelicza polozenia wdluz linku
+
 {
    WezelSieci* Pocz=Swiat::Wezel(_S);
    WezelSieci* Koni=Swiat::Wezel(_T);
    if(Pocz->X()!=Xa || Pocz->Y()!=Ya || Koni->X()!=Xb || Koni->Y()!=Yb)
-		   _PoliczParametryLuku();//Którys siê przesuna³ albo zmienil siê parametr
-   if(krokow==0) //Coœ siê chyba nie uda³o
+		   _PoliczParametryLuku(); //KtÃ³ryÅ› siÄ™ przesunÄ…Å‚ albo zmieniÅ‚ siÄ™ parametr
+   if(krokow==0) //CoÅ› siÄ™ chyba nie udaÅ‚o
    {
-	GenerycznePowiazanie::PodajPozycje(D,KierunekZwykly,X,Y,Messg);//RACZEJ TYMCZASOWO
-	return;
+	 GenerycznePowiazanie::PodajPozycje(D,KierunekZwykly,X,Y,Messg); //RACZEJ TYMCZASOWO
+	 return;
    }
-   //Wlasciwe obliczenie
+
+   // WÅ‚aÅ›ciwe obliczenie
    double angle;
    if(KierunekZwykly)
    {
@@ -140,3 +147,14 @@ void PowiazanieZagiete::PodajPozycje(double D,bool KierunekZwykly,double& X,doub
    Y=Yo+Promien*sin(angle);
 }
 
+/* *******************************************************************/
+/*			            SPS  version 2022                            */
+/* *******************************************************************/
+/*             THIS CODE IS DESIGNED & COPYRIGHT  BY:                */
+/*              W O J C I E C H   B O R K O W S K I                  */
+/*     Instytut StudiÃ³w SpoÅ‚ecznych Uniwersytetu Warszawskiego       */
+/*        RG:https://www.researchgate.net/profile/Wojciech-Borkowski */
+/*        GitHub: https://github.com/borkowsk                        */
+/*                                                                   */
+/*                               (Don't change or remove this note)  */
+/* *******************************************************************/

@@ -1,5 +1,5 @@
 /// \file
-/// \brief Deklaracja/Definicja linku ogólnego, ale rysowanego jako łuk paraboliczny
+/// \brief Deklaracja linku ogólnego, ale rysowanego jako łuk paraboliczny
 ///        -------------------------------------------------------------------------
 ///
 /// \details

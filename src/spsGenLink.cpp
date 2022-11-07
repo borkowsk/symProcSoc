@@ -1,12 +1,16 @@
-// //////////////////////////////////////////////////////////////////////////////
-// Symulator Proces�w Sieciowych/Spolecznych (c) Instytut Studi�w Spo�ecznych
-// Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-// //////////////////////////////////////////////////////////////////////////////
-// Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-// //////////////////////////////////////////////////////////////////////////////
-//
-// Definicje podstawowego typu realnego linku (nie pure virtual jak Powiazanie)
-// //////////////////////////////////////////////////////////////////////////////////////
+/// \file
+/// \brief Definicje podstawowego typu realnego linku (nie pure virtual jak Powiazanie)
+///        -----------------------------------------------------------------------------
+///
+/// \details
+///              ...
+///     ## (c)
+///     Symulator Procesów Sieciowych/Społecznych (c) Instytut Studiów Społecznych
+///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
+/// \date
+///     2022.11.07 (last updated)
+//*////////////////////////////////////////////////////////////////////////////////
+
 #include "spsGenLink.h"
 
 #include <iostream>
@@ -19,19 +23,22 @@ using namespace std;
 
 #include "sshutils.hpp"
 
-//Zakres w jakim musi si� zmie�ci� wizualizacja link�w
-//Ale mo�e by� jeszcze przeskalowane przez odpowiednie parametry klasy Swiat
-//Domyslne wartos�i daj� maksymalnie szerokie linki
+// Wirtualne konstruktory obu definiowanych tu typów
+// /////////////////////////////////////////////////
+GenerycznePowiazanie::KonstruktorElementowModelu<GenerycznePowiazanie>
+        GenerycznePowiazanie::WirtualnyKonstruktor("GenLink");
+GenerycznePowiazanieSkierowane::KonstruktorElementowModelu<GenerycznePowiazanieSkierowane>
+        GenerycznePowiazanieSkierowane::WirtualnyKonstruktor("DirGenLink");
+
+/// Zakres, w jakim musi się zmieścić wizualizacja linków.
+/// Jednakże może być jeszcze przeskalowane przez odpowiednie parametry klasy `Swiat::`
 float GenerycznePowiazanie::MINIMALNA_GRUBOSC_LINKU=0.05;
+/// Domyślne wartości dają maksymalnie szerokie linki
 float GenerycznePowiazanie::MAKSYMALNA_GRUBOSC_LINKU=0.5;
 
-GenerycznePowiazanie::KonstruktorElementowModelu<GenerycznePowiazanie>
-							GenerycznePowiazanie::WirtualnyKonstruktor("GenLink");
-GenerycznePowiazanieSkierowane::KonstruktorElementowModelu<GenerycznePowiazanieSkierowane>
-				GenerycznePowiazanieSkierowane::WirtualnyKonstruktor("DirGenLink");
 
-
-//Specyficzne dla Powi�zania (linku)
+// Specyficzne dla Powiązania (linku)
+// //////////////////////////////////
 /*
   private: //Pola
   std::string*	Dane;
@@ -41,27 +48,27 @@ GenerycznePowiazanieSkierowane::KonstruktorElementowModelu<GenerycznePowiazanieS
   DziedzKol  	Col;
 */
 
+/// \return `true` jeśli jest dobrze zdefiniowany
 bool GenerycznePowiazanie::Poprawny()
-//true je�li jest dobrze zdefiniowany
 {
 	return Swiat::Wezel(_S)!=NULL && Swiat::Wezel(_T)!=NULL;
 }
 
+/// Domyślna implementacja pozwala każdemu POPRAWNEMU komunikatowi przejść tym łączem
 bool  GenerycznePowiazanie::Akceptacja(Komunikat* Co)
-//Ta implementacja pozwala ka�demu POPRAWNEMU komunikatowi mo�e przej�� tym ��czem
 {
 	unsigned _N=Co->Nadawca();
 	unsigned _O=Co->Odbiorca();
-	if(	(_N==_S && _O==_T)     //Klasy potomne mog� by� skierowane
+	if(	(_N==_S && _O==_T)     //Klasy potomne mogą być skierowane
 		|| ( !Kierunkowy() && _N==_T && _O==_S) )
 			return true;
 			else
 			return false;
 }
 
-//virtual bool  Kierunkowy()=0;
+/// Oblicza położenia wzdłuż linku. Nie uwzględnia specyfiki komunikatu bo nie może jej znać
+/// Używa `virtual bool  Kierunkowy();`
 void  GenerycznePowiazanie::PodajPozycje(double D,bool KierunekZwykly,double& X,double& Y,Komunikat*)
-//Oblicza polozenia wdluz linku. Nie uwzgl�dnia specyfiki komunikatu bo nie mo�e jej zna�
 {
 	WezelSieci *_P, *_K;
 	if(KierunekZwykly)
@@ -89,34 +96,33 @@ void  GenerycznePowiazanie::PodajPozycje(double D,bool KierunekZwykly,double& X,
       return _T;
   }
 
-
+  /// Domyślny konstruktor ustawia pusty link o kolorze 0 i indeksach _S i _T `== -1`
   GenerycznePowiazanie::GenerycznePowiazanie() :  Waga(1)
-  // Domyslny konstruktor ustawiaj�cy pusty link
   {
 	  Col.ARGB = 0;
 	  _S = _T = -1;
   }
 
-  bool GenerycznePowiazanie::ZrobWgListy(const std::string* Lista,
-											unsigned Ile, unsigned& Blad)
-  // Metoda pobiera wszystkie potrzebne dane z listy string�w. Jak blad to podaje ktora pozycja
+  /// Metoda pobiera wszystkie potrzebne dane z listy stringów.
+  bool GenerycznePowiazanie::ZrobWgListy( const std::string* Lista,
+                                          unsigned Ile, unsigned& Blad)
   {
 	  Dane.InicjujWgListy(Lista,Ile);
-	  if(Dane.Ile()<5) { Blad=Ile; return false; } //Za ma�o danych. Pierwsza kom. za.
+	  if(Dane.Ile()<5) { Blad=Ile; return false; } //Za mało danych. Pierwsza kom. za.
 	//std::string*	Dane;
 	//unsigned		IleDanych;
 	//unsigned    	W,_S,_T;
 	//float 		_Z;
 	//DziedzKol  	Col;
 	//	0					1				2				  3		  4 	5
-	//typ(node/link)	Nazwa/Zrodlo	Wizualizacja/Cel	Waga	Kolor 	Z	Pole1	Pole2	Pole3	itd.
-	//genlink				Wydzia� 			Uniwerek	1			0   0
-	//genlink				Badacz A			Badacz B	0.5		00FF00   1
+	// typ(node/link)	Nazwa/Zrodlo	Wizualizacja/Cel	Waga	Kolor 	Z	Pole1	Pole2	Pole3	itd.
+	// genlink				Wydzia� 			Uniwerek	1			0   0
+	// genlink				Badacz A			Badacz B	0.5		00FF00   1
 	//...
 	//unsigned long strtoul(const char *s, char **endptr,int base);
 	//int atoi(const char *s);
 	//double atof(const char *s);
-	if(Dane.KonwertujDo(3,Waga)!=-1)//	Waga=atof(Dane[3].c_str());
+	if(Dane.KonwertujDo(3,Waga)!=-1) //	Waga=atof(Dane[3].c_str());
 		{ Blad=3; return false;}
 
 	char* endptr=NULL;
@@ -135,25 +141,26 @@ void  GenerycznePowiazanie::PodajPozycje(double D,bool KierunekZwykly,double& X,
 	if(_T==Swiat::INV_INDEX)
 		{ Blad=2; return false;}
 
-	Blad=6;//Uda�o si� wczyta� do indeksu 5
+	Blad=6; //Udało się wczytać do pola 5.
 
 	return true;
   }
 
+  /// Destruktor wirtualny, bo ma metody wirtualne
   GenerycznePowiazanie::~GenerycznePowiazanie()
-  // Destruktor wirtualny, bo b�d� metody wirtualne
   {
   }
 
+/* *******************************************************************/
+/*			            SPS  version 2022                            */
+/* *******************************************************************/
+/*             THIS CODE IS DESIGNED & COPYRIGHT  BY:                */
+/*              W O J C I E C H   B O R K O W S K I                  */
+/*     Instytut Studiów Społecznych Uniwersytetu Warszawskiego       */
+/*        RG:https://www.researchgate.net/profile/Wojciech-Borkowski */
+/*        GitHub: https://github.com/borkowsk                        */
+/*                                                                   */
+/*                               (Don't change or remove this note)  */
+/* *******************************************************************/
 
-/********************************************************************/
-/*			          SPS  version 2011                             */
-/********************************************************************/
-/*           THIS CODE IS DESIGNED & COPYRIGHT  BY:                 */
-/*            W O J C I E C H   B O R K O W S K I                   */
-/*    Instytut Studiow Spolecznych Uniwersytetu Warszawskiego       */
-/*        WWW:  http://wwww.iss.uw.edu.pl/borkowski/                */
-/*                                                                  */
-/*                               (Don't change or remove this note) */
-/********************************************************************/
 

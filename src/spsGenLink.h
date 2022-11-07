@@ -56,7 +56,7 @@ class GenerycznePowiazanie:public Powiazanie
 
 	virtual double ZOrder() {return _Z;} ///< \brief Do ustalania kolejności wyświetlania
 
-    virtual unsigned Poczatek();         ///< \brief Indekst węzła źródłowego (???)
+    virtual unsigned Poczatek();         ///< \brief Indeks węzła źródłowego (???)
 
     virtual unsigned Koniec();           ///< \brief Indeks węzła docelowego (???)
 
@@ -69,7 +69,7 @@ class GenerycznePowiazanie:public Powiazanie
     /// \brief   Pozycja na połączeniu
     /// \details Przelicza położenie wzdłuż linku
     ///          Może uwzględniać też specyfikę komunikatu
-    virtual void  PodajPozycje(double D,                        ///< Pozycja między źródłem a celem
+    virtual void  PodajPozycje(double Dist,                     ///< Pozycja między źródłem a celem (0..1)
                                bool KierunekZwykly,             ///< Czy kierunek zwykły czy odwrotny
                                double& X,                       ///< [out] X wynikowe
                                double& Y,                       ///< [out] Y wynikowe
