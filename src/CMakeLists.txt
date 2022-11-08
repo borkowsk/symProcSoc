@@ -8,6 +8,16 @@ project(SymProcSoc)
 set( WBRTM     "/home/borkowsk/SCC/public/symShell2andRTM/RTM/" )
 set( SYMSHELL  "/home/borkowsk/SCC/public/SymShellLight/" )
 
+IF (WIN32)
+  # set stuff for windows
+  message( "MS Windows platform assumed.\n\tInside C/C++ code automatic _MSC_VER variable will be used!" )
+  #set( WINDOWS_ONLY_SRC  "${WBRTM}/BASE/wb_assert.c" )
+ELSE()
+  # set stuff for other systems
+  message( "Linux/unix platform assumed.")
+  #set( X_ONLY_SRC  "" )
+ENDIF()
+
 include_directories( "${WBRTM}/"
 		      "${WBRTM}INCLUDE/" 
 		      "${SYMSHELL}"
@@ -48,7 +58,7 @@ add_library(SymProcSoc STATIC ${SOURCE_FILES})
 # SymProcSoc:
 # PL: Symulator Procesów Społecznych/Sieciowych  
 # EN: Social Processes Simulator Library
-#    (c) ISS UW 2015-2016 Wojciech Borkowski, modyfikacja 2022.10
+#    (c) ISS UW 2015-2016 Wojciech Borkowski, modyfikacja 2022.11
 #*//////////////////////////////////////////////////////////////////////////////
 
 
