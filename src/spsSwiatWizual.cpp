@@ -1,13 +1,16 @@
-// //////////////////////////////////////////////////////////////////////////////
-// Symulator Proces�w Sieciowych/Spolecznych (c) Instytut Studi�w Spo�ecznych
-// Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-// //////////////////////////////////////////////////////////////////////////////
-// Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-// //////////////////////////////////////////////////////////////////////////////
-//
-// Funkcje wizualizacji �wiata  - wyodr�bnione
-// �eby mo�na by�o �atwo zmieni� na bardziej zaawansowane �rodowisko
-// //////////////////////////////////////////////////////////////////////////////
+/// \file
+/// \brief Funkcje wizualizacji świata
+///        ---------------------------
+///
+/// \details
+///      Wyodrębnione, żeby można było łatwo zmienić na bardziej zaawansowane
+///      środowisko graficzne.
+///     ## (c)
+///     Symulator Procesów Sieciowych/Społecznych (c) Instytut Studiów Społecznych
+///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
+/// \date
+///     2022.11.09 (last updated)
+//*////////////////////////////////////////////////////////////////////////////////
 
 #include "spsModel.h"
 #include "spsGenNode.h"
@@ -21,13 +24,15 @@
 #include "sshutils.hpp"
 #include "wieloboki.hpp"
 #include "wb_ptr.hpp"
+
 #include "lingo.hpp"
 
 #include <sstream>
 using namespace std;
 using namespace wbrtm;
 
-//CO wy�wietla� w ka�dym kroku
+// CO wyświetlać w każdym kroku?
+// /////////////////////////////
 bool Swiat::WyswietlajWezly=true;
 bool Swiat::WyswietlajProcesy=true;
 bool Swiat::WyswietlajLinki=true;
@@ -35,20 +40,23 @@ bool Swiat::WyswietlajInformacje=true;
 unsigned Swiat::OpisWezlow=1;
 unsigned Swiat::OpisLinkow=-1;
 
-//Skale - przez ile mno�y� X i Y zeby wype�ni� ca�y ekran?
+// Skale - przez ile mnożyć X i Y, żeby wypełnić cały ekran?
+// /////////////////////////////////////////////////////////
 static double SkalaX=1.0;
 static double SkalaY=1.0;
 
-//Wizualizacyjne
-void _wizualizuj_komunikat_kropka(Komunikat* Inf);  //Pomocnicza - uproszczona wizualizacja komunikatu
+// IMPLEMENTACJE wizualizacyjne
+// /////////////////////////////
 
-void Swiat::Narysuj()
-// Odrysowanie ca�o�ci
+void _wizualizuj_komunikat_kropka(Komunikat* Inf);  ///< Pomocnicza - uproszczona wizualizacja komunikatu
+
+void Swiat::Narysuj() ///< Odrysowanie całości świata
 {
 	Wizualizacja_po_kroku();
 }
 
-//Funkcje potrzebne do sortowania (quicksort) wg. Z - �eby panowac nad zas�anianiem
+/// Funkcja potrzebna do sortowania (quicksort) wg. Z.
+/// Żeby panować nad zasłanianiem węzłów.
 int sort_function_wezly(const void *a, const void *b)
 {
    WezelSieci* Aw=*(WezelSieci**)a;
@@ -60,6 +68,8 @@ int sort_function_wezly(const void *a, const void *b)
 		else return -1;
 }
 
+/// Funkcja potrzebna do sortowania (quicksort) wg. Z.
+/// Żeby panować nad zasłanianiem linków.
 int sort_function_linki(const void *a, const void *b)
 {
    Powiazanie* Aw=*(Powiazanie**)a;
@@ -71,21 +81,26 @@ int sort_function_linki(const void *a, const void *b)
 		else return -1;
 }
 
-//Tablice do wizualizacji tylko tego co jest naprawde i w odpowiednim ZOrder
-static wb_dynarray<Powiazanie*> ListaPow;
-static unsigned IlePowFakt=0;
+// Tablice do wizualizacji tylko tego, co jest naprawdę i w odpowiednim ZOrder
+// ///////////////////////////////////////////////////////////////////////////
 static wb_dynarray<WezelSieci*> ListaWez;
-static unsigned IleWezFakt=0;
-static bool StrukturaSwiataNieZmieniona=false; //Flaga niezmienionej struktury
+static unsigned IleWezFakt=0;   ///< Ile faktycznie widać węzłów
 
-void Swiat::UwagaZmienionoStrukture()//     i    jej obsluga
+static wb_dynarray<Powiazanie*> ListaPow;
+static unsigned IlePowFakt=0;   ///< Ile faktycznie widać powiązań
+
+static bool StrukturaSwiataNieZmieniona=false; ///< Flaga niezmienionej struktury w danym kroku.
+
+/// Notyfikacja o zmianie struktury świata ustawia na `false` statyczną flagę  `StrukturaSwiataNieZmieniona`.
+void Swiat::UwagaZmienionoStrukture()
 {
    StrukturaSwiataNieZmieniona=false;
 }
 
+
+/// Odnajduje element wg. pozycji pikselowej.
+/// i opcjonalnie od razu wyświetla w oknie wizualizacji pełne informacje o nim.
 ElementModelu* Swiat::Inspekcja(int x,int y,bool Wizual)
-//Odnajduje element wg. pozycji pikselowej
-//i opcjonalnie od razu wy�wietla w oknie wizualizacji pe�ne informacje o nim
 {
 	double dX=double(x)/SkalaX;
 	double dY=double(y)/SkalaY;
@@ -105,13 +120,14 @@ ElementModelu* Swiat::Inspekcja(int x,int y,bool Wizual)
 
 	cout<<_LPL("Inspekcja","Inspection of")<<" \""<<Szukany->Nazwa()<<"\" ["<<Szukany->MojID()<<"]"<<endl;
 
-	if(Wizual)  //TERAZ W�A�CIWA PRACA ...
+	if(Wizual)  //TERAZ WŁAŚCIWA PRACA ...
 	{
-		Szukany->AktualizujListeDanych();//Musimy mie� pewno�� �e na liscie s� w�a�ciwe warto�ci
+		Szukany->AktualizujListeDanych(); //Musimy mie� pewno�� �e na liscie s� w�a�ciwe warto�ci
 		ssh_color back=255+127+RANDOM(127);
-	   //	circle(SkalaX*Szukany->X(),SkalaY*Szukany->Y(),/*min(SkalaX,SkalaY)**/Szukany->R(0),254);
-	   print_width(SkalaX*Szukany->X()-100,SkalaY*Szukany->Y()-char_height('X'),200,0,back,
+	    //	circle(SkalaX*Szukany->X(),SkalaY*Szukany->Y(),/*min(SkalaX,SkalaY)**/Szukany->R(0),254);
+	    print_width(SkalaX*Szukany->X()-100,SkalaY*Szukany->Y()-char_height('X'),200,0,back,
 					"[ %u ] ",Szukany->MojID());
+
 		for(unsigned j=0;j<Szukany->IlePolDanych();j++)
 		{
 			const char* NazwaPola=Szukany->NazwaPola(j);
@@ -134,19 +150,19 @@ ElementModelu* Swiat::Inspekcja(int x,int y,bool Wizual)
 	return Szukany;
 }
 
+/// Wykonanie pełnej wizualizacji modelu w danej chwili.
+/// Składowe muszą byc posortowane wg. ZOrder(), ale przecież nie koniecznie co krok!!!
 bool Swiat::Wizualizacja_po_kroku()
-// Wykonanie pe�nej wizualizacji modelu w danej chwili
-// Musz� byc posortowane wg. ZOrder() ale przecie� nie koniecznie co krok!!!
 {
-	//USTALENIE SKALI
+	// USTALENIE SKALI
 	SkalaX=double(screen_width());
 	SkalaY=double(screen_height());
 	SkalaX/=hor;
 	SkalaY/=ver;
 	if(SkalaX<=0.000001 ||  SkalaY<=0.000001)
-					return true; //Nic nie wyjdzie z tej wizualizacji ale musi zwr�ci� true bo si� przerwie!
+					return true; //Nic nie wyjdzie z tej wizualizacji, ale musi zwr�ci� `true`, bo si� przerwie!
 
-	//REJESTRACJA i RYSOWANIE LINK�W
+	// REJESTRACJA i RYSOWANIE LINKóW
 	if(!StrukturaSwiataNieZmieniona)//Przygotowanie posortowanej listy jak si� co� zmieni�o
 	{
 		if(Swiat::IlePowiazan()>0)
@@ -159,12 +175,12 @@ bool Swiat::Wizualizacja_po_kroku()
 			if(Pom!=NULL) //Mo�e by� pusty slot
 				ListaPow[IlePowFakt++]=Pom;
 		}
-		//Posortowanie wskaznikow wg. funkcji ZOrder() !!!
+		//Posortowanie wskaźników wg. funkcji ZOrder() !!!
 		if(IlePowFakt>0)
 			qsort(ListaPow.get_ptr_val(),IlePowFakt,sizeof(Powiazanie*),sort_function_linki);
 	}
 
-	//Rysowanie powiazan z listy
+	// Rysowanie powiazań z listy
 	if(WyswietlajLinki)
 	  for(unsigned i=0;i<IlePowFakt;i++)
 	  {
@@ -172,7 +188,7 @@ bool Swiat::Wizualizacja_po_kroku()
 				ListaPow[i]->Narysuj();
 	  }
 
-	//REJESTRACJA W�Z��W
+	// REJESTRACJA W�Z��W
 	if(!StrukturaSwiataNieZmieniona)//Przygotowanie posortowanej listy jak si� co� zmieni�o
 	{
 		if(Swiat::IleWezlow()>0)
@@ -189,10 +205,11 @@ bool Swiat::Wizualizacja_po_kroku()
 		if(IleWezFakt>0)
 			qsort(ListaWez.get_ptr_val(),IleWezFakt,sizeof(WezelSieci*),sort_function_wezly);
 	}
-	//Teraz ju� na pewno struktury danych pomocniczych s� aktualne
+
+	// Teraz ju� na pewno struktury danych pomocniczych s� aktualne
 	StrukturaSwiataNieZmieniona=true;
 
-	//Rysowanie wezlow z listy i ich proces�w
+	// Rysowanie wezlow z listy i ich proces�w
 	for(unsigned i=0;i<IleWezFakt;i++)
 	{
 		if(WyswietlajWezly)
@@ -218,7 +235,7 @@ bool Swiat::Wizualizacja_po_kroku()
 		}
 	}
 
-	//Rysowanie komunikat�w - bez listy. Za du�o ich i za cz�sto si� zmieniaj�
+	// Rysowanie komunikat�w - bez listy. Za du�o ich i za cz�sto si� zmieniaj�
 	if(WyswietlajInformacje)
 	 for(unsigned i=0;i<Swiat::IleInformacji();i++)
 	 {
@@ -238,7 +255,7 @@ bool Swiat::Wizualizacja_po_kroku()
 		}
 	 }
 
-	//OPCJONALNE WYPISYWANIE NAZW W�Z��W
+	// OPCJONALNE WYPISYWANIE NAZW W�Z��W
 	int	 transp=print_transparently(1);	// Wlacza drukowanie tekstu bez zamazywania t�a. Zwraca stan poprzedni
 	for(unsigned i=0;i<IleWezFakt;i++)
 	{
@@ -257,22 +274,30 @@ bool Swiat::Wizualizacja_po_kroku()
 	}
 	print_transparently(transp); //Przywr�cenie stanu podstawowego
 
-	return true;//Udalo si� jak zwykle :-)
+	return true; //Udało się jak zwykle :-)
 }
 
 
-
+/// Zabezpieczone rysowanie węzła. Tylko wtedy gdy jest dostępny kształt.
+/// Waga węzła zaszyta jest w jego wielkości...
 void GenerycznyWezelSieci::Narysuj()
 {
 	 if(this->Ksztalt!=NULL)
-		Ksztalt->Rysuj(SkalaX*_X,SkalaY*_Y,Col.R,Col.G,Col.B); //Kszta�t w kolorach
-				//Waga w�z�a zaszyta jest w jego wielko�ci...
+     {
+         Ksztalt->Rysuj(SkalaX * _X, SkalaY * _Y, Col.R, Col.G, Col.B); //Kształt w kolorach
+     }
+     else
+     {
+            //... TODO
+     }
 }
 
+/// Wizualizacja węzła macierzowego
 void WezelMacierzowy::Narysuj()
 {
 	 double StartX,StartY,Step;
 	 double R=this->R(0);
+
 	 if(Szerokosc>=Wysokosc)
 	 {
 		Step=(2*R)/Szerokosc;
@@ -281,6 +306,7 @@ void WezelMacierzowy::Narysuj()
 	 {
 		 Step=(2*R)/Wysokosc;
 	 }
+
 	 StartX=X()-0.5*Step*(Szerokosc-1);
 	 StartY=Y()-0.5*Step*(Wysokosc-1);
 	 for(unsigned i=0;i<Szerokosc;i++)
@@ -305,6 +331,11 @@ void WezelMacierzowy::Narysuj()
      }
 }
 
+/// Wizualizacja generycznego powiązania.
+/// Grubość zależy od wagi i domyślnego `R`, tu branego "przez pół"
+/// oraz od parametrów wizualizacji linku:
+/// `float GenerycznePowiazanie::MINIMALNA_GRUBOSC_LINKU=0.01;`
+/// `float GenerycznePowiazanie::MAKSYMALNA_GRUBOSC_LINKU=1;`
 void GenerycznePowiazanie::Narysuj()
 {
 	if(_S==Swiat::INV_INDEX || _T == Swiat::INV_INDEX)
@@ -316,20 +347,18 @@ void GenerycznePowiazanie::Narysuj()
 	if(Koniec==NULL)//Ups
 			cerr<<endl<<"Link celuje w pustke"<<endl;
 
-	//Grubo�c zale�y od wagi i domyslnego R. Ale tu branego "przez p�"
-	//oraz od parametr�w wizualizacji linku
-	//float GenerycznePowiazanie::MINIMALNA_GRUBOSC_LINKU=0.01;
-	//float GenerycznePowiazanie::MAKSYMALNA_GRUBOSC_LINKU=1;
+    // Grubość zależy od wagi i domyślnego `R`, tu branego "przez pół"
+    // oraz od parametrów wizualizacji linku.
 	int grubosc=JakieRwProcWidth/100.0*MINIMALNA_GRUBOSC_LINKU
 				+((JakieRwProcWidth/100.0*MAKSYMALNA_GRUBOSC_LINKU)*ver*Waga);
 
 	unsigned R,G,B;
-	if(Col.ARGB!=0) //Waga i kolor maj� znaczenie
+	if(Col.ARGB!=0) //Waga i kolor mają znaczenie
 	{                         assert(NumerKoloruTla>255); //Tylko szaro�ci!
 		double tlo=(NumerKoloruTla-255)*(1-Waga);
-		R=Col.R*Waga+tlo; //Srednie wa�one z tlem daj� kolory
-		G=Col.G*Waga+tlo; //coraz bardziej zbli�one do szarego t�a
-		B=Col.B*Waga+tlo; //im mniejsza waga
+		R=Col.R*Waga+tlo; // Średnie ważone z tłem dają kolory
+		G=Col.G*Waga+tlo; // coraz bardziej zbliżone do szarego tła
+		B=Col.B*Waga+tlo; // im mniejsza waga
 		set_pen_rgb(R,G,B,grubosc,SSH_LINE_SOLID);  //Free_style_pen
 	}
 	else
@@ -343,25 +372,27 @@ void GenerycznePowiazanie::Narysuj()
 	//Samo rysowanie   SkalaX*_X,SkalaY*_Y,
 	line_d(SkalaX*Start->X(),SkalaY*Start->Y(),SkalaX*Koniec->X(),SkalaY*Koniec->Y());
 
-	if(this->Kierunkowy()) //Jak kierunkowy to trzeba doda� strza�k�
+	if(this->Kierunkowy()) //Jak kierunkowy to trzeba dodać grot strzałki
 	{
-	   double dX=SkalaX*Koniec->X()-SkalaX*Start->X();
-	   double dY=SkalaY*Koniec->Y()-SkalaY*Start->Y();
-				if(dY==0 && dX==0) //Zlosliwa sytuacja
-				{
-					clog<<"?"; goto ERROR;
-				}
-	   double Rad=atan2(dY,dX)+M_PI/2.0;  //Te� nie dzia�a bez korekty
-	   Wielobok Arr=Wielobok::Namiot();//	(3,grubosc*1.5);
-	   Arr.Centruj();
-	   double MaX,MiX,MaY,MiY,cR,Skala;
-	   Arr.Zakresy(MiX,MiY,MaX,MaY,cR);
-	   Skala=(grubosc*1.66)/cR;
-	   Arr.Skaluj(Skala,Skala);
+        double dX=SkalaX*Koniec->X()-SkalaX*Start->X();
+        double dY=SkalaY*Koniec->Y()-SkalaY*Start->Y();
+        if(dY==0 && dX==0) //Złośliwa sytuacja
+        {
+            clog<<"?"; goto ERROR;
+        }
+
+        double Rad=atan2(dY,dX)+M_PI/2.0;  // Też nie działa bez korekty
+	    Wielobok Arr=Wielobok::Namiot();         //	(3,grubość*1.5);
+	    Arr.Centruj();
+
+        double MaX,MiX,MaY,MiY,cR,Skala;
+        Arr.Zakresy(MiX,MiY,MaX,MaY,cR);
+        Skala=(grubosc*1.66)/cR;
+        Arr.Skaluj(Skala,Skala);
         Arr.ObracajORad(Rad);
-	   Arr.Rysuj((SkalaX*Koniec->X()+SkalaX*Start->X())/2.0,
-				 (SkalaY*Koniec->Y()+SkalaY*Start->Y())/2.0,
-				 R*0.75,G*0.75,B*0.75);
+        Arr.Rysuj((SkalaX*Koniec->X()+SkalaX*Start->X())/2.0,
+                 (SkalaY*Koniec->Y()+SkalaY*Start->Y())/2.0,
+                 R*0.75,G*0.75,B*0.75);
 	}
 
 	return;
@@ -369,11 +400,16 @@ void GenerycznePowiazanie::Narysuj()
 	{
 		WezelSieci* W1=Swiat::Wezel(this->Poczatek());
 		WezelSieci* W2=Swiat::Wezel(this->Koniec());
-		clog<<"\nWadliwe powiazanie proste miedzy  ";
+		clog<<"\nWadliwy link prosty miedzy  ";
 		clog<<W1->Nazwa()<<" a "<<W2->Nazwa()<<endl;
 	}
 }
 
+/// Wizualizacja powiązania parabolicznego.
+/// Grubość zależy od wagi i domyślnego `R`, tu branego "przez pół"
+/// oraz od parametrów wizualizacji linku:
+/// `float GenerycznePowiazanie::MINIMALNA_GRUBOSC_LINKU=0.01;`
+/// `float GenerycznePowiazanie::MAKSYMALNA_GRUBOSC_LINKU=1;`
 void PowiazanieParaboliczne::Narysuj()
 {
 	if(_S==Swiat::INV_INDEX || _T == Swiat::INV_INDEX)
@@ -387,13 +423,7 @@ void PowiazanieParaboliczne::Narysuj()
 
 	//set_pen(256+RANDOM(255),1,SSH_LINE_DOTTED);
 	//line_d(SkalaX*Xa,SkalaY*Ya,SkalaX*Xb,SkalaY*Yb);//Debug
-	//Grubo�c zale�y od wagi i domyslnego R. Ale tu branego "przez p�"
-	//int grubosc=1+((JakieRwProcWidth/200)*ver*Waga);
 
-	//Grubo�c zale�y od wagi i domyslnego R. Ale tu branego "przez p�"
-	//oraz od parametr�w wizualizacji linku
-	//float GenerycznePowiazanie::MINIMALNA_GRUBOSC_LINKU=0.01;
-	//float GenerycznePowiazanie::MAKSYMALNA_GRUBOSC_LINKU=1;
 	int grubosc=JakieRwProcWidth/100.0*MINIMALNA_GRUBOSC_LINKU
 				+((JakieRwProcWidth/100.0*MAKSYMALNA_GRUBOSC_LINKU)*ver*Waga);
 
@@ -408,7 +438,7 @@ void PowiazanieParaboliczne::Narysuj()
 	}
 	else
 	{
-		unsigned intens=255-unsigned(Waga*255)%256; //Odcien szaro�ci zale�y od wagi
+		unsigned intens=255-unsigned(Waga*255)%256; //Odcień szarości zależy od wagi
 		set_pen_rgb(intens,intens,intens,grubosc,SSH_LINE_SOLID);  //Free_style_pen
 	}
 
@@ -427,16 +457,16 @@ void PowiazanieParaboliczne::Narysuj()
 
 	if(this->Kierunkowy()) //Jak kierunkowy to trzeba doda� strza�k�
 	{
-	   PodajPozycje(0.5,true,Xp,Yp,NULL); //Polozenie srodka strzalki
-	   PodajPozycje(0.66,true,Xk,Yk,NULL);//Do obliczenia kierunku
-	   double dX=SkalaX*Xk-SkalaX*Xp;//SkalaX*Koniec->X()-SkalaX*Start->X();
-	   double dY=SkalaY*Yk-SkalaY*Yp;//SkalaY*Koniec->Y()-SkalaY*Start->Y();
-				if(dY==0 && dX==0) //Zlosliwa sytuacja
+	   PodajPozycje(0.5,true,Xp,Yp,NULL);  //Położenie środka strzałki
+	   PodajPozycje(0.66,true,Xk,Yk,NULL); //Do obliczenia kierunku
+	   double dX=SkalaX*Xk-SkalaX*Xp; //SkalaX*Koniec->X()-SkalaX*Start->X();
+	   double dY=SkalaY*Yk-SkalaY*Yp; //SkalaY*Koniec->Y()-SkalaY*Start->Y();
+				if(dY==0 && dX==0) //Złośliwa sytuacja
 				{
 					clog<<"?"; goto ERROR;
 				}
-	   double Rad=atan2(dY,dX)+M_PI/2.0;  //Nie dzia�a bez korekty
-	   Wielobok Arr=Wielobok::Namiot();//	(3,grubosc*1.5);
+	   double Rad=atan2(dY,dX)+M_PI/2.0;  // Nie dzia�a bez korekty
+	   Wielobok Arr=Wielobok::Namiot();         //	(3,grubosc*1.5);
 	   Arr.Centruj();
 	   double MaX,MiX,MaY,MiY,cR,Skala;
 	   Arr.Zakresy(MiX,MiY,MaX,MaY,cR);
@@ -453,34 +483,42 @@ void PowiazanieParaboliczne::Narysuj()
 	{
 		WezelSieci* W1=Swiat::Wezel(this->Poczatek());
 		WezelSieci* W2=Swiat::Wezel(this->Koniec());
-		clog<<"\nWadliwe powiazanie paraboliczne miedzy ";
+		clog<<"\nWadliwy link paraboliczny miedzy ";
 		clog<<W1->Nazwa()<<" a "<<W2->Nazwa()<<endl;
 	}
 }
 
+/// Rysowanie generycznego komunikatu.
 void GeneryczneInfo::Narysuj()
 {
 	Powiazanie* Lacze;
+
 	if(Link==Swiat::INV_INDEX)
 		return; //Nierysowalny
-	if((Lacze=Swiat::Lacze(Link))==NULL) return; //Te� nierysowalny
-	if((Swiat::Wezel(Lacze->Poczatek()))==NULL) return; //Ten te� nierysowalny
-	if((Swiat::Wezel(Lacze->Koniec()))==NULL) return; //i ten nierysowalny
+	if((Lacze=Swiat::Lacze(Link))==NULL)
+        return; //Też nierysowalny
+	if((Swiat::Wezel(Lacze->Poczatek()))==NULL)
+        return; //Ten też nierysowalny
+	if((Swiat::Wezel(Lacze->Koniec()))==NULL)
+        return; //... i taki też nierysowalny
 
-	//Ustalanie kolorowania prostego lub alternatywnie:
+	// Ustalanie kolorowania prostego lub alternatywnie:
 	unsigned R=Col.R; //Srednie wa�one z tlem daj� kolory
 	unsigned G=Col.G; //coraz bardziej zbli�one do szarego t�a
 	unsigned B=Col.B; //im mniejsza waga
 
-	//Obliczanie skalowania:  SkalaX*_X,SkalaY*_Y,
+	// Obliczanie skalowania:  SkalaX*_X,SkalaY*_Y,
 	double X,Y;
 	Lacze->PodajPozycje(JakDostawa(),Kierunek,X,Y);
-	//Grubo�c zale�y od wagi i domyslnego R. Ale tu branego "przez p�"
+
+	// Wielkość zależy od wagi i domyślnego R. Ale tu branego "przez pół"
 	double Rad=((JakieRwProcWidth/800)*ver)*min(SkalaX,SkalaY);
 	if(Rad<1) Rad=1;
-	RysujKsztalt(SkalaX*X,SkalaY*Y,Rad,R,G,B);
+
+	RysujKsztalt(SkalaX*X,SkalaY*Y,Rad,R,G,B); // WŁAŚCIWE RYSOWANIE
 }
 
+/// Pomocnicze rysowanie kształtu.
 void GeneryczneInfo::RysujKsztalt(float X,float Y,float Rad,unsigned R,unsigned G,unsigned B)
 {
 	set_pen_rgb(R/2,G/2,B/2,0,SSH_LINE_SOLID);  //Free_style_pen
@@ -488,74 +526,83 @@ void GeneryczneInfo::RysujKsztalt(float X,float Y,float Rad,unsigned R,unsigned 
 	fill_circle_d(X,Y,Rad);
 }
 
+/// Wyczyszczenie całości świata. Może być "na skróty"
 void Swiat::Wymazuj()
-// Wyczyszczenie calo�ci - mo�e by� "na skr�ty"
 {
    fill_rect(0,0,screen_width(),screen_height(),NumerKoloruTla);
 }
 
+/// Wymazuje kształt rysując go kolorem tła.
+/// Tło jest zawsze odcieniem szarości, a kolory szare mają w symshellu indeksy w zakresie [256..511].
 void GenerycznyWezelSieci::Wymazuj()
-{                             assert(NumerKoloruTla>255); //Tylko szaro�ci!
+{                                                                                            assert(NumerKoloruTla>255);
 	 if(this->Ksztalt!=NULL)
-		Ksztalt->Rysuj(SkalaX*_X,SkalaY*_Y,NumerKoloruTla-255,NumerKoloruTla-255,NumerKoloruTla-255); //Kszta�t jak t�o
-				//T�o jest zawsze odcieniem szaro�ci a kolory szare maj� w symshellu indeksy w zakresie [256..511]
+		Ksztalt->Rysuj(SkalaX*_X,SkalaY*_Y,NumerKoloruTla-255,NumerKoloruTla-255,NumerKoloruTla-255);
 }
 
+/// Wymazywanie węzła macierzowego NIE ROBI NIC. TODO?
 void WezelMacierzowy::Wymazuj()
 {
-	//NumerKoloruTla
+	//TODO NumerKoloruTla
 }
 
+/// Wymazywanie procesu.
 void GenerycznyProces::Wymazuj()
 {
-	//NumerKoloruTla
+	//TODO NumerKoloruTla
 	WezelSieci* Mw=Swiat::Wezel(Procesor());
 	if(Mw==NULL)
-		cerr<<endl<<"Proces na nieistniej�cym wezle"<<endl;
+		cerr<<endl<<"Proces na nieistniejacym wezle"<<endl;
 	unsigned ile=Swiat::IleProcesow(Procesor());
 	double R=Mw->R(1.5*M_PI);
-	double Y=Mw->Y()-0.1*R+this->MojID();//Indeks procesu na w�le
+	double Y=Mw->Y()-0.1*R+this->MojID(); //Indeks procesu wpływa na Y
 	double X1=Mw->X()-R;
 	double X2=X1+2*R;
-	set_pen(254/*NumerKoloruTla*/,SkalaY,SSH_LINE_SOLID);  //Kolor t�a
+	set_pen(254/*NumerKoloruTla*/,SkalaY,SSH_LINE_SOLID);  //Kolor tła
 	line_d(SkalaX*X1,SkalaY*Y,SkalaX*X2,SkalaY*Y);
 }
 
+/// Wymazywanie powiązania generycznego NIE ROBI NIC. TODO?
 void GenerycznePowiazanie::Wymazuj()
 {
-   //NumerKoloruTla
+    //TODO NumerKoloruTla
 }
 
+/// Wymazywanie generycznego komunikatu
 void GeneryczneInfo::Wymazuj()
 {
-	//NumerKoloruTla
+    //TODO NumerKoloruTla
 	Powiazanie* Lacze;
 	if(Link==Swiat::INV_INDEX)
 		return; //Nierysowalny
-	if((Lacze=Swiat::Lacze(Link))==NULL) return; //Te� nierysowalny
-	if((Swiat::Wezel(Lacze->Poczatek()))==NULL) return; //Ten te� nierysowalny
-	if((Swiat::Wezel(Lacze->Koniec()))==NULL) return; //i ten nierysowalny
+	if((Lacze=Swiat::Lacze(Link))==NULL)
+        return; //Też nierysowalny
+	if((Swiat::Wezel(Lacze->Poczatek()))==NULL)
+        return; //Taki też nierysowalny
+	if((Swiat::Wezel(Lacze->Koniec()))==NULL)
+        return; //... i taki nierysowalny
 
-	//Kolorowanie
+	// Kolorowanie
 	set_pen_rgb(NumerKoloruTla-255,NumerKoloruTla-255,NumerKoloruTla-255,0,SSH_LINE_SOLID);  //Free_style_pen
 	set_brush(NumerKoloruTla);
 
 	//Rysowanie  SkalaX*_X,SkalaY*_Y,
 	double X,Y;
 	Lacze->PodajPozycje(JakDostawa(),Kierunek,X,Y);
-	//Grubo�c zale�y od wagi i domyslnego R. Ale tu branego "przez p�"
+
+	// Grubośc zależy od wagi i domyślnego R. Ale tu branego "przez p�"
 	double Rad=((JakieRwProcWidth/800)*ver)*min(SkalaX,SkalaY);
 	if(Rad<1) Rad=1;
 	fill_circle_d(SkalaX*X,SkalaY*Y,Rad);
 }
 
-
+/// Wymazywanie powiązania parabolicznego NIE ROBI NIC. TODO?
 void PowiazanieParaboliczne::Wymazuj()
 {
-   //NumerKoloruTla
+    //TODO NumerKoloruTla
 }
 
-/// Na zakonczenie kroku trzeba odnowi� graficzny wiersz statusu
+/// Na zakończenie kroku trzeba odnowić graficzny wiersz statusu
 bool Swiat::Status_po_kroku()
 {
 	std::ostringstream Bufor;
@@ -568,28 +615,30 @@ bool Swiat::Status_po_kroku()
 	return true;
 }
 
+/// Pomocnicza - uproszczona wizualizacja komunikatu
 void _wizualizuj_komunikat_kropka(Komunikat* Inf)
-//Pomocnicza - uproszczona wizualizacja komunikatu
 {
 	unsigned Kanal=Inf->Kanal();
 	Powiazanie* Link=Swiat::Lacze(Kanal);
-	if(Link==NULL) return; //co� nie wysz�o
+	if(Link==NULL) return; //coś nie wyszło
 	double X,Y;
 	Link->PodajPozycje(Inf->JakDostawa(),Inf->KierunekZgodny(),X,Y,Inf);
 	DziedzinaWKolorze Dz=Inf->PodajDziedzine();
 	plot_rgb(X*SkalaX,Y*SkalaY,Dz.R,Dz.G,Dz.B);
 }
 
+/// Proste testy graficzne wieloboków
 bool testy_graficzne()
 {
-//Proste testy
+
  Wielobok Ostrze(Wielobok::Namiot());
  Wielobok Test(8,50);
 
  Test.Rysuj(hor/2,ver/2,128);
  Ostrze.Centruj();
  //Ostrze.Skaluj(0.2,0.4);
-    Ostrze.ObracajORad(M_PI / 2);
+
+ Ostrze.ObracajORad(M_PI / 2);
  Ostrze.Rysuj(hor/4,ver/2,32,128,32);
 
  return true;
@@ -610,11 +659,11 @@ void GenerycznyProces::Narysuj()
 
 	double Zaaw=this->JakZaawansowany();
 
-	//Pasek podkre�lenia projektu bliskiego zakonczenia
+	//Pasek podkreślenia projektu bliskiego zakończenia
 	if(Zaaw>0.99)
 	{
-		set_pen_rgb(255,200,0,SkalaY,SSH_LINE_SOLID);  //Kolor przerobionego
-		line_d(SkalaX*X1,SkalaY*Y+1,SkalaX*X2,SkalaY*Y+1);//Dodatkowe podkre�lenie
+		set_pen_rgb(255,200,0,SkalaY,SSH_LINE_SOLID); //Kolor przerobionego
+		line_d(SkalaX*X1,SkalaY*Y+1,SkalaX*X2,SkalaY*Y+1); //Dodatkowe podkreślenie
 	}
 
 	//DziedzKol Pom=Mw->PodajDziedzine();//Pom.R<<=1;Pom.G<<=1;Pom.B<<=1;
@@ -630,18 +679,20 @@ void GenerycznyProces::Narysuj()
 	line_d(SkalaX*X1,SkalaY*Y,SkalaX*X2,SkalaY*Y);
 }
 
-//Bardzo intensywnie uzywane  - Mo�e inliny kiedy� zrobie?)
+/// Bardzo intensywnie używane. TODO: Może inline lepiej zrobić?
 double Swiat::SkalujX() { return SkalaX; }
+
+/// Bardzo intensywnie używane. TODO: Może inline lepiej zrobić?
 double Swiat::SkalujY() { return SkalaY; }
 
-/********************************************************************/
-/*			          SPS  version 2011                             */
-/********************************************************************/
-/*           THIS CODE IS DESIGNED & COPYRIGHT  BY:                 */
-/*            W O J C I E C H   B O R K O W S K I                   */
-/*    Instytut Studiow Spolecznych Uniwersytetu Warszawskiego       */
-/*        WWW:  http://wwww.iss.uw.edu.pl/borkowski/                */
-/*                                                                  */
-/*                               (Don't change or remove this note) */
-/********************************************************************/
-
+/* *******************************************************************/
+/*			            SPS  version 2022                            */
+/* *******************************************************************/
+/*             THIS CODE IS DESIGNED & COPYRIGHT  BY:                */
+/*              W O J C I E C H   B O R K O W S K I                  */
+/*     Instytut Studiów Społecznych Uniwersytetu Warszawskiego       */
+/*        RG:https://www.researchgate.net/profile/Wojciech-Borkowski */
+/*        GitHub: https://github.com/borkowsk                        */
+/*                                                                   */
+/*                               (Don't change or remove this note)  */
+/* *******************************************************************/
