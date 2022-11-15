@@ -1,29 +1,40 @@
 # (c)ISS UW, @author Wojciech Borkowski
 ################################################################################
 
-cmake_minimum_required(VERSION 3.6)
 project(SymProcSoc)
+cmake_minimum_required(VERSION 3.6)
 
-#Te ścieżki trzeba ustawić ręcznie.
-set( WBRTM     "/home/borkowsk/SCC/public/symShell2andRTM/RTM/" )
-set( SYMSHELL  "/home/borkowsk/SCC/public/SymShellLight/" )
+
+#\note Ścieżki do katalogów niezbędnych bibliotek trzeba ustawić ręcznie PONIŻEJ!
 
 IF (WIN32)
   # set stuff for windows
-  message( "MS Windows platform assumed.\n\tInside C/C++ code automatic _MSC_VER variable will be used!" )
+  # Typowo dla Windows
+  set( WBRTM     "c:/users/borkowsk/SCC/public/symShell2andRTM/RTM/" )
+  set( SYMSHELL  "c:/users/borkowsk/SCC/public/SymShellLight/" )
+
+  message( ${PROJECT_NAME} ": MS Windows platform assumed.\n\tInside C/C++ code automatic _MSC_VER variable will be used!" )
+
+  set(CMAKE_CXX_STANDARD 11) # See: https://matgomes.com/setting-cpp-standard-cmake/
+  set(CMAKE_CXX_STANDARD_REQUIRED On)
+  set(CMAKE_CXX_EXTENSIONS Off)  
   #set( WINDOWS_ONLY_SRC  "${WBRTM}/BASE/wb_assert.c" )
 ELSE()
   # set stuff for other systems
-  message( "Linux/unix platform assumed.")
+  # Typowo dla linuxa
+  set( WBRTM     "/home/borkowsk/SCC/public/symShell2andRTM/RTM/" )
+  set( SYMSHELL  "/home/borkowsk/SCC/public/SymShellLight/" )
+
+  message( ${PROJECT_NAME} ": Linux/unix platform assumed.")
+
+  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
   #set( X_ONLY_SRC  "" )
 ENDIF()
 
 include_directories( "${WBRTM}/"
 		      "${WBRTM}INCLUDE/" 
-		      "${SYMSHELL}"
+		      "${SYMSHELL}/"
 		    )
-
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
 
 set( SOURCE_FILES
 	spsArcLink.cpp

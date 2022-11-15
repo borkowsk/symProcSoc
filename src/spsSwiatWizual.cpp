@@ -109,7 +109,9 @@ ElementModelu* Swiat::Inspekcja(int x,int y,bool Wizual)
 	for(unsigned i=0;i<Swiat::IleWezlow();i++)
 	{
 	   WezelSieci* Pom=Swiat::Wezel(i);
-	   if(Pom==NULL) continue; //Mo�e by� pusty slot, kt�ry pomijamy
+	   if(Pom==NULL) 
+		   continue; //Może być pusty slot, ktory pomijamy
+
 	   if(Pom->Trafiony(dX,dY))
 	   {
 		 Szukany=Pom; break;

@@ -30,7 +30,7 @@ union DziedzinaWKolorze
 		unsigned R:8;  ///< byte Red
 		unsigned A:8;  ///< byte Alfa
 	};
-	float F;             ///< Jakby ktoś chciał widzieć to jako Float (?) Tylko po co?
+	float F;             ///< Jakby ktoś chciał widzieć to jako `float` (?) Tylko po co?
 
     /// \brief Konstruktor domyślny
     explicit DziedzinaWKolorze(): ARGB(0) {}
@@ -136,7 +136,8 @@ class ElementModelu
 	virtual void Narysuj()=0; ///< \brief Narysowanie obiektu
 	virtual void Wymazuj()=0; ///< \brief W miarę dokładne wymazanie obiektu
 
-    ///< \brief Test czy pukt/piksel jest w obiekcie \details Np. do inspekcji myszką
+    /// \brief Test czy pukt/piksel jest w obiekcie \details Np. do inspekcji myszką
+	/// \note  TODO: Dlaczego parametry `float`?
 	virtual bool Trafiony(float X,float Y) { return false;}
 
     /// \brief Przydział czasu CPU na zmianę stanu obiektu

@@ -71,10 +71,10 @@ unsigned Swiat::WstawProc(Proces* Jaki,unsigned KtoryWezel)
 	if(Procesy[KtoryWezel].wolnych==0) //Trzeba realokować jak brak miejsca
 	{
 	   wb_dynarray<Proces*> Pom=Procesy[KtoryWezel].Tab; //TRANSFER!!!
-	   unsigned len=Pom.get_size()+PoIleProcesowAlokowac;
+	   size_t len=Pom.get_size()+PoIleProcesowAlokowac;
 	   Procesy[KtoryWezel].Tab.alloc(len);
 	   Procesy[KtoryWezel].Tab.fill(NULL); //Zapewniamy pustostan
-	   unsigned bytes=Pom.get_size()*sizeof(Proces*);
+	   size_t bytes=Pom.get_size()*sizeof(Proces*);
 
 	   if(bytes>0)
 	   {
@@ -87,9 +87,9 @@ unsigned Swiat::WstawProc(Proces* Jaki,unsigned KtoryWezel)
 	   Procesy[KtoryWezel].wolnych=PoIleProcesowAlokowac;
 	}
 
-	//Teraz szukamy wolnego miejsca. Od końca
-	int i; //Pozycja
-	for(i=Procesy[KtoryWezel].Tab.get_size()-1;i>=0;i--)
+	//Teraz szukamy wolnego miejsca. Od końca. `i` to pozycja.
+	int i = static_cast<int>(Procesy[KtoryWezel].Tab.get_size()) - 1; 								 assert(i>=0); //!!!
+	for(;i>=0;i--)
 		if(Procesy[KtoryWezel].Tab[i]==NULL)
 			break;
 										                                                             assert(i>=0); //!!!
@@ -209,13 +209,12 @@ unsigned Swiat::UsunProc(Proces* Jaki,unsigned KtoryWezel/*=-1*/)
 unsigned Swiat::IleProcesow(unsigned KtoryWezel/*=-1*/)
 {
 	if(KtoryWezel == INV_INDEX)
-	{
-		                                                  assert("Wariant nie zaimplementowany"=="Swiat::IleProcesow()");
+	{	                                                  assert("Wariant nie zaimplementowany"=="Swiat::IleProcesow()");
 		return -1; //Na razie nic z tym nie umie zrobić
 	}
 	else
-	{
-		return Procesy[KtoryWezel].Tab.get_size();
+	{                                               		     assert(Procesy[KtoryWezel].Tab.get_size() <= UINT32_MAX);
+		return static_cast<unsigned>(Procesy[KtoryWezel].Tab.get_size());
 	}
 }
 

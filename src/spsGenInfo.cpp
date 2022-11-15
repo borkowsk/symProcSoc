@@ -1,6 +1,6 @@
 /// \file
-/// \brief Implementacja klasy podstawowego komunikatu realizująca interface Komunikat
-///        ---------------------------------------------------------------------------
+/// \brief Implementacja klasy podstawowego komunikatu realizującej interface Komunikat
+///        -----------------------------------------------------------------------------
 ///
 /// \details
 ///
@@ -168,7 +168,7 @@ bool 	GeneryczneInfo::Zwrotnie(float _Szybkosc)
 		Predkosc=_Szybkosc; //A jeśli jest równe 0 to zostawia to co było
 	if(Predkosc<=0) //A jak wyszło mniejsze lub równe 0 to nadaje prędkość awaryjną
 	{
-		Predkosc=0.000000001; //Awaryjna prędkość komunikatu
+		Predkosc=0.000000001f; //Awaryjna prędkość komunikatu
 		//cerr<<
 	}
 	LicznikZycia=0;
@@ -197,7 +197,7 @@ bool  	 GeneryczneInfo::Zaadresuj(unsigned _Powiazanie,bool KierunekZwykly,float
 	if(_Szybkosc!=0)
 		Predkosc=_Szybkosc; //A jeśli równe to zostawia
 	if(Predkosc<=0)
-		Predkosc=0.000000001; //Awaryjna prędkość komunikatu
+		Predkosc=0.000000001f; //Awaryjna prędkość komunikatu
 	LicznikZycia=0;
 	//if(P->Akceptacja()    ---> Sprawdzana w momencie wstawiania
 	return true;

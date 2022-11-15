@@ -11,14 +11,19 @@
 ///     2022.11.07 (last updated)
 //*////////////////////////////////////////////////////////////////////////////////
 
-
 #pragma hdrstop
 
 #include "spsParaLink.h"
 #include <cassert>
+#ifndef M_PI
 #define _USE_MATH_DEFINES /*For MSVC*/
+#endif
 #include <cmath>
 #include <iostream>
+#ifndef M_PI //STILL!?!?!
+#include "use_math_defines.h"
+#endif
+
 using namespace std;
 
 #include "wb_smartlog.hpp"
@@ -128,7 +133,7 @@ void PowiazanieParaboliczne::_PoliczParametryLuku()
    cos_alfa=cos(alfa);
    sin_alfa=sin(alfa);
    Promien=sqrt((Xa-Xb)*(Xa-Xb)+(Ya-Yb)*(Ya-Yb));   	                                              assert(Promien>0);
-   krokow=Promien/5;//Na razie tak zgrubnie
+   krokow=int(Promien/5);//Na razie tak zgrubnie
    if(krokow<3) krokow=3;
 }
 

@@ -8,12 +8,13 @@
 ///     Symulator Procesów Sieciowych/Społecznych (c) Instytut Studiów Społecznych
 ///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
 /// \date
-///     2022.11.04 (last updated)
+///     2022.11.15 (last updated)
 // ///////////////////////////////////////////////////////////////////////////////////////
 #include "spsElement.h"
 
 #include <cassert>
 #include <cstring>
+#include <cfloat>
 #include <iostream>
 using namespace std;
 
@@ -232,7 +233,11 @@ void ElementModelu::DaneLokalne::Realokuj(unsigned Ile)
 bool ElementModelu::DaneLokalne::PrzypiszZ(unsigned gdzie,double co)
 {
 	char bufor[512];
+#ifdef _MSC_VER
+	if(sprintf_s(bufor, "%g", co) != EOF)
+#else
 	if(sprintf(bufor,"%g",co)!=EOF)
+#endif
 	{
 		Dane[gdzie]=bufor;
 		return true;
@@ -244,7 +249,11 @@ bool ElementModelu::DaneLokalne::PrzypiszZ(unsigned gdzie,double co)
 bool ElementModelu::DaneLokalne::PrzypiszZ(unsigned gdzie,long   co)
 {
 	char bufor[512];
+#ifdef _MSC_VER
+	if (sprintf_s(bufor,"%lu", co) != EOF)
+#else
 	if(sprintf(bufor,"%lu",co)!=EOF)
+#endif
 	{
 		Dane[gdzie]=bufor;
 		return true;
@@ -257,36 +266,49 @@ int ElementModelu::DaneLokalne::KonwertujDo(unsigned zkad,float& naco)
 {
 	double pom;
 	int ret=KonwertujDo(zkad,pom);
-	if(ret!=-1) return ret;
-	naco=pom; //TU SIĘ MOŻE SKOPAĆ !!!???
+	if(ret!=-1) return ret;                                                                assert(abs(pom) < FLT_MAX );
+	naco=static_cast<float>(pom); //TU MOŻE OBCIACHAĆ MIEJSCA ZNACZĄCE, a nawet zrobić OVERFLOW, ale nie w trybie DEBUG
 	return -1;
 }
 
 /// Zwraca indeks znaku który nie pasował lub -1 jako sukces
-int ElementModelu::DaneLokalne::KonwertujDo(unsigned zkad,double& naco)
+int ElementModelu::DaneLokalne::KonwertujDo(unsigned zkad, double& naco)
 {
-	bool procent=false;
+	bool procent = false;
 	char  temp[1024]; //Duża tablica na stosie
-	char* pom=temp;
-	strncpy(temp,Dane[zkad].c_str(),511);
 
-	if(strlen(temp)==0) //PUSTY!!!
-		   { naco=0;  return 0; }
+#ifdef _MSC_VER
+	{ auto str = Dane[zkad].c_str(); // 4DEBUG
+	  strncpy_s(temp, sizeof(temp), str, sizeof(temp) - 1);
+    }
+#else
+	strncpy(temp, Dane[zkad].c_str(), 1023);
+	temp[1023] = '\0';
+#endif
 
-	if( strchr(temp,'.')==NULL //Gdy nie ma kropki
-	  && (pom=strrchr(temp,','))!=NULL ) //To ostatni przecinek zmienia na kropkę
-			*pom='.';
-
-	if( (pom=strrchr(temp,'%'))!=NULL )
+	if (strlen(temp) == 0) //PUSTY!!!
 	{
-			procent=true;
-			*pom='\0';
+		naco = 0;  return 0;
 	}
 
-	char* endptr=NULL;
-	naco=strtod(temp,&endptr);
-	if(endptr!=NULL && *endptr!='\0')
-		return endptr-temp;
+	char* pom = temp;
+	if (strchr(temp, '.') == NULL //Gdy nie ma kropki
+		&& (pom = strrchr(temp, ',')) != NULL) //To ostatni przecinek zmienia na kropkę
+		*pom = '.';
+
+	if ((pom = strrchr(temp, '%')) != NULL)
+	{
+		procent = true;
+		*pom = '\0';
+	}
+
+	char* endptr = NULL;
+	naco = strtod(temp, &endptr);
+	if (endptr != NULL && *endptr != '\0')
+	{	
+		auto ret = endptr - temp;                                           assert(0 < ret && ret < Dane[zkad].size());
+		return static_cast<int>(ret);
+	}
 
 	if(procent)
 		naco/=100.0;
@@ -295,23 +317,29 @@ int ElementModelu::DaneLokalne::KonwertujDo(unsigned zkad,double& naco)
 }
 
 /// Zwraca indeks znaku który nie pasował lub -1 jako sukces
-int ElementModelu::DaneLokalne::KonwertujDo(unsigned zkad,int& naco)
+int ElementModelu::DaneLokalne::KonwertujDo(unsigned zkad, int& naco)
 {
-	char* endptr=NULL;
-	naco=strtol(Dane[zkad].c_str(),&endptr,0);
-	if(endptr!=NULL && *endptr!='\0')
-		return endptr-Dane[zkad].c_str();
+	char* endptr = NULL;
+	naco = strtol(Dane[zkad].c_str(), &endptr, 0);
+	if (endptr != NULL && *endptr != '\0')
+	{
+		auto ret=endptr - Dane[zkad].c_str();								assert(0 < ret && ret < Dane[zkad].size());
+		return static_cast<int>(ret);
+	}
 	else
 		return -1;  //Wbrew pozorom OK
 }
 
 /// Zwraca indeks znaku który nie pasował lub -1 jako sukces
-int ElementModelu::DaneLokalne::KonwertujDo(unsigned zkad,unsigned& naco)
+int ElementModelu::DaneLokalne::KonwertujDo(unsigned zkad, unsigned& naco)
 {
-	char* endptr=NULL;
-	naco=strtoul(Dane[zkad].c_str(),&endptr,0);
-	if(endptr!=NULL && *endptr!='\0')
-		return endptr-Dane[zkad].c_str();
+	char* endptr = NULL;
+	naco = strtoul(Dane[zkad].c_str(), &endptr, 0);
+	if (endptr != NULL && *endptr != '\0')
+	{
+		auto ret=endptr - Dane[zkad].c_str();								assert(0 < ret && ret < Dane[zkad].size());
+		return static_cast<int>(ret);
+	}
 	else
 		return -1;  //Wbrew pozorom OK
 }

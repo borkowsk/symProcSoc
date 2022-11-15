@@ -50,13 +50,13 @@ class PowiazanieParaboliczne: public GenerycznePowiazanie
 
     // Specyficzne dla takiego połączenia
     // //////////////////////////////////
-	void  UstawWygiecie(double par);       ///< \brief Zmiana parametru łuku \note więc i pomocnicze zmienne się zmieniają
-	float DajWygiecie(){ return parametr;} ///< \brief Dostęp do wartości parametru łuku
+	void  UstawWygiecie(double par);        ///< \brief Zmiana parametru łuku \note więc i pomocnicze zmienne się zmieniają
+	double DajWygiecie(){ return parametr;} ///< \brief Dostęp do wartości parametru łuku
 
   protected:
 	void _PoliczParametryLuku(); /// \brief Liczy zmienne pomocnicze łuku dla danej wartości parametru
 
-	float parametr;  ///< Wartość decydująca o sposobie zagięcia
+	double   parametr;  ///< Wartość decydująca o sposobie zagięcia
 
   private:
     unsigned krokow; ///< Ile odcinków łuku przy rysowaniu ~ odległość PK/10 pix
