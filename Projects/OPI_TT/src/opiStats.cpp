@@ -1,7 +1,7 @@
 // Transfer technologii 2011
 ///////////////////////////////////////////////////////////////
-// Funkcje obliczania statystyk dla Œwiata  - wyodrêbnione
-// ¿eby by³o ³atwo znaleŸæ i rozbudowywaæ
+// Funkcje obliczania statystyk dla ï¿½wiata  - wyodrï¿½bnione
+// ï¿½eby byï¿½o ï¿½atwo znaleï¿½ï¿½ i rozbudowywaï¿½
 ////////////////////////////////////////////////////////////////////////////////
 #include <fstream>
 #include <map>
@@ -12,7 +12,7 @@
 #include <time.h>
 using namespace std;
 
-#include "INCLUDE/platform.hpp"
+#include "compatyb.hpp"
 #include "spsModel.h"
 
 /*
@@ -24,18 +24,18 @@ GenProc;SocialProc;ReportProc;ProductProc;   ResearchProc;  FinSourceProc;  TTSe
 
 extern char PlikWejsciowy[256];
 
-unsigned STAT_HISTOGRAM_WAZNOSCI=5;//Liczba przedzia³ów histogramów "wa¿noœci"
+unsigned STAT_HISTOGRAM_WAZNOSCI=5;//Liczba przedziaï¿½ï¿½w histogramï¿½w "waï¿½noï¿½ci"
 unsigned MAX_WARTOSC_POWIAZANIA=1;
 unsigned MAX_WARTOSC_WEZLA=STAT_HISTOGRAM_WAZNOSCI;//Do ewentualnej zmiany przy starcie programu lub z pliku .dat
 
-//Widoczny te¿ na zewn¹trz strumien logu statystycznego.
-//¯eby w razie NIEZBÊDNEJ potrzeby mo¿na by³o cos do niego dopisaæ
+//Widoczny teï¿½ na zewnï¿½trz strumien logu statystycznego.
+//ï¿½eby w razie NIEZBï¿½DNEJ potrzeby moï¿½na byï¿½o cos do niego dopisaï¿½
 ofstream StatLog;
-bool StatLogPoprawny=false; //Informacja ¿e ju¿ mo¿na u¿ywaæ StatLog
+bool StatLogPoprawny=false; //Informacja ï¿½e juï¿½ moï¿½na uï¿½ywaï¿½ StatLog
 bool StatLogExists = false;
 string StatLogPath;
 
-// Wyliczenie pe³nej statystyki modelu w danym kroku
+// Wyliczenie peï¿½nej statystyki modelu w danym kroku
 ///////////////////////////////////////////////////////////////////////////////
 
 void InitStatLog() {
@@ -188,34 +188,34 @@ int PozycjaWHistogramie(double Wartosc, double MaxWartosc, int LiczbaPrzedzialow
 
 bool Swiat::Statystyka_po_kroku()
 // Zainicjowanie StatLogu plikiem w katalogu ./WynikiOpiTT											X DONE
-// który trzeba utworzyæ jak go nie ma.																X DONE
-// Najlepiej jakby plik nazywa³ siê tak jak ¿ród³o danych tyle ¿e
+// ktï¿½ry trzeba utworzyï¿½ jak go nie ma.																X DONE
+// Najlepiej jakby plik nazywaï¿½ siï¿½ tak jak ï¿½rï¿½dï¿½o danych tyle ï¿½e
 // z unikalnym dopiskiem utworzonym z daty i czasu. Rozszerzenie: .sdat
 //-----------------------------------------------------------------------------
-//Plik TAB DELIMITED z nag³ówkiem,
+//Plik TAB DELIMITED z nagï¿½ï¿½wkiem,
 //* W pierwszej kolumnie numer kroku.																X DONE
-//NAJWA¯NIEJSZE:																					X DONE
-//* Kolejne kolumny z liczb¹ obiektów ka¿dego typu znalezionego na liscie							X DONE
+//NAJWAï¿½NIEJSZE:																					X DONE
+//* Kolejne kolumny z liczbï¿½ obiektï¿½w kaï¿½dego typu znalezionego na liscie							X DONE
 //    ElementModelu::WirtualnyKonstruktor::ListaNazwTypow()											X DONE
-//Uporz¹dkowana kategoriami "*Node", "*Proc", "*Link", "*Info"										X DONE
-//Pewnie trzeba bêdzie u¿yæ jakiejœ "mapy" (z STL), co niestety mo¿e byæ kosztowne					X DONE
-//ale statystyki liczy siê nie zawsze w ka¿dym kroku, a zliczanie konstrukcji						X DONE
-//i destrukcji musia³oby byæ zawsze.																X DONE
+//Uporzï¿½dkowana kategoriami "*Node", "*Proc", "*Link", "*Info"										X DONE
+//Pewnie trzeba bï¿½dzie uï¿½yï¿½ jakiejï¿½ "mapy" (z STL), co niestety moï¿½e byï¿½ kosztowne					X DONE
+//ale statystyki liczy siï¿½ nie zawsze w kaï¿½dym kroku, a zliczanie konstrukcji						X DONE
+//i destrukcji musiaï¿½oby byï¿½ zawsze.																X DONE
 
-//JAK SIÊ UDA ZROBIÆ EFEKTYWNIE W OPARCIU O AKTUALNY INTERFAC										X DONE
-//* Nazwa wêz³a o najwiêkszej liczbie po³¹czeñ (albo kilku oddzielonych œrednikami jak równe)		X DONE
+//JAK SIï¿½ UDA ZROBIï¿½ EFEKTYWNIE W OPARCIU O AKTUALNY INTERFAC										X DONE
+//* Nazwa wï¿½zï¿½a o najwiï¿½kszej liczbie poï¿½ï¿½czeï¿½ (albo kilku oddzielonych ï¿½rednikami jak rï¿½wne)		X DONE
 //* i ta liczba																						X DONE
-//* i nazwa wêz³a najwiêkszej liczbie procesów (j.w.)												X DONE
+//* i nazwa wï¿½zï¿½a najwiï¿½kszej liczbie procesï¿½w (j.w.)												X DONE
 //* i ta liczba																						X DONE
-//* link o najwiêkszej liczbie komunikatów (identyfikowany przez nazwê pocz¹tku i konca)			X DONE
+//* link o najwiï¿½kszej liczbie komunikatï¿½w (identyfikowany przez nazwï¿½ poczï¿½tku i konca)			X DONE
 //* i ta liczba																						X DONE
-//(te¿ potrzebne "mapy" albo du¿e tablice "równoleg³e" do ukrytych tablic Swiata					X DONE
+//(teï¿½ potrzebne "mapy" albo duï¿½e tablice "rï¿½wnolegï¿½e" do ukrytych tablic Swiata					X DONE
 
-//TO SIÊ DA DOŒÆ £ATWO:
-//* Nazwa wêz³a o najwiêkszej wadze																	X DONE
+//TO SIï¿½ DA DOï¿½ï¿½ ï¿½ATWO:
+//* Nazwa wï¿½zï¿½a o najwiï¿½kszej wadze																	X DONE
 //* i ta waga																						X DONE
 //* link o najwyszej wadze i ta waga																X DONE
-//** A potem osobno dla wêz³ów i dla linków histogramy Waznosc()'i w zadanej liczbie przedzia³ow	X DONE
+//** A potem osobno dla wï¿½zï¿½ï¿½w i dla linkï¿½w histogramy Waznosc()'i w zadanej liczbie przedziaï¿½ow	X DONE
 {
 	map<string,int> ItemsCounts;
 	
@@ -392,7 +392,7 @@ bool Swiat::Statystyka_po_kroku()
 		}
 	}
 
-	//Powoduje utworzenie w mapie odpowiednich elementów
+	//Powoduje utworzenie w mapie odpowiednich elementï¿½w
 	MaxKomunikatyPolaczenia["AdminLink"] = 0;
 	MaxKomunikatyPolaczenia["CoopLink"] = 0;
 	MaxKomunikatyPolaczenia["DirGenLink"] = 0;

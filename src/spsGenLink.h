@@ -1,72 +1,115 @@
-////////////////////////////////////////////////////////////////////////////////
-// Symulator Proces�w Sieciowych/Spolecznych (c) Instytut Studi�w Spo�ecznych
-// Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-////////////////////////////////////////////////////////////////////////////////
-// Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-////////////////////////////////////////////////////////////////////////////////
-//
-// Deklaracja podstawowego typu realnego linku (nie pure virtual jak Powiazanie)
-////////////////////////////////////////////////////////////////////////////////
-//------------------------------------------------------------------------------
+/// \file
+/// \brief Deklaracja podstawowego typu realnego linku (nie pure virtual jak Powiazanie)
+///        -----------------------------------------------------------------------------
+///
+/// \details
+///              ...
+///     ## (c)
+///     Symulator Procesów Sieciowych/Społecznych (c) Instytut Studiów Społecznych
+///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
+/// \date
+///     2022.11.07 (last updated)
+//*////////////////////////////////////////////////////////////////////////////////
+
 #ifndef spsGenLinkH
 #define spsGenLinkH
 
-#include "spsModel.h" //Tu s� deklaracje potrzebnych typow
+#include "spsModel.h" //Tu są deklaracje potrzebnych typów
 
+/// \brief link ogólny, symetryczny, rysowanego jako linia
 class GenerycznePowiazanie:public Powiazanie
 {
+    static KonstruktorElementowModelu<GenerycznePowiazanie> WirtualnyKonstruktor;
   public:
-	GenerycznePowiazanie(); //Domyslny konstruktor ustawiaj�cy pusty link
-	static KonstruktorElementowModelu<GenerycznePowiazanie> WirtualnyKonstruktor;
-	ElementModelu::WirtualnyKonstruktor* VKonstruktor() { return &WirtualnyKonstruktor;}
-	virtual bool Poprawny(); //true je�li jest dobrze zdefiniowany
-	virtual double Waznosc() { return Waga; } //Zwraca wsp�lczynnik wa�no�ci obiektu. Np. wag� w�z�a lub linku, priorytet procesu, etc.
-	//Metoda pobiera wszystkie potrzebne dane z listy string�w. Jak blad to podaje ktora pozycja
-	virtual bool ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad);
-	virtual ~GenerycznePowiazanie();//Destruktor wirtualny, bo b�d� metody wirtualne
-	virtual void ChwilaDlaCiebie(); //Daje mu szanse na endogenne zmiany stan�w
-	virtual void Narysuj();
-	virtual void Wymazuj();
-  //Specyficzne dla Powi�zania (linku)
-	virtual double ZOrder() {return _Z;} //Do ustalania kolejnosci wyswietlania
-	virtual unsigned Poczatek();
-	virtual unsigned Koniec();
-	virtual bool  Kierunkowy() { return false;}
-	virtual bool  Akceptacja(Komunikat* Co);//To akurat pozwala ka�demu POPRAWNEMU komunikatowi mo�e przej�� tym ��czem
-	virtual void  PodajPozycje(double D,bool KierunekZwykly,
-							   double& X,double& Y,Komunikat* K=NULL);//Przelicza polozenia wdluz linku
-							   //Mo�e uwzgl�dnia� te� specyfik� komunikatu
+    /// \brief Powiązany obiekt wirtualnego konstruktora
+    ElementModelu::WirtualnyKonstruktor* VKonstruktor() { return &WirtualnyKonstruktor;}
 
-	//Zakres w jakim musi si� zmie�ci� wizualizacja link�w
-	//Ale mo�e by� jeszcze przeskalowane przez odpowiednie parametry klasy Swiat
-	static float MINIMALNA_GRUBOSC_LINKU;
-	static float MAKSYMALNA_GRUBOSC_LINKU;
+	GenerycznePowiazanie(); ///< Domyślny konstruktor ustawiający pusty link
+
+    /// \brief   Czytanie danych obiektu
+    /// \details Metoda pobiera wszystkie potrzebne dane z listy stringów. Jak błąd to podaje która pozycja
+	virtual bool ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad);
+
+    /// \brief Destruktor wirtualny. \details bo są inne metody wirtualne
+	virtual ~GenerycznePowiazanie();
+
+    /// \brief Sprawdzanie poprawności
+    /// \return true jeśli jest dobrze zdefiniowany
+    virtual bool Poprawny();
+
+    /// \brief Współczynnik ważności obiektu.
+    /// \details Znaczenie zależy od kontekstu. Współczynnik może oznaczać
+    ///          Np. wagę węzła lub linku, priorytet procesu, etc.
+    virtual double Waznosc() { return Waga; }
+
+    /// \brief Metoda dająca =szanse na endogenne zmiany stanów obiektów
+    virtual void ChwilaDlaCiebie();
+
+    /// \brief rysowanie \details Od zwykłego powiązania różni się tylko sposobem rysowania
+	virtual void Narysuj();
+
+    /// \brief czyszczenie z ekranu
+	virtual void Wymazuj();
+
+    // Specyficzne dla Powiązania (linku)
+    // //////////////////////////////////
+
+	virtual double ZOrder() {return _Z;} ///< \brief Do ustalania kolejności wyświetlania
+
+    virtual unsigned Poczatek();         ///< \brief Indeks węzła źródłowego (???)
+
+    virtual unsigned Koniec();           ///< \brief Indeks węzła docelowego (???)
+
+	virtual bool  Kierunkowy() { return false;} /// \brief Czy link kierunkowy czy symetryczny? \return false (symetryczny)
+
+    ///< \brief   Czy komunikat pasuje do łącza?
+    ///< \details Ta wersja akurat pozwala każdemu POPRAWNEMU komunikatowi przejść tym łączem
+    virtual bool  Akceptacja(Komunikat* Co);
+
+    /// \brief   Pozycja na połączeniu
+    /// \details Przelicza położenie wzdłuż linku
+    ///          Może uwzględniać też specyfikę komunikatu
+    virtual void  PodajPozycje(double Dist,                     ///< Pozycja między źródłem a celem (0..1)
+                               bool KierunekZwykly,             ///< Czy kierunek zwykły czy odwrotny
+                               double& X,                       ///< [out] X wynikowe
+                               double& Y,                       ///< [out] Y wynikowe
+                               Komunikat* K=NULL                ///< opcjonalnie link do komunikatu, jeśli jakaś specyfika.
+    );
+
+	/// \brief Zakres w jakim musi się zmieścić wizualizacja linków
+	/// \details Ale może być jeszcze przeskalowane przez odpowiednie parametry klasy Swiat
+	static float MINIMALNA_GRUBOSC_LINKU,MAKSYMALNA_GRUBOSC_LINKU;
 
   protected: //Pola
-	//DziedzKol  		Col;   //Dziedziczone z ElementModelu
-	//DaneLokalne		Dane;      //Dane tekstowe
-	unsigned    	_S,_T;
-	float         	_Z;
-	float 			Waga;
+	//DziedzKol  		Col;       // Dziedziczone z ElementModelu
+	//DaneLokalne		Dane;      // Dane tekstowe
+	unsigned    	_S,_T;  // INDEKSY ŹRÓDŁA I CELU
+	float         	_Z;     // Z-order
+	float 			Waga;   ///< Znaczenie linku
 };
 
+/// \brief link ogólny, skierowany, rysowanego jako strzałka
 class GenerycznePowiazanieSkierowane:public GenerycznePowiazanie
 {
 	public:
+    /// \brief Powiązany obiekt wirtualnego konstruktora
 	static KonstruktorElementowModelu<GenerycznePowiazanieSkierowane> WirtualnyKonstruktor;
-		virtual bool  Kierunkowy() { return true;}
+    ElementModelu::WirtualnyKonstruktor* VKonstruktor() { return &WirtualnyKonstruktor;}
+
+    /// \brief Czy link kierunkowy czy symetryczny?
+    /// \return true (asymetryczny)
+    virtual bool  Kierunkowy() { return true;}
 };
 
-//------------------------------------------------------------------------------
-
-/********************************************************************/
-/*			          SPS  version 2011                             */
-/********************************************************************/
-/*           THIS CODE IS DESIGNED & COPYRIGHT  BY:                 */
-/*            W O J C I E C H   B O R K O W S K I                   */
-/*    Instytut Studiow Spolecznych Uniwersytetu Warszawskiego       */
-/*        WWW:  http://wwww.iss.uw.edu.pl/borkowski/                */
-/*                                                                  */
-/*                               (Don't change or remove this note) */
-/********************************************************************/
+/* *******************************************************************/
+/*			            SPS  version 2022                            */
+/* *******************************************************************/
+/*             THIS CODE IS DESIGNED & COPYRIGHT  BY:                */
+/*              W O J C I E C H   B O R K O W S K I                  */
+/*     Instytut Studiów Społecznych Uniwersytetu Warszawskiego       */
+/*        RG:https://www.researchgate.net/profile/Wojciech-Borkowski */
+/*        GitHub: https://github.com/borkowsk                        */
+/*                                                                   */
+/*                               (Don't change or remove this note)  */
+/* *******************************************************************/
 #endif

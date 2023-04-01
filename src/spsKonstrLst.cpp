@@ -1,24 +1,28 @@
-// //////////////////////////////////////////////////////////////////////////////
-// Symulator Proces�w Sieciowych/Spolecznych (c) Instytut Studi�w Spo�ecznych
-// Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-// //////////////////////////////////////////////////////////////////////////////
-// Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-// //////////////////////////////////////////////////////////////////////////////
-//
-// Metody klasy bazowej ElementModelu  slu�ace rejestracji wirtualnych konstruktor�w
-// w sytuacji gdy nie mo�na u�y� <map>  Szuka liniowo po klasycznej li�cie,
-// wi�c przy wi�kszej liczbie typ�w b�dzie nieefektywne, ale przy malej jest
-// ca�kiem skuteczne, szybko si� kompiluje i nie wywala nawet w "Borlandzie"
-// //////////////////////////////////////////////////////////////////////////////////
+/// \file
+/// \brief Metody klasy bazowej ElementModelu  służące rejestracji wirtualnych konstruktorów
+///        ---------------------------------------------------------------------------------
+///
+/// \details
+///		W sytuacji gdy nie można użyć <map>.  Szuka liniowo po klasycznej liście,
+///		więc przy większej liczbie typów będzie nieefektywne, ale przy małej jest
+///		całkiem skuteczne, szybko się kompiluje i nie wywala nawet w "Borlandzie"
+///     ## (c)
+///     Symulator Procesów Sieciowych/Społecznych (c) Instytut Studiów Społecznych
+///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
+/// \date
+///     2022.11.15 (last updated)
+//*////////////////////////////////////////////////////////////////////////////////
+
 
 #include <cstring>
 #include <string>
-
 
 using namespace std;
 
 #include "spsElement.h"
 #include "compatyb.h"
+
+// #define SAFE_LIST_CONSTRUCTION
 
 struct WezelListy
 {
@@ -28,100 +32,110 @@ struct WezelListy
 };
 
 WezelListy* Head=NULL;
-bool	ListaNazwTypowAktualna=false;
 
-#define SAFE_LIST_CONSTRUCTION
+
 #ifdef SAFE_LIST_CONSTRUCTION
-//GENEROWANIE LISTY ZA POMOC� MOJE KLASY wb_pchar - dziala zawsze ...
+/// GENEROWANIE LISTY ZA POMOCĄ MOJE KLASY wb_pchar - działa zawsze ...
 #include"INCLUDE/wb_ptr.hpp" 
+
 using namespace wbrtm;
 
-static wb_pchar ListaNazwTypow;
+static wb_pchar ListaNazwTypow; ///< Ukryta przed linkerem tekstowa lista typów.
+static bool	ListaNazwTypowAktualna = false;
 
+/// TESTOWA I TEKSTOWA(!) LISTA TYPÓW?
 const char*  dummy() 
 {
 	if(ListaNazwTypowAktualna)
 			return ListaNazwTypow.get();
 
-	WezelListy* Top=Head; //Pocz�tek
+	WezelListy* Top=Head; //Początek
 	size_t Rozmiar=0;
 	while(Top!=NULL)
 	{
 	   if(Top->Konst!=NULL)
 	   {
-		  Rozmiar+=strlen(Top->Nazwa.c_str())+1;//Zliczanie rozmiar�w
+		  Rozmiar+=strlen(Top->Nazwa.c_str())+1; //Zliczanie rozmiarów
 	   }
-	   Top=Top->Nastepny;//Szuka dalej
+	   Top=Top->Nastepny; //Szuka dalej
 	}
+
 	ListaNazwTypow.alloc(Rozmiar+1);
-	Top=Head; //Znowu pocz�tek
+	Top=Head; //Znowu początek
 	while(Top!=NULL)
 	{
 	   if(Top->Konst!=NULL)
 	   {
-		   ListaNazwTypow.add("%s;",Top->Nazwa.c_str());//Rozmiar musi by� OK!!!
+		   ListaNazwTypow.add("%s;",Top->Nazwa.c_str()); //Rozmiar musi być OK!!!
 	   }
-	   Top=Top->Nastepny;//Szuka dalej
+	   Top=Top->Nastepny; //Szuka dalej
 	}
+
 	ListaNazwTypowAktualna=true;
 	const char*  fordebu=ListaNazwTypow.get_ptr_val();
+
 	return fordebu;
 }
 
+/// \note Wewnątrz tej funkcji nie można użyć klas z nagłówków ??? Zwłaszcza STL (to chyba w Borlandzie?)
 const char*   ElementModelu::WirtualnyKonstruktor::ListaNazwTypow()
 {
-	return dummy();//Wewn�trz tej funkcji nie mo�na u�y� klas z nag��wk�w ??? Zw�aszcza STL
+	return dummy();
 }
 #else
-//GENEROWANIE LISTY ZA POMOC� KLASY stringstream - nie w ka�dym kompilatorze dzia�a poprawnie ! ! !
+/// GENEROWANIE LISTY ZA POMOCĄ KLASY stringstream - nie w każdym kompilatorze działa poprawnie ! ! !
 #include <sstream>
 
-stringstream ListaNazwTypow;
+static stringstream ListaNazwTypow; ///< Ukryta przed linkerem tekstowa lista typów.
+static bool	ListaNazwTypowAktualna = false;
 
 static const char*  dummy()
 {
 	if(ListaNazwTypowAktualna)
 			return ListaNazwTypow.str().c_str();
 
-	WezelListy* Top=Head; //Pocz�tek
+	WezelListy* Top=Head; //Początek
 	while(Top!=NULL)
 	{
 	   if(Top->Konst!=NULL)
 	   {
 		  ListaNazwTypow<<Top->Nazwa<<";";
 	   }
-	   Top=Top->Nastepny;//Szuka dalej
+	   Top=Top->Nastepny; //Szuka dalej
 	}
+
 	ListaNazwTypowAktualna=true;
 	const char*  fordebu=ListaNazwTypow.str().c_str();
 	return fordebu;
 }
 
+/// \note Wewnątrz tej funkcji nie można użyć klas z nagłówków ??? Zwłaszcza STL (to chyba w Borlandzie?)
+///       Bezpośrednio nie rozpoznaje poprawnie strstream np.!!!
 const char*   ElementModelu::WirtualnyKonstruktor::ListaNazwTypow()
 {
-	return dummy();//Wewn�trz tej funkcji nie mo�na u�y� klas z nag��wk�w ??? Zw�aszcza STL
-				   //Bezpo�rednio nie rozpoznaje poprawnie strstream np.!!!
+	return dummy(); 
 }
 
 #endif
 
-
+/// \return obiekt informacji o typie wg. zarejestrowanej nazwy klasy.
 WezelListy* Znajdz(const char* NazwaKlasy)
 {
-	WezelListy* Top=Head; //Pocz�tek
+	WezelListy* Top=Head; //Początek
 	while(Top!=NULL)
 	{
 	   if(strcasecmp(NazwaKlasy,Top->Nazwa.c_str())==0)
-			return Top; //Znalaz�
+			return Top; //Znalazł!
 			else
-			Top=Top->Nastepny;//Szuka dalej
+			Top=Top->Nastepny; //Szuka dalej
 	}
-	return NULL;//Nie ma
+	return NULL; //Nie ma
 }
 
+/// \note Obiekt musi istnieć puki jest potrzebny 
+/// `Mapa[NazwaKlasy]=Ten;`
 void ElementModelu::WirtualnyKonstruktor::Zarejestruj(const char* NazwaKlasy,WirtualnyKonstruktor* Ten)
-//Obiekt musi istnie� puki jest potrzebny
-{//Mapa[NazwaKlasy]=Ten;
+{
 	 WezelListy* Pom=new WezelListy;
 	 Pom->Nastepny=Head;
 	 Pom->Nazwa=NazwaKlasy;
@@ -130,24 +144,29 @@ void ElementModelu::WirtualnyKonstruktor::Zarejestruj(const char* NazwaKlasy,Wir
 	 ListaNazwTypowAktualna=false;
 }
 
+/// \note Gdy obiekt konstriktora juz niepotrzebny mozna wyrejestrować
+/// `if(Mapa[NazwaKlasy]==Ten) Mapa[NazwaKlasy]=NULL;`
 void ElementModelu::WirtualnyKonstruktor::Wyrejestruj(const char* NazwaKlasy,WirtualnyKonstruktor* Ten)
-//A potem mo�na wyrejestrowa�
-{//if(Mapa[NazwaKlasy]==Ten) Mapa[NazwaKlasy]=NULL;
+{
 	WezelListy* Pom=Znajdz(NazwaKlasy);
 	if(Pom)
 		Pom->Konst=NULL; //Skasowane...
-	//... Mo�na by dealokowa�, ale to jest prosta implementacja :-)
+	//TODO: Można by dealokować?
 	ListaNazwTypowAktualna=false;
 }
 
-ElementModelu::WirtualnyKonstruktor* ElementModelu::WirtualnyKonstruktor::DajWirtualnyKonstruktor(const char* NazwaKlasy)
-//A to daje zarejestrowany obiekt gdy potrzebny
-{ /* map<string, ElementModelu::WirtualnyKonstruktor* , less<string> >::const_iterator i;
-	i = Mapa.find(NazwaKlasy);    // WirtualnyKonstruktor* Pom=
+/// \return Metoda daje zarejestrowany obiekt gdy potrzebny
+/** ```
+	map<string, ElementModelu::WirtualnyKonstruktor* , less<string> >::const_iterator i;
+	i = Mapa.find(NazwaKlasy);
 	if (i == Mapa.end ())
 		return NULL; //Nie ma
 		else
-		return i->second;    */
+		return i->second;  
+    ```
+*/
+ElementModelu::WirtualnyKonstruktor* ElementModelu::WirtualnyKonstruktor::DajWirtualnyKonstruktor(const char* NazwaKlasy)
+{ 
 	WezelListy* Pom=Znajdz(NazwaKlasy);
 	if(Pom)
 		return Pom->Konst;
@@ -155,14 +174,15 @@ ElementModelu::WirtualnyKonstruktor* ElementModelu::WirtualnyKonstruktor::DajWir
 		return NULL;
 }
 
+/* *******************************************************************/
+/*			            SPS  version 2022                            */
+/* *******************************************************************/
+/*             THIS CODE IS DESIGNED & COPYRIGHT  BY:                */
+/*              W O J C I E C H   B O R K O W S K I                  */
+/*     Instytut Studiów Społecznych Uniwersytetu Warszawskiego       */
+/*        RG:https://www.researchgate.net/profile/Wojciech-Borkowski */
+/*        GitHub: https://github.com/borkowsk                        */
+/*                                                                   */
+/*                               (Don't change or remove this note)  */
+/* *******************************************************************/
 
-/********************************************************************/
-/*			          SPS  version 2011                             */
-/********************************************************************/
-/*           THIS CODE IS DESIGNED & COPYRIGHT  BY:                 */
-/*            W O J C I E C H   B O R K O W S K I                   */
-/*    Instytut Studiow Spolecznych Uniwersytetu Warszawskiego       */
-/*        WWW:  http://wwww.iss.uw.edu.pl/borkowski/                */
-/*                                                                  */
-/*                               (Don't change or remove this note) */
-/********************************************************************/

@@ -6,8 +6,8 @@ cmake_minimum_required(VERSION 3.0)
 
 project(OPI_TT)
 
-set( WBRTM     "/home/borkowsk/SCC/private/Simulations202x/WBRTM_Linux/" )
-set( SYMSHELL  "/home/borkowsk/SCC/private/Simulations202x/WBRTM_Linux/SYMSHELL/" )
+set( WBRTM     "/home/borkowsk/SCC/public/symShell2andRTM/RTM/" )
+set( SYMSHELL  "/home/borkowsk/SCC/public/SymShellLight/" )
 set( SPS       "/home/borkowsk/SCC/public/SymProcSoc/src/" )
 
 # Also: -DUSE_X11 -DUSE_WINDOWS -DUSE_CONSOLE_ONLY -DMULTITR -DDEF_MAXTHREADS=16
@@ -16,7 +16,7 @@ add_definitions( -DHAVE_X11 -DUSE_ZENITY )
 
 # FOR BUILDING LIBRARIES WHERE THEY ARE: #add_subdirectory( ${} ${} )
 add_subdirectory( ${WBRTM}   ${WBRTM}  )
-#add_subdirectory( ${SYMSHELL} ${SYMSHELL}  ) #aktualnie robione przez cmake z WBRTM
+add_subdirectory( ${SYMSHELL} ${SYMSHELL}  )
 add_subdirectory( ${SPS} ${SPS} )
 
 # Define WITHTOOLS if you want build helpers applications!
@@ -24,7 +24,7 @@ add_subdirectory( ${SPS} ${SPS} )
 #   add_subdirectory( HELPERS/ )
 #endif()
 
-include_directories( "${SPS}" "${SYMSHELL}" "${WBRTM}" "${WBRTM}INCLUDE/" )
+include_directories( "${SPS}" "${SYMSHELL}" "${WBRTM}INCLUDE/" )
 
 # MAIN APPLICATION 
 add_executable( opi_tt
@@ -50,7 +50,7 @@ target_compile_options( opi_tt  PRIVATE "${CMAKE_CXX_FLAGS}"
 
 target_link_libraries( opi_tt
 #        "-L ${MYLIBS}"
-        SymProcSoc wbsymshell wbsyshX11 wbrtm X11 Xpm
+        SymProcSoc wbsyshLight wbrtm X11 Xpm
         ${CMAKE_THREAD_LIBS_INIT}
         pthread
         rt

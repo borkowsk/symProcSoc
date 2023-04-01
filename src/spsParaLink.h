@@ -1,64 +1,86 @@
+/// \file
+/// \brief Deklaracja linku ogólnego, ale rysowanego jako łuk paraboliczny
+///        -------------------------------------------------------------------------
+///
+/// \details
+///              ...
+///     ## (c)
+///     Symulator Procesów Sieciowych/Społecznych (c) Instytut Studiów Społecznych
+///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
+/// \date
+///     2022.11.07 (last updated)
+//*////////////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////////////////////////////////
-// Symulator Proces�w Sieciowych/Spolecznych (c) Instytut Studi�w Spo�ecznych
-// Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-////////////////////////////////////////////////////////////////////////////////
-// Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-////////////////////////////////////////////////////////////////////////////////
-//
-// Deklaracja/Definicja linku og�lnego, ale rysowanego jako �uk paraboliczny
-////////////////////////////////////////////////////////////////////////////////
-//------------------------------------------------------------------------------
 #ifndef spsParaLinkH
 #define spsParaLinkH
 
 #include "spsGenLink.h"
 
-class PowiazaniePaboliczne:public GenerycznePowiazanie
+/// \brief Klasa linku ogólnego, ale rysowanego jako łuk paraboliczny
+class PowiazanieParaboliczne: public GenerycznePowiazanie
 {
+    static KonstruktorElementowModelu<PowiazanieParaboliczne> WirtualnyKonstruktor;
   public:
-	PowiazaniePaboliczne(); //Domyslny konstruktor ustawiaj�cy pusty link
-	PowiazaniePaboliczne(double par);//Konstruktor z ustawieniem parametru
-	static KonstruktorElementowModelu<PowiazaniePaboliczne> WirtualnyKonstruktor;
-	//Metoda pobiera wszystkie potrzebne dane z listy string�w. Jak blad to podaje ktora pozycja
-	virtual bool ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad);
-	virtual ~PowiazaniePaboliczne();
-	//Tak naprawd� to r�ni si� tylko sposobem rysowania
-	virtual void Narysuj();
-	virtual void Wymazuj();
-	virtual void  PodajPozycje(double D,bool KierunekZwykly,
-							   double& X,double& Y,Komunikat* K=NULL);//Przelicza polozenia wdluz linku
-							   //Mo�e uwzgl�dnia� te� specyfik� komunikatu
-	void UstawWygiecie(double par);//Zmienia parametr wi�c i pomocnicze zmienne si� zmieniaja
-	float DajWygiecie(){ return parametr;}
+    // \brief Powiązany obiekt wirtualnego konstruktora
+    //ElementModelu::WirtualnyKonstruktor* VKonstruktor() { return &WirtualnyKonstruktor;} //TODO CZY TO POTRZEBNE?
 
-	protected:
-	void _PoliczParametryLuku();//Liczy parametry �uku dla danej wartosci parametru
-	float parametr;//Warto�� decyduj�ca o sposobie zagi�cia
-	virtual bool Poprawny();
-	private:
-	//Pomocnicze pola zawieraj�ce niezb�dne parametry �uku
+	PowiazanieParaboliczne();             /// \brief Domyślny konstruktor ustawiający pusty link
+	PowiazanieParaboliczne(double par);   /// \brief Konstruktor z ustawieniem parametru
+    virtual ~PowiazanieParaboliczne();    /// \brief Destruktor  wirtualny
+
+	/// \brief Metoda pobiera wszystkie potrzebne dane z listy stringów. Jak blad to podaje która pozycja
+	virtual bool ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad);
+
+    /// \brief Test poprawności
+    virtual bool Poprawny();
+
+    // Do wizualizacji
+    // ///////////////
+	virtual void Narysuj();    /// \brief Tak naprawdę to różni się tylko sposobem rysowania
+	virtual void Wymazuj();    /// \brief Wymazywanie kolorem tła
+
+    /// \brief Pozycja na powiązaniu
+    /// \note Przelicza położenie wzdłuż linku ewentualnie uwzględniając też specyfikę komunikatu
+	virtual void  PodajPozycje(double D,                ///< Jakie zaawansowanie dostarczenia (0..1)
+                               bool KierunekZwykly,     ///< Jaki kierunek ruchu (z prądem czy pod prąd)
+							   double& X,               ///< [out] obliczona współrzędna X
+                               double& Y,               ///< [out] obliczona współrzędna Y
+                               Komunikat* K=NULL        ///< wskaźnik do komunikatu, jeśli chcemy uwzględnić jego specyfikę
+                                       );
+
+    // Specyficzne dla takiego połączenia
+    // //////////////////////////////////
+	void  UstawWygiecie(double par);        ///< \brief Zmiana parametru łuku \note więc i pomocnicze zmienne się zmieniają
+	double DajWygiecie(){ return parametr;} ///< \brief Dostęp do wartości parametru łuku
+
+  protected:
+	void _PoliczParametryLuku(); /// \brief Liczy zmienne pomocnicze łuku dla danej wartości parametru
+
+	double   parametr;  ///< Wartość decydująca o sposobie zagięcia
+
+  private:
+    unsigned krokow; ///< Ile odcinków łuku przy rysowaniu ~ odległość PK/10 pix
+
+	//Pomocnicze pola zawierające niezbędne parametry łuku
 	double Xa,Ya,Xb,Yb,Promien,alfa,cos_alfa,sin_alfa;
-	unsigned krokow;//Ile odcink�w �uku przy rysowaniu ~ odleglo�� PK/10 pix
 };
 
-class PowiazaniePaboliczneSkierowane:public PowiazaniePaboliczne
+class PowiazanieParaboliczneSkierowane: public PowiazanieParaboliczne
 {
-	public:
-	static KonstruktorElementowModelu<PowiazaniePaboliczneSkierowane> WirtualnyKonstruktor;
+    static KonstruktorElementowModelu<PowiazanieParaboliczneSkierowane> WirtualnyKonstruktor;
+  public:
 		virtual bool  Kierunkowy() { return true;}
 };
 
-//---------------------------------------------------------------------------
-
-/********************************************************************/
-/*			          SPS  version 2011                             */
-/********************************************************************/
-/*           THIS CODE IS DESIGNED & COPYRIGHT  BY:                 */
-/*            W O J C I E C H   B O R K O W S K I                   */
-/*    Instytut Studiow Spolecznych Uniwersytetu Warszawskiego       */
-/*        WWW:  http://wwww.iss.uw.edu.pl/borkowski/                */
-/*                                                                  */
-/*                               (Don't change or remove this note) */
-/********************************************************************/
+/* *******************************************************************/
+/*			            SPS  version 2022                            */
+/* *******************************************************************/
+/*             THIS CODE IS DESIGNED & COPYRIGHT  BY:                */
+/*              W O J C I E C H   B O R K O W S K I                  */
+/*     Instytut Studiów Społecznych Uniwersytetu Warszawskiego       */
+/*        RG:https://www.researchgate.net/profile/Wojciech-Borkowski */
+/*        GitHub: https://github.com/borkowsk                        */
+/*                                                                   */
+/*                               (Don't change or remove this note)  */
+/* *******************************************************************/
 #endif

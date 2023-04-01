@@ -3,18 +3,18 @@
 // ***TODO!!!!-->
 // Implementacja akcji klas w³aœciwego modelu bezpoœrednio zwi¹zanych z TT
 // na poziomie rynkowym (BOTT) i naukowym (UOTT) i odpowiednie procesy oraz komunikaty
-// (bez technikaliów obslugi interfaceu )
+// (bez technikaliów obs³ugi interface-u )
 // //////////////////////////////////////////////////////////////////////////////
 
 #include "opiKlasyWersja.hpp"
-#include "INCLUDE/wb_smartlog.h"
+#include "wb_smartlog.hpp"
 using namespace wbrtm;
 
 double OTT_FANTAZJA=0.05; //Jak czêsto OTT bez kontaktu z rynkiem "zapuszcza" sobie proces TT.
 					//Oczywiscie przy zachowaniu innych uwarunkowañ
 bool   PROMUJ_SKOMPLIKOWANE_ROZWIAZANIA=false;
-double ILE_RAZY_PROTOTYP_DROZSZY_NIZ_TOWAR=2; //Na razie nieznacznie bo nie ma finansowania zewnetrznego
-extern double ILE_RAZY_BADANIA_DROZSZE_NIZ_TOWAR; //Na razie nieznacznie bo nie ma finansowania zewnetrznego
+double ILE_RAZY_PROTOTYP_DROZSZY_NIZ_TOWAR=2; //Na razie nieznacznie bo nie ma finansowania zewnêtrznego
+extern double ILE_RAZY_BADANIA_DROZSZE_NIZ_TOWAR; //Na razie nieznacznie bo nie ma finansowania zewnêtrznego
 extern const char* const  KONTO; //Marker komunikatu finansowego z przep³ywem
 
 static const int LOCLOG=0; //Na jakim poziomie logowania domyœlnie zapisywaæ problemy z tego pliku
@@ -44,7 +44,7 @@ bool ProcesTransferuTech::InterpretujKomunikat(Komunikat* Co)
 //Pobiera ró¿ne komunikaty i ³¹czy z nich pomys³y
 //Tak ¿eby by³y zgodne z profilem firmy. Od czasu do czasu odpala
 //zwyk³y ProcesTT
-{                                                                assert(Co->Kanal()!=Swiat::INVINDEX);
+{                                                                assert(Co->Kanal()!=Swiat::INV_INDEX);
 	WezelSieci* Proc=Swiat::Wezel(Procesor());					assert(Proc!=NULL);
 
 	if(Co->Rodzaj()=="WYPRODUKUJE!"
@@ -90,7 +90,7 @@ bool ProcesTransferuTech::InterpretujKomunikat(Komunikat* Co)
 										);//Konstruktowanie kooperacji wstepnej
 			FK->UstawWygiecie(DRAND()-0.5);
 			FK->UstawDziedzine(PodajDziedzine()); //Link ma kolor produktu
-			unsigned COlacze=Swiat::WstawLacze(FK.give());                        assert(COlacze!=Swiat::INVINDEX);
+			unsigned COlacze=Swiat::WstawLacze(FK.give());                        assert(COlacze!=Swiat::INV_INDEX);
 
 			//Po nawi¹zaniu kooperacji precyzujemy zamówieni na badania
 			wb_ptr<KomunikacjaOficjalna> KO( new KomunikacjaOficjalna("ZAMOWIENIE!",Procesor()) );
@@ -99,7 +99,7 @@ bool ProcesTransferuTech::InterpretujKomunikat(Komunikat* Co)
 			if(!KO->Zaadresuj(COlacze,true,0.05))
 					TLOG(0,<<"NIEudane adresowanie na nowym linku kooperacyjnym!?" )
 					else
-					if(Swiat::WstawInfo(KO.give())==Swiat::INVINDEX)
+					if(Swiat::WstawInfo(KO.give())==Swiat::INV_INDEX)
 						 TLOG(0,<<"NIEudane WYSYLANIE na nowym linku kooperacyjnym!?" )
 			this->_IleKrokowDoKonca*=1.5; //Przedluzamy czas, skoro dopiero teraz znaleŸliœmy
 			return true;//Moje - i ju¿ nikomu nic do tego
@@ -127,7 +127,7 @@ bool ProcesTransferuTech::InterpretujKomunikat(Komunikat* Co)
 					if(!Zaplata->Zwrotnie())//Je¿eli by³ kana³ spo³eczny to tu siê zmieni³ na odpowiedni w drug¹ stronê
 						TLOG(0, <<"Nocna sztuczka z wyslaniem zaplaty za badania nie wychodzi..." )
 						else
-						if(Swiat::WstawInfo(Zaplata.give())==Swiat::INVINDEX)
+						if(Swiat::WstawInfo(Zaplata.give())==Swiat::INV_INDEX)
 						   TLOG(0, <<"Nie uda³o siê wys³¹æ zaplaty za badania nocn¹ sztuczk¹..." )
 						   else
 						   TLOG(LOCLOG, <<"Wys³ano zaplaty za badania dla\t"<<Badacz->Nazwa()<<"\t w projekcie TT:\t"<<hex<<PodajDziedzine().ARGB<<dec )
@@ -136,7 +136,7 @@ bool ProcesTransferuTech::InterpretujKomunikat(Komunikat* Co)
 	}
 
 	bool flaga=GenerycznyProces::InterpretujKomunikat(Co);
-																 assert(Co->Kanal()!=Swiat::INVINDEX);
+																 assert(Co->Kanal()!=Swiat::INV_INDEX);
 	return flaga;
 }
 
@@ -159,7 +159,7 @@ void ProcesTransferuTech::SprawdzajZapotrzebowania()
 		 && link->Koniec()==AutorPomyslu //Albo jakiekolwiek ³¹cze do autora?
 		 && Wzor->Zaadresuj(i,true,0.1) )
 		 {
-			if(Swiat::WstawInfo(Wzor.give())==Swiat::INVINDEX)
+			if(Swiat::WstawInfo(Wzor.give())==Swiat::INV_INDEX)
 				TLOG(0, <<"NIE UDA£O SIÊ WYS£AÆ" )
 			break;//Wiecej nie próbujemy
 		 }
@@ -221,7 +221,7 @@ void ProcesTransferuTech::ObsluzPorazke()
 	 for(unsigned i=0;i<24;i++)
 	 {
 		unsigned Roboczy=Fragmenty[i].Wykonawca;
-		if(Roboczy==Swiat::INVINDEX)
+		if(Roboczy==Swiat::INV_INDEX)
 				goto CONTINUE;
 		for(unsigned j=0;j<ilu;j++)
 		   if(Badacze[j]==Roboczy) //Ju¿ byl
@@ -239,7 +239,7 @@ void ProcesTransferuTech::ObsluzPorazke()
 		 WezelSieci* Bada=Swiat::Wezel(Badacze[j]);								assert(Proc!=NULL);
 		 clog<<endl<<"  * "<<Bada->Nazwa();
 		 unsigned link1=ProcesSpoleczny::_JestPowiazanySocjalnie(Procesor(),Badacze[j]);
-		 if(link1!=Swiat::INVINDEX)
+		 if(link1!=Swiat::INV_INDEX)
 		 {
 			KontaktTowarzyski* KT=dynamic_cast<KontaktTowarzyski*>(Swiat::Lacze(link1));
 																				assert(KT!=NULL);
@@ -247,7 +247,7 @@ void ProcesTransferuTech::ObsluzPorazke()
 			clog<<" -->DO ";
 		 }
 		 unsigned link2=ProcesSpoleczny::_JestPowiazanySocjalnie(Badacze[j],Procesor());
-		 if(link2!=Swiat::INVINDEX)
+		 if(link2!=Swiat::INV_INDEX)
 		 {
 			KontaktTowarzyski* KT=dynamic_cast<KontaktTowarzyski*>(Swiat::Lacze(link2));
 																				assert(KT!=NULL);
@@ -299,7 +299,7 @@ void ProcesTransferuTech::ObsluzSukces()
 	 for(unsigned i=0;i<24;i++)
 	 {
 		unsigned Roboczy=Fragmenty[i].Wykonawca;
-		if(Roboczy==Swiat::INVINDEX)
+		if(Roboczy==Swiat::INV_INDEX)
 				goto CONTINUE;
 		for(unsigned j=0;j<ilu;j++)
 		   if(Badacze[j]==Roboczy) //Ju¿ byl
@@ -326,7 +326,7 @@ void ProcesTransferuTech::ObsluzSukces()
 
 		 clog<<endl<<"  * "<<Bada->Nazwa();
 		 unsigned link1=ProcesSpoleczny::_JestPowiazanySocjalnie(Procesor(),Badacze[j]);
-		 if(link1!=Swiat::INVINDEX)
+		 if(link1!=Swiat::INV_INDEX)
 		 {
 			KontaktTowarzyski* KT=dynamic_cast<KontaktTowarzyski*>(Swiat::Lacze(link1));
 																				assert(KT!=NULL);
@@ -334,7 +334,7 @@ void ProcesTransferuTech::ObsluzSukces()
 			clog<<" -->DO ";
 		 }
 		 unsigned link2=ProcesSpoleczny::_JestPowiazanySocjalnie(Badacze[j],Procesor());
-		 if(link2!=Swiat::INVINDEX)
+		 if(link2!=Swiat::INV_INDEX)
 		 {
 			KontaktTowarzyski* KT=dynamic_cast<KontaktTowarzyski*>(Swiat::Lacze(link2));
 																				assert(KT!=NULL);
@@ -356,7 +356,7 @@ void ProcesTransferuTech::ObsluzSukces()
 	 //ProcesProdukcyjny(const char* Nazwa, unsigned IleSztuk,float JakaCena,unsigned IleWPaczce=-1);//Dzieli na 10 pak jak -1
 	 wb_ptr<ProcesProdukcyjny> Proces( new ProcesProdukcyjny(NazwaProduktu.c_str(),1000,Cena,10));
 	 Proces->UstawDziedzine(PodajDziedzine());
-	 if(Swiat::WstawProc(Proces.give(),Fragmenty[PRODUCENT].Wykonawca)==Swiat::INVINDEX)
+	 if(Swiat::WstawProc(Proces.give(),Fragmenty[PRODUCENT].Wykonawca)==Swiat::INV_INDEX)
 			TLOG(0, <<"NIE UDA£O SIÊ URUCHOMIÆ PROCESU! (???)" )
 	 //A teraz linki kooperacyjne
 	 //FormalnaKooperacja(unsigned Inicjator,unsigned Kooperator,float Waga/*=Udzial=1*/,unsigned Termin=(10*365));//Konstruktor domyœlny
@@ -366,7 +366,7 @@ void ProcesTransferuTech::ObsluzSukces()
 												0.1+DRAND()*0.1, 365*20)  ); //10%-20% dla organizatora
 		LinkCooP->UstawDziedzine(PodajDziedzine());
 		LinkCooP->UstawWykonano(true);
-		if(Swiat::WstawLacze(LinkCooP.give())==Swiat::INVINDEX)
+		if(Swiat::WstawLacze(LinkCooP.give())==Swiat::INV_INDEX)
 			TLOG(0, <<"NIE UDA£O SIÊ WSTAWIÆ £¥CZA CooP! (???)"<<"  * "<<Proc->Nazwa() )
 			else
 			clog<<endl<<"  * "<<Proc->Nazwa();
@@ -379,7 +379,7 @@ void ProcesTransferuTech::ObsluzSukces()
 												0.2/ilu)  ); //do 20% dla badacza
 		LinkCooP->UstawDziedzine(PodajDziedzine());
 		LinkCooP->UstawWykonano(true);//¯eby siê kiedyœ jednak konczyl!
-		if(Swiat::WstawLacze(LinkCooP.give())==Swiat::INVINDEX)
+		if(Swiat::WstawLacze(LinkCooP.give())==Swiat::INV_INDEX)
 			TLOG(0, <<"NIE UDA£O SIÊ WSTAWIÆ £¥CZA CooP! (???)"<<"  * "<<Bada->Nazwa() )
 			else
 			clog<<endl<<"  * "<<Bada->Nazwa();
@@ -403,7 +403,7 @@ void ProcesTransferuTech::_RozeslijPoLinkachSocjalnych(Komunikat* Wzor)
 	 {
 		Komunikat* Klon=Wzor->Klonuj();
 		Klon->Zaadresuj(i,true,0.02+DRAND()*0.1);
-		if(Swiat::WstawInfo(Klon)==Swiat::INVINDEX)
+		if(Swiat::WstawInfo(Klon)==Swiat::INV_INDEX)
 			TLOG(1, <<"NIEUDANE WYSYLANIE W PO KONTAKTACH TOWARZYSKICH::" );
 	 }
 }
@@ -438,7 +438,7 @@ bool ProcesTransferuTech::ZarejestrujCoSiePrzyda(DziedzinaWKolorze& D,unsigned B
 	   unsigned Maska=0x1<<i;
 	   if( (D.ARGB & Maska)!=0   //Jest ten bit w D
 	   &&  (!Fragmenty[i].Check) //i ci¹gle go nie mamy
-	   &&  (Fragmenty[i].Wykonawca==Swiat::INVINDEX) //i nikt nam go nie obieca³
+	   &&  (Fragmenty[i].Wykonawca==Swiat::INV_INDEX) //i nikt nam go nie obieca³
 	   )
 	   {
 			Fragmenty[i].Wykonawca=Badacz;
@@ -620,10 +620,10 @@ bool ProcesPoszukiwanTT::InterpretujKomunikat(Komunikat* Co)
 	//Dalej to ju¿ dobrze mieæ odnaleziony kontakt z rynkiem
 
 
-	unsigned    iLMRK=Swiat::INVINDEX; //Na nuker powiazania z rynkiem
+	unsigned    iLMRK=Swiat::INV_INDEX; //Na nuker powiazania z rynkiem
 	Powiazanie* LMRK=NULL;//Do szukania powiazania
 
-	if(Rynek!=Swiat::INVINDEX) //Jak w ogóle jest rynek na scenie!!!
+	if(Rynek!=Swiat::INV_INDEX) //Jak w ogóle jest rynek na scenie!!!
 	{
 		unsigned ile_powiazan=Swiat::IlePowiazan();
 		for(unsigned i=0;i<ile_powiazan;i++)
@@ -640,7 +640,7 @@ bool ProcesPoszukiwanTT::InterpretujKomunikat(Komunikat* Co)
 
 	//Zbieranie informacji, wysylanie zapytan do rynku
 	////////////////////////////////////////////////////////////////////////////
-	unsigned Autor=Swiat::INVINDEX; //Kto jest autorem zapytania? Mo¿e byæ badacz!
+	unsigned Autor=Swiat::INV_INDEX; //Kto jest autorem zapytania? Mo¿e byæ badacz!
 
 	//Teraz sprawdzamy czy nie jest to niezamówiona prezentacja pomyslu
 	if(Co->Rodzaj()=="PREZENTACJA" && DRAND()<0.1)//Tylko czasem zainteresuje siê naprawdê, inaczej bierze tylko bity jak zwykle
@@ -681,14 +681,14 @@ bool ProcesPoszukiwanTT::InterpretujKomunikat(Komunikat* Co)
 		Autor=Procesor(); //Tu autorem pomys³u jest sam wêze³, czyli wszystko trzeba by robiæ od pocz¹tku
 	}
 
-	if(iLMRK!=Swiat::INVINDEX) //Mamy link do rynku
-	{                                                                           assert(Autor!=Swiat::INVINDEX);
+	if(iLMRK!=Swiat::INV_INDEX) //Mamy link do rynku
+	{                                                                           assert(Autor!=Swiat::INV_INDEX);
 																				assert(D.A!=0);
 	 wb_ptr<KomunikacjaOficjalna> KO( new KomunikacjaOficjalna("TEST",Autor)  );
 	 KO->UstawDziedzine(D); //Dziedzina pytania
 	 bool Kierunek=(LMRK->Poczatek()==Procesor());
 	 if(KO->Zaadresuj(iLMRK,Kierunek,0.05))
-		if(Swiat::WstawInfo(KO.give())!=Swiat::INVINDEX)
+		if(Swiat::WstawInfo(KO.give())!=Swiat::INV_INDEX)
 				{//Udalo sie                 <<Nazwa()<<"na \""<<MyProc->Nazwa()<<"\" spytal rynek w sprawie D:"<<hex<<D.ARGB<<dec
 				IFTL(LOCLOG+2) clog<<endl<<Nazwa()<<" na \""<<MyProc->Nazwa()<<"\" SPYTAL rynek w sprawie D:"<<hex<<D.ARGB<<" Au:"<<dec<<Autor<<endl;
 				TLOG(LOCLOG, <<Nazwa()<<" na \""<<MyProc->Nazwa()<<"\" spytal rynek w sprawie D:"<<hex<<D.ARGB<<" Au:"<<dec<<Autor )
@@ -701,7 +701,7 @@ bool ProcesPoszukiwanTT::InterpretujKomunikat(Komunikat* Co)
 	{
 		//Mo¿e tu jeszcze sprawdziæ Aktywnoœæ wêz³a? Albo liczbê ju¿ odpalonych Procesów TT
 		//... Bo co z tego ¿e obiecuj¹ce, skoro nie ma si³, œrodków lub chêci?
-																				assert(Autor!=Swiat::INVINDEX);
+																				assert(Autor!=Swiat::INV_INDEX);
 		_SprobujOdpalicProcesTT(D,Autor);
 	}
 
@@ -713,7 +713,7 @@ void ProcesPoszukiwanTT::ChwilaDlaCiebie()
 //Endogenne zmiany stanów - nigdy siê nie koñczy...
 //Resztê robi w reakcji na komunikaty
 {
-	unsigned    MPRNID=this->Procesor();     					assert(MPRNID!=Swiat::INVINDEX);
+	unsigned    MPRNID=this->Procesor();     					assert(MPRNID!=Swiat::INV_INDEX);
 	WezelSieci* MojProcesor=Swiat::Wezel(MPRNID);
 	if(PROMUJ_SKOMPLIKOWANE_ROZWIAZANIA)
 	   if(this->PodajDziedzine().ARGB==0) //Skopiowanie dziedziny gdy jej nie ma
@@ -731,7 +731,7 @@ void ProcesPoszukiwanTT::ChwilaDlaCiebie()
 }
 
 void ProcesPoszukiwanTT::_SprobujOdpalicProcesTT(DziedzinaWKolorze Wzorzec,unsigned Wynalazca)
-{                                                                               assert(Wynalazca!=Swiat::INVINDEX);
+{                                                                               assert(Wynalazca!=Swiat::INV_INDEX);
 	WezelSieci*		MyProc=Swiat::Wezel( Procesor() );
 	WezelSieci*		KtoWyn=Swiat::Wezel( Wynalazca  );
 	if( (Wzorzec.ARGB & 0x00FFFFFF)==0) //Pusty projekt
@@ -790,7 +790,7 @@ void UOTT::InterpretujKomunikat(Komunikat* Co)
 
 bool FormalnaKooperacja::Akceptacja(Komunikat* Co)
 //Selekcja komunikatów
-{    bool flaga=PowiazaniePaboliczne::Akceptacja(Co);
+{    bool flaga=PowiazanieParaboliczne::Akceptacja(Co);
 	 if(flaga )
 	 {
 		if(!this->CzyWykonany())
@@ -811,7 +811,7 @@ bool  FormalnaKooperacja::Poprawny()
 {
 	if(Termin<=0)
 			return false;
-	return PowiazaniePaboliczne::Poprawny();
+	return PowiazanieParaboliczne::Poprawny();
 }
 
 void FormalnaKooperacja::ChwilaDlaCiebie()

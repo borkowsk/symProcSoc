@@ -1,195 +1,343 @@
-////////////////////////////////////////////////////////////////////////////////
-// Symulator ProcesÛw Sieciowych/Spolecznych (c) Instytut StudiÛw Spo≥ecznych
-// Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-////////////////////////////////////////////////////////////////////////////////
-// Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-////////////////////////////////////////////////////////////////////////////////
-//
-//Klasa bazowa definiujπca najbardziej podstawowy interfejs do elementÛw modelu
-// G≥Ûwnie chodzi o wizualizacje i inicjalizacje z pliku
-////////////////////////////////////////////////////////////////////////////////
-//------------------------------------------------------------------------------
+/// \file
+/// \brief Klasa bazowa definiujƒÖca najbardziej podstawowy interfejs do element√≥w modelu
+///        -----------------------------------------------------------------------------
+///
+/// \details
+///              G≈Ç√≥wnie chodzi o wizualizacje i inicjalizacjƒô z pliku
+///     ## (c)
+///     Symulator Proces√≥w Sieciowych/Spo≈Çecznych (c) Instytut Studi√≥w Spo≈Çecznych
+///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
+/// \date
+///     2022.11.04 (last updated)
+// ///////////////////////////////////////////////////////////////////////////////////////
+
 #ifndef spsElementH
 #define spsElementH
 
-#include <string> //Musi byÊ bo uøywany w deklaracjach
+#include <cassert>
+#include <string> // Musi byƒá, bo u≈ºywany std::string w deklaracjach
 
-//Pomocnicza unia do manipulacji kolorami/dziedzinami elementow
+/// \brief Pomocnicza unia do manipulacji kolorami/dziedzinami element√≥w
+/// \note  TODO Wymaga sprawdzenia zgodno≈õci z kodowaniem kolor√≥w w u≈ºywanej bibliotece wizualizacyjnej!
+/// \details constexpr - NIE DZIA≈ÅA DLA TEJ UNII
+///          U≈ªYJ: DziedzinaWKolorze::union_test_for_call_somewhere() w main() albo jako≈õ tak.
 union DziedzinaWKolorze
 {
-	unsigned ARGB;
-	struct{     //Naiwna kolejnoúÊ ARGB nie koniecznie musi dzia≥ac
-		unsigned B:8;
-		unsigned G:8;
-		unsigned R:8;
-		unsigned A:8;
+	unsigned ARGB;  ///< \brief Pole zbiorcze \details Naiwna kolejno≈õƒá p√≥l w ARGB nie koniecznie musi dzia≈Çaƒá
+	struct{
+		unsigned B:8;  ///< byte Blue
+		unsigned G:8;  ///< byte Green
+		unsigned R:8;  ///< byte Red
+		unsigned A:8;  ///< byte Alfa
 	};
-	float F; //Jakby kto chcia≥ widzieÊ to jako Float
-	bool operator == (const DziedzinaWKolorze& s) { return this->ARGB==s.ARGB;}
-	void operator = (unsigned ARGB) { this->ARGB=ARGB;} // explicit
-	unsigned IleBitow(); //Zwraca liczbÍ bitÛw 1 w tych danych
-};
+	float F;             ///< Jakby kto≈õ chcia≈Ç widzieƒá to jako `float` (?) Tylko po co?
+
+    /// \brief Konstruktor domy≈õlny
+    explicit DziedzinaWKolorze(): ARGB(0) {}
+
+    /// \brief Konstruktor kopiujƒÖcy
+    //explicit
+    DziedzinaWKolorze(const DziedzinaWKolorze&) = default;
+
+    /// \brief Konstruktor z  liczby typu `unsigned`
+    /// \details constexpr - NIE DZIA≈ÅA DLA TEJ UNII
+    ///          Use DziedzinaWKolorze::union_test_for_call_somewhere()
+    constexpr explicit DziedzinaWKolorze(unsigned iARGB): ARGB(iARGB) {}
+
+    /// \brief Operator przypisania liczby typu `unsigned`
+    //explicit
+    DziedzinaWKolorze& operator = (unsigned iARGB) { ARGB=iARGB; return *this; }
+
+    /// \brief Trywialny operator por√≥wnania.
+	bool operator == (const DziedzinaWKolorze& s) const
+    { return this->ARGB==s.ARGB;}
+
+    /// \brief  Zliczenie bit√≥w ustawionych na 1
+    /// \return Zwraca liczbƒô bit√≥w 1 w tych danych
+	unsigned IleBitow();
+
+    /// \brief    Funkcja testujƒÖca konstrukcjƒô tej uni.
+    /// \details  Nie umia≈Çem zrobiƒá tego z u≈ºyciem static_assert
+    static void union_test_for_call_somewhere()
+    {
+        DziedzinaWKolorze _wzorDziedziny{0x01020304};
+        assert(_wzorDziedziny.A==1); //"Unexpected field order (ARGB.A)");
+        assert(_wzorDziedziny.R==2); //"Unexpected field order (ARGB.R)");
+        assert(_wzorDziedziny.G==3); //"Unexpected field order (ARGB.G)");
+        assert(_wzorDziedziny.B==4); //"Unexpected field order (ARGB.B)");
+    }
+} ;
+
+// To nie dzia≈Ça:
+// error: accessing ‚ÄòDziedzinaWKolorze::<anonymous>‚Äô member instead of initialized ‚ÄòDziedzinaWKolorze::ARGB‚Äô member in constant expression
+// (CLion, clang, C++12, UBUNTU 20.04)
+//static_assert((DziedzinaWKolorze{0x01020304}).A==1); //"Unexpected field order (ARGB.A)");
+
+/// \brief Skr√≥t nazwy typu DziedzinaWKolorze
 typedef DziedzinaWKolorze DziedzKol;
 
-class Swiat; //Zapowiedz Swiata
+class Swiat; //Zapowiedz klasy ≈õwiata
 
+/// \brief Klasa definiujƒÖca interface do ka≈ºdego elementu modelu
 class ElementModelu
 {
-	void operator = (const ElementModelu&); //Blokada bezpoúredniego przypisywania
+	void operator = (const ElementModelu&) = delete; ///< Blokada bezpo≈õredniego przypisywania
+
  public:
-	unsigned MojID(); //Zwraca Indeks ustawiony przez åwiat albo jakiú innych identyfikator wobec swiata
+    /// \brief Ka≈ºdy element modelu musi znac sw√≥j w≈Çasny identyfikator
+	unsigned MojID(); ///< \details Zwraca Indeks ustawiony przez Swiat:: albo jakich≈õ innych identyfikator wobec ≈õwiata
 
-	ElementModelu();//Konstruktor domyúlny
+	ElementModelu(); ///< \brief Konstruktor domy≈õlny
 
-	virtual ~ElementModelu();//Destruktor wirtualny, bo bÍdπ metody wirtualne
-	virtual bool   Poprawny()=0; //true jeúli jest dobrze zdefiniowany. Jak nie to moøe zostaÊ usuniÍty!
-	virtual double Waznosc() { return 1; } //Zwraca wspÛlczynnik waønoúci obiektu. Np. wagÍ wÍz≥a lub linku, priorytet procesu, etc.
+	virtual ~ElementModelu();    ///< \brief Destruktor wirtualny, bo bƒôdƒÖ metody wirtualne
 
-	//WSPARCIE WEJSCIA WYJSCIA i dostÍpu do danych tekstowych
-	//Metoda pobiera wszystkie potrzebne dane z listy stringÛw. Jak blad to IlePol podaje ktora pozycja listy
-	//Jak bez b≥edu to IlePol podaje pierwsze pole za listπ
+    /// \brief Test poprawno≈õci stanu obiektu
+	virtual bool   Poprawny()=0; ///< \return true je≈õli jest dobrze zdefiniowany. Jak nie to mo≈ºe zostaƒá usuniƒôty!
+
+    /// \brief Warto≈õƒá wa≈ºno≈õci obiektu (waga, priorytet etc.)
+	virtual double Waznosc() { return 1; } ///< \return wsp√≥≈Çczynnik wa≈ºno≈õci obiektu.
+                                           ///< Np. wagƒô wƒôz≈Ça lub linku, priorytet procesu, etc.
+
+	// WSPARCIE WEJ≈öCIA WYJ≈öCIA i dostƒôpu do danych tekstowych
+    // ///////////////////////////////////////////////////////
+
+    /// \brief Wype≈Çnianie obiektu z listy warto≈õci tekstowych
+    /// \details
+	///        Metoda pobiera wszystkie potrzebne dane z listy string√≥w. Jak b≈ÇƒÖd, to `IlePol` podaje pozycjƒô na li≈õcie
+	///        Jak bez b≈Çƒôdu to IlePol podaje pierwsze pole za listƒÖ
 	virtual bool ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& IlePol)=0;
-	//Jak ma jakieú dane to moøna przeczytaÊ - i np. zwizualizowaÊ, oraz zmieniÊ
-	virtual unsigned 	IlePolDanych();  //Ile jest w tej chwili pÛl
+
+    /// \brief Ile jest p√≥l obiektu (w tej chwili?)
+	/// \details
+	///       Jak obiekt ma jakie≈õ dane to mo≈ºna je przeczytaƒá ≈ºeby np. zwizualizowaƒá, ale mo≈ºna te≈º zmieniƒá.
+	virtual unsigned 	IlePolDanych();
+
+    /// \brief Nazwa pola o danym indeksie \param Ktore - indeks pola.
 	virtual const char* NazwaPola(unsigned Ktore);
-	virtual const char* WartoscPola(unsigned Ktore);
-	virtual bool 		UstawPole(unsigned Ktore,const char* NowaWartosc);
-	//Metoda aktualizujπca zapis stanu obiektu na jego liúcie danych. Po jej wykonaniu
-	//pobierane pola muszπ byÊ juø poprawne i moøna siÍ nimi pos≥uøyÊ do zapisu do pliku
-	//W szczegÛlnoúci moøe realokowaÊ listÍ "Dane", jeúli nie mia≥a wczeúniej poprawnego rozmiaru
+
+    /// \brief Warto≈õƒá pola w postaci tekstowej \param Ktore - indeks pola.
+    virtual const char* WartoscPola(unsigned Ktore);
+
+    /// \brief Nadawanie warto≈õci polu
+    /// \param Ktore - indeks pola.
+    /// \param NowaWartosc - nowa warto≈õƒá w postaci tekstowej
+    /// \return `false` je≈õli nie mo≈ºna wykonaƒá konwersji lub z innego powodu nie da siƒô ustawiƒá warto≈õci tego pola.
+    virtual bool 		UstawPole(unsigned Ktore,const char* NowaWartosc);
+
+    /// \brief Aktualizacja tekstowego dostƒôpu do p√≥l obiektu
+    /// \details
+	///     Metoda aktualizujƒÖca zapis stanu obiektu na jego li≈õcie danych. Po jej wykonaniu
+	///     pobierane pola muszƒÖ byƒá ju≈º poprawne i mo≈ºna siƒô nimi pos≈Çu≈ºyƒá do zapisu do pliku
+	///     W szczeg√≥lno≈õci mo≈ºe realokowaƒá listƒô "Dane", je≈õli nie mia≈Ça wcze≈õniej poprawnego rozmiaru.
 	virtual void AktualizujListeDanych();
 
-	//WspÛlny interfejs wizualizacji
-	virtual void Narysuj()=0;
-	virtual void Wymazuj()=0;
-	virtual bool Trafiony(float X,float Y) { return false;} //Np. do inspekcji myszkπ
+	// Wsp√≥lny interfejs wizualizacji
+    // //////////////////////////////
+	virtual void Narysuj()=0; ///< \brief Narysowanie obiektu
+	virtual void Wymazuj()=0; ///< \brief W miarƒô dok≈Çadne wymazanie obiektu
 
+    /// \brief Test czy pukt/piksel jest w obiekcie \details Np. do inspekcji myszkƒÖ
+	/// \note  TODO: Dlaczego parametry `float`?
+	virtual bool Trafiony(float X,float Y) { return false;}
 
-	virtual void ChwilaDlaCiebie()=0; //Daje mu szanse na endogenne zmiany stanÛw
+    /// \brief Przydzia≈Ç czasu CPU na zmianƒô stanu obiektu
+    /// \details Daje mu szanse na endogenne zmiany stan√≥w, co nie znaczy ≈ºe muszƒÖ one zaj≈õƒá
+	virtual void ChwilaDlaCiebie()=0;
 
-	//Kolor czyli "dziedzinÍ" musi miec kazdy obiekt w uøywany w SPS
-	//Moøe on znaczyÊ rÛøne rzeczy, ale przede wszystkim jest potrzebny w kaødej wizualizacji
-	//Jego czytanie i pisanie moøna obudowaÊ w klasach potomnych w razie potrzeby
+    /// \brief Podaje "dziedzinƒô" danego obiektu
+    /// \details
+	///     Kolor czyli "dziedzinƒô" musi miec kazdy obiekt w u≈ºywany w SPS
+	///     Mo≈ºe on znaczyƒá r√≥≈ºne rzeczy, ale przede wszystkim jest potrzebny w ka≈ºdej wizualizacji
+	///     Jego czytanie i pisanie mo≈ºna obudowaƒá w klasach potomnych w razie potrzeby
 	virtual DziedzKol	PodajDziedzine();
+
+    /// \brief Ustawia "dziedzinƒô" danego obiektu na podstawie dziedziny innego
 	virtual void 	UstawDziedzine(const DziedzinaWKolorze& D);
+
+    /// \brief Ustawia "dziedzinƒô" danego obiektu na podstawie sk≈Çadowych RGBA
 	virtual void 	UstawDziedzine(unsigned R,unsigned G, unsigned B,unsigned A=0);
 
  public:
- //Klasa pomocnicza obslugujaca zarzπdzanie danymi tekstowymi obiektÛw modelu
- //a mogπca teø przejπc zarzπdzanie ich konwersjami i przekszta≥cenie w warianty
+
+ /// \brief Klasa obs≈Çugi nazwanych danych obiektu
+ /// \details
+ ///     Klasa pomocnicza obs≈ÇugujƒÖca zarzƒÖdzanie danymi tekstowymi obiekt√≥w modelu
+ ///     a mogƒÖca te≈º przejƒÖc zarzƒÖdzanie ich konwersjami i przekszta≈Çcenie w warianty.
  class DaneLokalne
  {
-	std::string* Dane;
-	unsigned 	IleDanych;
-	const DaneLokalne& operator = (const DaneLokalne& Wzor); //Prywatne przypisanie - BRAK!
- public:
-	DaneLokalne():Dane(0),IleDanych(0){}
-	~DaneLokalne();
+	std::string* Dane;          ///< ???
+	unsigned 	 IleDanych;     ///< ???
 
+	const DaneLokalne& operator = (const DaneLokalne& Wzor) = delete; ///< przypisania BRAK!
+ public:
+	DaneLokalne():Dane(0),IleDanych(0){}        ///< \brief Jedyny konstruktor tworzƒÖcy pusty obiekt
+	~DaneLokalne();                             ///< \brief Destruktor nie jest wirtualny
+
+    /// \brief Wype≈Çnienie obiektu danymi z listy
 	void InicjujWgListy(const std::string* Lista,unsigned Ile);
+
+     /// \brief Wype≈Çnienie obiektu kopiowanymi danymi
 	void InicjujZDanych(const DaneLokalne& Wzor);
-	void Realokuj(unsigned Ile);//Rozbudowuje lub skraca listÍ
-	//Akcesory
-	unsigned Ile() const { return IleDanych;}
-	std::string& operator [] (unsigned index) const ;
-	//Przypisania i konwersje na elementy listy
-	//Zwracajπ true jak siÍ uda≥o
+
+    /// \brief Metoda kt√≥ra rozszerza lub skraca listƒô
+	void Realokuj(unsigned Ile);
+
+	// Akcesory
+    // ////////
+
+	unsigned Ile() const { return IleDanych;}           ///< \brief Ile ma zapamiƒôtanych danych
+	std::string& operator [] (unsigned index) const ;   ///< \brief Dostƒôp do konkretnej danej
+
+	// Przypisania i konwersje na elementy listy
+	// ZwracajƒÖ true jak siƒô uda≈Ço
+    // //////////////////////////////////////////
+
+    /// \brief Przypisywanie danej z konwersjƒÖ z typu `double` \return true jak siƒô uda≈Ço
 	bool PrzypiszZ(unsigned gdzie,double co);
+
+    /// \brief Przypisywanie danej z konwersjƒÖ z typu `long`  \return true jak siƒô uda≈Ço
 	bool PrzypiszZ(unsigned gdzie,long   co);
-	//Zwracajπ indeks znaku ktÛry nie pasowa≥ lub -1 jako sukces
+
+	//ZwracajƒÖ indeks znaku, kt√≥ry nie pasowa≈Ç lub -1 jako sukces
+
+    /// \brief konwersja pola na `float` \return -1 jak sukces albo indeks znaku gdzie b≈ÇƒÖd
 	int KonwertujDo(unsigned zkad,float& naco);
+
+    /// \brief konwersja pola na `double` \return -1 jak sukces albo indeks znaku gdzie b≈ÇƒÖd
 	int KonwertujDo(unsigned zkad,double& naco);
+
+    /// \brief konwersja pola na `int` \return -1 jak sukces albo indeks znaku gdzie b≈ÇƒÖd
 	int KonwertujDo(unsigned zkad,int& naco);
+
+    /// \brief konwersja pola na `unsigned` \return -1 jak sukces albo indeks znaku gdzie b≈ÇƒÖd
 	int KonwertujDo(unsigned zkad,unsigned& naco);
  };
 
- public:
-// Interface konieczny do elastycznego wczytywania z tablicy stringÛw lub pliku
-// !!! Ale nie rÛbcie tego sami w domu :-)
- class WirtualnyKonstruktor   //Klasa bazowa wirtualnych konstruktorÛw
+ /// \brief   Klasa bazowa wirtualnych konstruktor√≥w element√≥w modelu
+ /// \details
+ ///          Interface konieczny do elastycznego wczytywania
+ ///          Bardziej z≈Ço≈ºony od tego z wb_rtm. Pozwala na czytanie z liku lub z tablicy string√≥w.
+ /// \note Ale nie r√≥bcie tego sami w domu :-)
+ class WirtualnyKonstruktor
  {
   protected:
-	static void Zarejestruj(const char* NazwaKlasyKonstruowanej,WirtualnyKonstruktor* ); //Obiekt musi istnieÊ puki jest potrzebny
-	static void Wyrejestruj(const char* NazwaKlasyKonstruowanej,WirtualnyKonstruktor* ); //A potem moøna wyrejestrowaÊ
+    /// \brief Rejestrator wirtualnego konstruktora danej klasy \note Obiekt musi istnieƒá puki jest potrzebny
+    /// \details Chroniony, bo oczekujemy  ze u≈ºywany tylko w konstruktorach klas potomnych
+	static void Zarejestruj(const char* NazwaKlasyKonstruowanej,WirtualnyKonstruktor* );
+
+    /// \brief De-rejestrator wirtualnego konstruktora danej klasy \note Jak ju≈º niepotrzebny to mo≈ºna wyrejestrowaƒá
+    /// \details Chroniony, bo oczekujemy  ze u≈ºywany tylko w destruktorach klas potomnych
+	static void Wyrejestruj(const char* NazwaKlasyKonstruowanej,WirtualnyKonstruktor* );
 
   public:
-	static const char* 			 ListaNazwTypow(void); //Generuje przeglπdowπ listÍ nazw zarejestrowanych typÛw elementÛw
-	static WirtualnyKonstruktor* DajWirtualnyKonstruktor(const char* NazwaKlasy); //Znajduje wg. zarejestrowanej nazwy typu
+    /// \brief Lista typ√≥w \details Generuje przeglƒÖdowƒÖ listƒô nazw zarejestrowanych typ√≥w element√≥w
+	static const char* 			 ListaNazwTypow();
 
-	virtual  const char* NazwaTypu()=0; //Nazwa typu dla tego obiektu konstruujπcego
-	virtual  unsigned 	 IleNazwPol();//Dwa pola sπ obslugiwane nawet jak nie ma nazw!
-	virtual  const char* NazwaPola(unsigned i);//Bezpieczniejsze w uøyciu, a najlepiej uzywac "nazwy pola" z ElementModelu
+    /// \brief Wirtualny konstruktor dla typu o znanej nazwie \details Znajduje wg. __zarejestrowanej__ nazwy typu
+	static WirtualnyKonstruktor* DajWirtualnyKonstruktor(const char* NazwaKlasy);
 
-	virtual  unsigned&    Flagi()=0; //32 bity na jakieú nieprzewidziane wczeúniej informacje konfiguracyjne
-	static const unsigned VFLAG=0x3; //Najmlodsze bity zarezerwowany na tryb wizualizacji
-									 //* 0 nie powinien pokazywaÊ obiektÛw danej klasy!
-									 //* 1 tylko kropki
-									 //* 2 domyslny sposÛb uproszczony
-									 //* 3 sposob wirtualny, zwykle graficznie rozbudowany
 
-	//NAJWAØNIEJSZY ELEMENT -  TWORZENIE OBIEKTU ODPOWIEDNIEGO TYPU POCHODNEGO OD Element
+	virtual  const char* NazwaTypu()=0; ///< \brief Nazwa typu obs≈Çugiwanego dla tego obiektu wirtualnego konstruktora
+	virtual  unsigned 	 IleNazwPol();  ///< \brief Ile jest nazwanych p√≥l \note Dwa pola sƒÖ obslugiwane nawet jak nie ma nazw!
+
+    /// \details Bezpieczniejsze w u≈ºyciu, a najlepiej u≈ºywaƒá "nazwy pola" z ElementModelu
+	virtual  const char* NazwaPola(unsigned i);
+
+    /// \brief S≈Çowo flag danego typu.
+    /// \details
+    ///     32 bity na jakie≈õ nieprzewidziane wcze≈õniej informacje konfiguracyjne.
+    ///     Najm≈Çodsze bity zarezerwowany na tryb wizualizacji:
+    ///     * 0 nie powinien pokazywaƒá obiekt√≥w danej klasy!
+    ///     * 1 tylko jako kropki
+    ///     * 2 domy≈õlny spos√≥b uproszczony
+    ///     * 3 spos√≥b wirtualny, zwykle graficznie rozbudowany
+	virtual  unsigned&    Flagi()=0;
+
+	static const unsigned VFLAG=0x3; ///< Sta≈Ça maskujƒÖca bity wizualizacji na s≈Çowie flag konfiguracji typu.
+
+
+	/// \brief NAJWA≈ªNIEJSZA METODA -  TWORZENIE OBIEKTU ODPOWIEDNIEGO TYPU POCHODNEGO OD Element
 	virtual  ElementModelu*  KonstruktorWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad)=0;
 
   public:
-	DaneLokalne Nazwy; //Nazwy pÛl, sπ teø dostÍpne bezpoúrednio, ale mogπ byÊ puste!!!
+	DaneLokalne Nazwy; ///< Nazwy p√≥l, sƒÖ te≈º dostƒôpne bezpo≈õrednio, ale mogƒÖ byƒá puste!!!
  };
 
-//Kazda klasa potomna musi mieÊ klasÍ pe≥niπca rolÍ wirtualnego konstruktora tworzπcego takie obiekty na stercie
-//Obiekt takiego szablonu trzeba zadeklarowaÊ i zainicjowac jako pole static kaødej klasy  potomnej dla "Element"
- template<class JakiElement>
+ /// \brief Szablon wirtualnych konstruktor√≥w
+ /// \details
+ ///     Ka≈ºda klasa potomna musi mieƒá klasƒô pe≈ÇniƒÖca rolƒô wirtualnego konstruktora tworzƒÖcego takie obiekty na stercie.
+ ///     Obiekt takiego szablonu trzeba zadeklarowaƒá i zainicjowaƒá jako pole static ka≈ºdej klasy  potomnej
+ ///     dla klasy `ElementModelu::`.
+ template<class ObslugiwanyTyp>
  class KonstruktorElementowModelu:public  WirtualnyKonstruktor
  {
-	std::string MojaNazwa;
-	unsigned    FLAGI;
+	std::string MojaNazwa;  ///< Nazwa obs≈Çugiwanego typu
+	unsigned    FLAGI;      ///< Flagi konfiguracji obs≈Çugiwania typu, zw≈Çaszcza konfiguracja wizualizacji
+
   public:
 	KonstruktorElementowModelu(const char* NazwaKlasyKonstruowanej):MojaNazwa(NazwaKlasyKonstruowanej),FLAGI(VFLAG)
 		{ Zarejestruj(MojaNazwa.c_str(),this); }
 
 	~KonstruktorElementowModelu()  { Wyrejestruj(MojaNazwa.c_str(),this); }
 
-	const char* NazwaTypu()	{ return MojaNazwa.c_str(); }
-	unsigned&   Flagi()     { return FLAGI; }
+    /// \brief Nazwa typu obs≈Çugiwanego dla tego obiektu wirtualnego konstruktora
+	const char* NazwaTypu() override { return MojaNazwa.c_str(); }
 
-	ElementModelu*  KonstruktorWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad)
+    /// \brief S≈Çowo flag danego typu.
+	unsigned&   Flagi() override     { return FLAGI; }
+
+    /// \brief Wirtualna konstrukcja na podstawie tekstowej listy parametr√≥w
+	ElementModelu*  KonstruktorWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad) override
 	{
-	   JakiElement* Tworzony=new JakiElement();
+	   auto Tworzony=new ObslugiwanyTyp();
 	   if(Tworzony->ZrobWgListy(Lista,Ile,Blad))
 				 return Tworzony;
 		  else  { delete Tworzony; return NULL;}
 	}
  };
 
- // POLA chronione i publiczne stanowiπce dane klasy Element
- ///////////////////////////////////////////////////////////////////////////////
+ // POLA chronione i publiczne stanowiƒÖce dane klasy ElementModelu
+ // //////////////////////////////////////////////////////////////
  protected:
-	friend class Swiat; //Ma dostÍp do pÛl prywatnych - zw≥aszcza do zapisu indeksu
+	friend class Swiat;  ///< ≈öwiat ma dostƒôp do p√≥l prywatnych - zw≈Çaszcza konieczne do zapisu!
 
-	unsigned _MojIndeks;//Pole jest ustawiane przez Swiat(!!!)
-				//Pozwala siÍ obiektowi zlokalizowaÊ w strukturach åwiata
+	unsigned _MojIndeks; ///< \brief Liczbowy identyfikator obiektu w ≈õwiecie symulacji
+	                     ///<  Pole jest ustawiane przez Swiat(!!!)
+				         ///<  Pozwala siƒô obiektowi zlokalizowaƒá w strukturach ≈öwiata.
 
-	DziedzKol Col; //Kaødy "Element" SPS musi mieÊ swÛj g≥Ûwny kolor, ktÛry moøe znaczyÊ rÛøne rzeczy
-				// ale przede wszystkim jest potrzebny w kaødej wizualizacji
+	DziedzKol Col; ///< \brief "Dziedzina" czyli kolor
+	               ///<   Ka≈ºdy "Element" SPS musi mieƒá sw√≥j g≈Ç√≥wny kolor, kt√≥ry mo≈ºe znaczyƒá r√≥≈ºne rzeczy,
+				   ///<   ale przede wszystkim jest potrzebny w ka≈ºdej wizualizacji
  public:
-	//Obsluga danych tekstowych - jako udostÍpniony obiekt, co nie jest zbyt bezpieczne (!)
-	DaneLokalne Dane; //I kazdy ElementModelu ma taki jeden obiekt  danych tekstowych
+	/// \brief Tekstowe dane lokalne
+    /// \details
+    ///     Obs≈Çuga danych tekstowych - jako udostƒôpniony obiekt, co nie jest zbyt bezpieczne (TODO ?!)
+    ///     Kazdy ElementModelu ma taki jeden obiekt danych tekstowych, ale jego wype≈Çnienie jest "leniwe".
+	DaneLokalne Dane;
 
-	//Obsluga wirtualnego kreowania
-	//Dla usprawnienia klasa potomna moøe zwracaÊ adres swojego wirtualnego konstruktora
-	//albo NULL oznaczajπcy øe trzeba go szukaÊ wg. zarejestrowanej nazwy
-	//lub øe go nie ma ... (co moøe stanowiÊ problem)
+	/// \brief Obsluga wirtualnego kreowania
+	/// \details
+	///     Dla usprawnienia klasa potomna mo≈ºe zwracaƒá adres swojego wirtualnego konstruktora
+	///     albo NULL oznaczajƒÖcy ≈ºe trzeba go szukaƒá wg. zarejestrowanej nazwy
+	///     lub ≈ºe go nie ma ... (co mo≈ºe stanowiƒá problem)
+	/// \return Wirtualny konstruktor danej klasy albo NULL oznaczajƒÖcy ≈ºe trzeba jednak szukaƒá po nazwie.
 	virtual WirtualnyKonstruktor* VKonstruktor();
-	virtual unsigned              VWidocznosc(); //Bazujπca na FLAGS informacja o widocznosci
+
+    /// \brief   Informacja o wizualizacji
+    /// \details BazujƒÖca na KonstruktorElementowModelu< __obs≈Çugiwany_typ__ >::FLAGS
+	virtual unsigned              VWidocznosc();
 };
 
-/********************************************************************/
-/*			          SPS  version 2011                             */
-/********************************************************************/
-/*           THIS CODE IS DESIGNED & COPYRIGHT  BY:                 */
-/*            W O J C I E C H   B O R K O W S K I                   */
-/*    Instytut Studiow Spolecznych Uniwersytetu Warszawskiego       */
-/*        WWW:  http://wwww.iss.uw.edu.pl/borkowski/                */
-/*                                                                  */
-/*                               (Don't change or remove this note) */
-/********************************************************************/
+/* *******************************************************************/
+/*			            SPS  version 2022                            */
+/* *******************************************************************/
+/*             THIS CODE IS DESIGNED & COPYRIGHT  BY:                */
+/*              W O J C I E C H   B O R K O W S K I                  */
+/*     Instytut Studi√≥w Spo≈Çecznych Uniwersytetu Warszawskiego       */
+/*        RG:https://www.researchgate.net/profile/Wojciech-Borkowski */
+/*        GitHub: https://github.com/borkowsk                        */
+/*                                                                   */
+/*                               (Don't change or remove this note)  */
+/* *******************************************************************/
 #endif    // opiElementH
 

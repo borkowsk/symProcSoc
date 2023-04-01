@@ -1,16 +1,20 @@
-// //////////////////////////////////////////////////////////////////////////////
-// Symulator Procesów Sieciowych/Społecznych (c) Instytut Studiów Społecznych
-// Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-// //////////////////////////////////////////////////////////////////////////////
-// Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-// //////////////////////////////////////////////////////////////////////////////
-//
-// Te metody klasy bazowej ElementModelu
-// //////////////////////////////////////////////////////////////////////////////
+/// \file
+/// \brief Metody klasy bazowa definiującej najbardziej podstawowy interfejs do elementów modelu
+///        --------------------------------------------------------------------------------------
+///
+/// \details
+///              Głównie chodzi o wizualizacje i inicjalizację z pliku
+///     ## (c)
+///     Symulator Procesów Sieciowych/Społecznych (c) Instytut Studiów Społecznych
+///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
+/// \date
+///     2022.11.15 (last updated)
+// ///////////////////////////////////////////////////////////////////////////////////////
 #include "spsElement.h"
 
 #include <cassert>
 #include <cstring>
+#include <cfloat>
 #include <iostream>
 using namespace std;
 
@@ -28,16 +32,16 @@ ElementModelu::ElementModelu()
 {Col.ARGB=0;_MojIndeks=-1;}
 
 //virtual
-/// \details Destruktor wirtualny, bo b�d� metody wirtualne
+/// \details Destruktor wirtualny, bo ma metody wirtualne
 ElementModelu::~ElementModelu()
 {
-//	assert(_MojIndeks!=-1);    //Tak naprawd� to si� zdarza
+//	assert(_MojIndeks!=-1);    //Tak naprawdę to siś zdarza?
 }
 
 /// Zwraca Indeks ustawiony przez świat albo jakiś innych identyfikator wobec swiata
 unsigned ElementModelu::MojID()
 {                                                                                               assert(_MojIndeks!=-1);
-                                                        //Tak naprawdę to się zdarza jak obiekt nie wstawiony do świata
+                                                        //Tak naprawdę to się zdarza, jak obiekt nie wstawiony do świata
 	return _MojIndeks;
 }
 
@@ -51,7 +55,7 @@ void ElementModelu::UstawDziedzine(const DziedzinaWKolorze& D)
     Col=D;
 }
 
-void ElementModelu::UstawDziedzine(unsigned R,unsigned G, unsigned B, unsigned A)//A=0 domyslnie
+void ElementModelu::UstawDziedzine(unsigned R,unsigned G, unsigned B, unsigned A) //A=0 domyślnie
 {
    Col.A=A;
    Col.R=R;
@@ -59,11 +63,9 @@ void ElementModelu::UstawDziedzine(unsigned R,unsigned G, unsigned B, unsigned A
    Col.B=B;
 }
 
-
-
+/// Klasa bazowa nie ma wirtualnego konstruktora, bo jest pure-virtual \return NULL
 ElementModelu::WirtualnyKonstruktor* ElementModelu::VKonstruktor()
 {
-	//Klasa bazowa nie ma bo jest pure-virtual
 	return NULL;
 }
 
@@ -74,19 +76,21 @@ unsigned  ElementModelu::VWidocznosc()
    if(Kons)
    {
 	  // cerr<<Kons->NazwaTypu()<<endl;
-	   return  Kons->Flagi() & 0x3; //Dwa najmlodsze bity
+	   return  Kons->Flagi() & 0x3; //Dwa najmłodsze bity
    }
-   else return 4; //Na wszelki wypadek pe�na wizualizacja
+   else return 4; //Na wszelki wypadek pełna wizualizacja, gdy nie ma "wirtualnego konstruktora"
 }
 
+/// Dwa pola są obsługiwane nawet jak nie ma nazw!
 unsigned ElementModelu::WirtualnyKonstruktor::IleNazwPol()
-{  //Dwa pola są obslugiwane nawet jak nie ma nazw!
+{
 	if(Nazwy.Ile()>2)
 		return Nazwy.Ile();
 	else
 		return 2;
 }
 
+/// \return zwraca nazwę pola
 const char* ElementModelu::WirtualnyKonstruktor::NazwaPola(unsigned i)
 {
 	if(Nazwy.Ile()>i)
@@ -95,6 +99,7 @@ const char* ElementModelu::WirtualnyKonstruktor::NazwaPola(unsigned i)
 		return "<DEF>";
 }
 
+/// \return liczbę pól danych lokalnych
 unsigned 	ElementModelu::IlePolDanych()
 {
    return Dane.Ile();
@@ -133,18 +138,20 @@ bool   ElementModelu::UstawPole(unsigned Ktore,const char* NowaWartosc)
 			return false;
 }
 
-//Klasa pomocnicza obslugujaca zarz�daznie danymi tekstowymi obiekt�w modelu
-//a mog�ca te� przej�c zarz�dzanie ich konwersjami i przekszta�cenie w warianty
+// Klasa pomocnicza obsługująca zarządzanie danymi tekstowymi obiektów modelu
+// a mogąca też przejąć zarządzanie ich konwersjami i przekształcenie w warianty
 //
 // class ElementModelu::DaneLokalne
-//	string* Dane;
-//	unsigned 	IleDanych;
+//	  string* Dane;
+//	  unsigned 	IleDanych;
 
+/// Jeśli ma zaalokowane `Dane` to robi im `delete`
 ElementModelu::DaneLokalne::~DaneLokalne()
 {
 	if(IleDanych!=0) delete [] Dane;
 }
 
+/// Dostęp do danych ze sprawdzeniem indeksu. Jak wadliwy to `exit(-1)`.
 string& ElementModelu::DaneLokalne::operator [] (unsigned index) const
 {
 	if(index<IleDanych) return Dane[index];
@@ -153,68 +160,84 @@ string& ElementModelu::DaneLokalne::operator [] (unsigned index) const
 	exit(-1);
 }
 
+///     - Usuwa stare dane jeśli są.
+///     - Potem alokuje `Ile` stringów.
+///     - Potem kopiuje stringi z `Lista` na `Dane`
 void ElementModelu::DaneLokalne::InicjujWgListy(const std::string* Lista,unsigned Ile)
 {
 	if(IleDanych!=0)
 			delete [] Dane;
-	Dane=new string[Ile];             		assert(Dane!=NULL);
+
+	Dane=new string[Ile];             		                                                         assert(Dane!=NULL);
 	for(unsigned i=0;i<Ile;i++)
 	{
 		Dane[i]=Lista[i];
 	}
+
 	IleDanych=Ile;
 }
 
+/// Funkcja jest wymagana, ale dla klasy praktycznie bazowej nie ma wiele do roboty.
+/// Musi zadbać żeby wszystko było aktualne, jednak klasy potomne mogą gdzie indziej chcieć zapisywać
+/// dziedzinę, a to jedyne pole poza nazwą typu, które tu by można zaktualizować
 void ElementModelu::AktualizujListeDanych()
-// Funkcja musi zadba� �eby wszystko by�o aktualne
-// ale klasy potomne mog� gdzie indziej chcie� zapisywa�
-// dziedzin�, a to jedyne pole poza nazw� typu kt�r etu by mo�na zaktualizowa�
 {
 	if(Dane.Ile()==0)
 	{
 		Dane.Realokuj(1);
 		WirtualnyKonstruktor* Kons=this->VKonstruktor();
-		if(Kons)  	//Chyba nie warto robi� nic wi�cej?
+
+		if(Kons)  	//Chyba nie warto robić nic więcej?
 			Dane[0]=Kons->NazwaTypu();
 	}
 }
 
+/// Przekopiowywanie danych z innej listy danych.
+///     - Usuwa stare dane jeśli są.
+/// TODO? `const DaneLokalne& operator = (const DaneLokalne& Wzor);`  - powinno być zabronione na wszelki wypadek!
 void ElementModelu::DaneLokalne::InicjujZDanych(const DaneLokalne& Wzor)
-//Przekopiowywanie danych z innej listy danych
 {
 	 if(IleDanych!=0) delete [] Dane;
-	 Dane=new string[Wzor.Ile()];   		assert(Dane!=NULL);
+	 Dane=new string[Wzor.Ile()];   		                                                         assert(Dane!=NULL);
 	 IleDanych=Wzor.Ile();
 	 for(unsigned i=0;i<IleDanych;i++)
 	 {
 		Dane[i]=Wzor[i];
 	 }
 }
-//const DaneLokalne& operator = (const DaneLokalne& Wzor);  - powinno by� zabronione na wszelki wypadek
 
-
-void ElementModelu::DaneLokalne::Realokuj(unsigned Ile)//Rozbudowuje lub skraca list�
+/// Rozszerza lub skraca listę danych
+void ElementModelu::DaneLokalne::Realokuj(unsigned Ile)
 {
-	if(Ile==IleDanych) //Nic si� nie zmieni�o!
+	if(Ile==IleDanych) //Nic się nie zmieniło!
 		return;
+
 	string* StaraLista=Dane;
-	Dane=new string[Ile];                    assert(Dane!=NULL);
+	Dane=new string[Ile];                                                                            assert(Dane!=NULL);
 	unsigned limit=min(Ile,IleDanych);
-	if(limit>0)
-	  for(unsigned i=0;i<limit;i++)//Nie jest to najszybszy spos�b
-		Dane[i]=StaraLista[i];	//ale nie wiem czy mo�na bezpiecznie zrobi� cos lepszego
+
+    if(limit>0)
+	  for(unsigned i=0;i<limit;i++) // Nie jest to najszybszy sposób,
+		Dane[i]=StaraLista[i];	    // ale czy można bezpiecznie zrobić cos lepszego?
+                                    // TODO Chyba że w C++17?
+
 	if(StaraLista!=NULL)
 		delete [] StaraLista;
-	IleDanych=Ile;
+
+    IleDanych=Ile;
 }
 
 
-//Przypisania i konwersje na elementy listy
-//Zwracaj� true jak si� uda�o
+/// Przypisania i konwersje na elementy listy
+/// Zwraca `true` jak się udało
 bool ElementModelu::DaneLokalne::PrzypiszZ(unsigned gdzie,double co)
 {
-	char bufor[512];//Du�o za du�o?
+	char bufor[512];
+#ifdef _MSC_VER
+	if(sprintf_s(bufor, "%g", co) != EOF)
+#else
 	if(sprintf(bufor,"%g",co)!=EOF)
+#endif
 	{
 		Dane[gdzie]=bufor;
 		return true;
@@ -222,10 +245,15 @@ bool ElementModelu::DaneLokalne::PrzypiszZ(unsigned gdzie,double co)
 	else return false;
 }
 
+/// Zwraca `true` jak się udało
 bool ElementModelu::DaneLokalne::PrzypiszZ(unsigned gdzie,long   co)
 {
-	char bufor[512];//Du�o za du�o?
+	char bufor[512];
+#ifdef _MSC_VER
+	if (sprintf_s(bufor,"%lu", co) != EOF)
+#else
 	if(sprintf(bufor,"%lu",co)!=EOF)
+#endif
 	{
 		Dane[gdzie]=bufor;
 		return true;
@@ -233,40 +261,54 @@ bool ElementModelu::DaneLokalne::PrzypiszZ(unsigned gdzie,long   co)
 	else return false;
 }
 
-//Zwracaj� indeks znaku kt�ry nie pasowa� lub -1 jako sukces
+/// Zwraca indeks znaku który nie pasował lub -1 jako sukces
 int ElementModelu::DaneLokalne::KonwertujDo(unsigned zkad,float& naco)
 {
 	double pom;
 	int ret=KonwertujDo(zkad,pom);
-	if(ret!=-1) return ret;
-	naco=pom; //TU SI� MO�E SKOPA� !!!
+	if(ret!=-1) return ret;                                                                assert(abs(pom) < FLT_MAX );
+	naco=static_cast<float>(pom); //TU MOŻE OBCIACHAĆ MIEJSCA ZNACZĄCE, a nawet zrobić OVERFLOW, ale nie w trybie DEBUG
 	return -1;
 }
 
-int ElementModelu::DaneLokalne::KonwertujDo(unsigned zkad,double& naco)
+/// Zwraca indeks znaku który nie pasował lub -1 jako sukces
+int ElementModelu::DaneLokalne::KonwertujDo(unsigned zkad, double& naco)
 {
-	bool procent=false;
-	char  temp[512];//Du�a tablica na stosie
-	char* pom=temp;
-	strncpy(temp,Dane[zkad].c_str(),511);
+	bool procent = false;
+	char  temp[1024]; //Duża tablica na stosie
 
-	if(strlen(temp)==0) //PUSTY!!!
-		   { naco=0;  return 0; }
+#ifdef _MSC_VER
+	{ auto str = Dane[zkad].c_str(); // 4DEBUG
+	  strncpy_s(temp, sizeof(temp), str, sizeof(temp) - 1);
+    }
+#else
+	strncpy(temp, Dane[zkad].c_str(), 1023);
+	temp[1023] = '\0';
+#endif
 
-	if( strchr(temp,'.')==NULL //Gdy nie ma kropki
-	  && (pom=strrchr(temp,','))!=NULL ) //To ostatni przecinek zmienia na kropk�
-			*pom='.';
-
-	if( (pom=strrchr(temp,'%'))!=NULL )
+	if (strlen(temp) == 0) //PUSTY!!!
 	{
-			procent=true;
-			*pom='\0';
+		naco = 0;  return 0;
 	}
 
-	char* endptr=NULL;
-	naco=strtod(temp,&endptr);
-	if(endptr!=NULL && *endptr!='\0')
-		return endptr-temp;
+	char* pom = temp;
+	if (strchr(temp, '.') == NULL //Gdy nie ma kropki
+		&& (pom = strrchr(temp, ',')) != NULL) //To ostatni przecinek zmienia na kropkę
+		*pom = '.';
+
+	if ((pom = strrchr(temp, '%')) != NULL)
+	{
+		procent = true;
+		*pom = '\0';
+	}
+
+	char* endptr = NULL;
+	naco = strtod(temp, &endptr);
+	if (endptr != NULL && *endptr != '\0')
+	{	
+		auto ret = endptr - temp;                                           assert(0 < ret && ret < Dane[zkad].size());
+		return static_cast<int>(ret);
+	}
 
 	if(procent)
 		naco/=100.0;
@@ -274,35 +316,44 @@ int ElementModelu::DaneLokalne::KonwertujDo(unsigned zkad,double& naco)
 	return -1;  //Wbrew pozorom OK
 }
 
-int ElementModelu::DaneLokalne::KonwertujDo(unsigned zkad,int& naco)
+/// Zwraca indeks znaku który nie pasował lub -1 jako sukces
+int ElementModelu::DaneLokalne::KonwertujDo(unsigned zkad, int& naco)
 {
-	char* endptr=NULL;
-	naco=strtol(Dane[zkad].c_str(),&endptr,0);
-	if(endptr!=NULL && *endptr!='\0')
-		return endptr-Dane[zkad].c_str();
+	char* endptr = NULL;
+	naco = strtol(Dane[zkad].c_str(), &endptr, 0);
+	if (endptr != NULL && *endptr != '\0')
+	{
+		auto ret=endptr - Dane[zkad].c_str();								assert(0 < ret && ret < Dane[zkad].size());
+		return static_cast<int>(ret);
+	}
 	else
 		return -1;  //Wbrew pozorom OK
 }
 
-int ElementModelu::DaneLokalne::KonwertujDo(unsigned zkad,unsigned& naco)
+/// Zwraca indeks znaku który nie pasował lub -1 jako sukces
+int ElementModelu::DaneLokalne::KonwertujDo(unsigned zkad, unsigned& naco)
 {
-	char* endptr=NULL;
-	naco=strtoul(Dane[zkad].c_str(),&endptr,0);
-	if(endptr!=NULL && *endptr!='\0')
-		return endptr-Dane[zkad].c_str();
+	char* endptr = NULL;
+	naco = strtoul(Dane[zkad].c_str(), &endptr, 0);
+	if (endptr != NULL && *endptr != '\0')
+	{
+		auto ret=endptr - Dane[zkad].c_str();								assert(0 < ret && ret < Dane[zkad].size());
+		return static_cast<int>(ret);
+	}
 	else
 		return -1;  //Wbrew pozorom OK
 }
 
+/* *******************************************************************/
+/*			            SPS  version 2022                            */
+/* *******************************************************************/
+/*             THIS CODE IS DESIGNED & COPYRIGHT  BY:                */
+/*              W O J C I E C H   B O R K O W S K I                  */
+/*     Instytut Studiów Społecznych Uniwersytetu Warszawskiego       */
+/*        RG:https://www.researchgate.net/profile/Wojciech-Borkowski */
+/*        GitHub: https://github.com/borkowsk                        */
+/*                                                                   */
+/*                               (Don't change or remove this note)  */
+/* *******************************************************************/
 
-/********************************************************************/
-/*			          SPS  version 2011                             */
-/********************************************************************/
-/*           THIS CODE IS DESIGNED & COPYRIGHT  BY:                 */
-/*            W O J C I E C H   B O R K O W S K I                   */
-/*    Instytut Studiow Spolecznych Uniwersytetu Warszawskiego       */
-/*        WWW:  http://wwww.iss.uw.edu.pl/borkowski/                */
-/*                                                                  */
-/*                               (Don't change or remove this note) */
-/********************************************************************/
 

@@ -1,69 +1,101 @@
-////////////////////////////////////////////////////////////////////////////////
-// Symulator Procesów Sieciowych/Spolecznych (c) Instytut Studiów Spo³ecznych
-// Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
-////////////////////////////////////////////////////////////////////////////////
-// Wersja okrojona dla OPI - Projekt "Transfer technologii 2011"
-////////////////////////////////////////////////////////////////////////////////
-//
-// Definicje matrycowego typu wêz³a - czyli zawieraj¹cego tablicê "dziedin"
-// która jest wizualizowana jako obrazek i mo¿e byæ obrazkiem zainicjowana
-////////////////////////////////////////////////////////////////////////////////
+/// \file
+/// \brief Klasa matrycowego typu wÄ™zÅ‚a
+///        ----------------------------
+///
+/// \details
+///     Definicje matrycowego typu wÄ™zÅ‚a - czyli zawierajÄ…cego tablicÄ™ "dziedzin",
+////    ktÃ³ra jest wizualizowana jako obrazek i moÅ¼e byÄ‡ obrazkiem zainicjowana.
+///     ## (c)
+///     Symulator ProcesÃ³w Sieciowych/SpoÅ‚ecznych (c) Instytut StudiÃ³w SpoÅ‚ecznych
+///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
+/// \date
+///     2022.11.07 (last updated)
+// //////////////////////////////////////////////////////////////////////////////
+
 #ifndef spsMatrixNodeH
 #define spsMatrixNodeH
 
 #include "spsGenNode.h"
 
+/// \brief Klasa matrycowego typu wÄ™zÅ‚a
 class WezelMacierzowy:public GenerycznyWezelSieci
 {
+    static KonstruktorElementowModelu<WezelMacierzowy> WirtualnyKonstruktor;
    public:
-	//Konstruktor  ustawia domyslne
+
+	/// \brief Konstruktor  domyÅ›lny  ustawia domyslne parametry
 	WezelMacierzowy();
-	static KonstruktorElementowModelu<WezelMacierzowy> WirtualnyKonstruktor;
-	//Metoda pobiera wszystkie potrzebne dane z listy stringów. Jak blad to podaje ktora pozycja
+    virtual ~WezelMacierzowy(); ///<  \brief Destruktor wirtualny
+
+    /// \brief Metoda pobiera wszystkie potrzebne dane z listy stringÃ³w. \return Jak bÅ‚Ä…d to podaje, ktÃ³ra pozycja listy
 	virtual bool ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad);
-	virtual ~WezelMacierzowy();//Destruktor wirtualny
-	virtual void Narysuj();
-	virtual void Wymazuj();
-	//Proste akcesory
-	virtual bool Trafiony(float X,float Y);//Np. do inspekcji myszk¹
-	virtual double R(double Angle); //Promieñ otaczaj¹cego okrêgu lub elipsy itp...
-	virtual void InterpretujKomunikat(Komunikat* Co);//Interpretuje komunikat
-	virtual void ChwilaDlaCiebie(); //Daje jakies szanse na endogenne zmiany stanów - tu koloru
-	virtual DziedzKol& operator() (unsigned x,unsigned y); //Dostêp do danych macierzy
+
+    // Do wizualizacji
+    // ///////////////
+	virtual void Narysuj();    ///< \brief RYSOWANIE STANU WÄ˜ZÅA
+	virtual void Wymazuj();    ///< \brief Czyszczenie miejsca po rysunku wÄ™zÅ‚a
+
+	// Proste akcesory
+    // ///////////////
+	virtual bool Trafiony(float X,float Y);   ///< \brief Sprawdzenie czy punkt w obrÄ™bie wizualizacji. \note Np. do inspekcji myszkÄ…
+	virtual double R(double Angle);           ///< \brief PromieÅ„ otaczajÄ…cego okrÄ™gu lub elipsy itp...
+    virtual DziedzKol& operator() (unsigned x,unsigned y); ///< \brief DostÄ™p do danych macierzy
+
+    // DZIAÅANIA WÄ˜ZÅA
+    // ///////////////
+	virtual void InterpretujKomunikat(Komunikat* Co); ///< \brief Interpretuje komunikat \note MoÅ¼e jakimÅ› procesem?
+	virtual void ChwilaDlaCiebie(); ///< \brief Daje szanse na endogenne zmiany stanÃ³w (tu np. kolorÃ³w)
+
+
   protected:
 	//DziedzKol  		Col;   //Dziedziczony z ElementModelu
 	//Dane;				//Dziedziczony z  GenerycznyWezelSieci
 	//double    		W,_X,_Y,_Z; //j.w.
-	//Wielobok* 		Ksztalt; //U¿ywany do wyœwietlania pojedynczego "piksela"
-	DziedzinaWKolorze*  Tablica;
-	unsigned 			Wysokosc;
-	unsigned 			Szerokosc;
-	//Procedury pomocnicze przydatne te¿ dla klas potomnych
-	//////////////////////////////////////////////////////////////////////////
-	virtual bool _ZaladujKoloryZPliku(const char* Nazwa,const char* TekstPomocniczy=NULL);//Procedura ³aduj¹ca dane
-				//zwraca "true" jeœli siê uda, false jak nie (komunikat mo¿e byæ na perror)
-				//z plików DAT (tab delimited), i ewentualnie graficznym PBM
-				// - jest w osobnym Ÿródle wiêc mo¿na przeimplementowaæ
-				//TekstPomocniczy to dane po gwiazdce (*) w komórce poprzedzajacej nazwê
-	//Funkcja przeszukiwania "bazy danych". Mo¿e losowo, albo liniowo, ale potomne mog¹ zaiplementowac coœ lepszego
-	virtual DziedzinaWKolorze _ZnajdzNajpodobniejszy(DziedzinaWKolorze D,unsigned& Indeks,double& WzglednePobienstwo,unsigned IleProb=Swiat::INVINDEX);
-	//...Element bêd¹cy podstw¹ mo¿e byæ wskazany lub losowy
-	virtual bool _OdpowiedzLosowymBitem(Komunikat* Pyt,unsigned Ktory=Swiat::INVINDEX,bool AND_OR=true);
-	//MOZE BYÆ KOSZTOWNA! Jak nie podano liczby prób to przegl¹da ca³¹ zawartoœæ!!!
+	//Wielobok* 		Ksztalt; //UÅ¼ywany do wyÅ›wietlania pojedynczego "piksela"
+	DziedzinaWKolorze*  Tablica;     ///< Tablica/lista kolorÃ³w
+	unsigned 			Wysokosc;    ///< WysokoÅ›Ä‡ macierzy kolorÃ³w
+	unsigned 			Szerokosc;   ///< SzerokoÅ›Ä‡ macierzy kolorÃ³w
+
+	// Procedury pomocnicze przydatne teÅ¼ dla klas potomnych
+	// //////////////////////////////////////////////////////
+
+    /// \brief Metoda Å‚adujÄ…ca dane z plikÃ³w DAT (tab delimited), i ewentualnie graficznym PBM
+    ///     \return "true" jeÅ›li siÄ™ uda, false jak nie (opis bÅ‚Ä™du moÅ¼e byÄ‡ na perror
+    ///     \note   Implementacja metody jest w osobnym ÅºrÃ³dle wiÄ™c moÅ¼na sobie przeimplementowaÄ‡
+    /// \param Nazwa - po prostu Å›cieÅ¼ka do pliku
+    /// \param TekstPomocniczy to dane po gwiazdce (*) w komÃ³rce poprzedzajacej nazwÄ™ (???)
+	virtual bool _ZaladujKoloryZPliku(const char* Nazwa,const char* TekstPomocniczy=NULL);
+
+	/// \brief Funkcja przeszukiwania jako "bazy danych".
+	/// \return Zwraca dziedzinÄ™ (kolor) elementu podobnego do szukanej dziedziny `D`
+	/// \note  MoÅ¼e szukaÄ‡ losowo, albo liniowo, ale klasy potomne mogÄ… zaimplementowaÄ‡ coÅ› lepszego.
+	virtual DziedzinaWKolorze _ZnajdzNajpodobniejszy( DziedzinaWKolorze D,   ///< Poszukiwana dziedzina (kolor)
+                                                      unsigned& Indeks,      ///< [out] gdzie znaleziono to co zwrÃ³cono
+                                                      double&   Pobienstwo,  ///< [out] podobieÅ„stwo z D
+                                                      unsigned IleProb=Swiat::INV_INDEX ///< ograniczenie liczby prÃ³b
+                                                              );
+
+    /// \brief Odpowiada na komunikat
+	/// \note  Element bÄ™dÄ…cy podstawÄ… moÅ¼e byÄ‡ wskazany lub losowy
+	virtual bool _OdpowiedzLosowymBitem( Komunikat* Pyt,                    ///< Komunikat pytajÄ…cy
+                                         unsigned Ktory=Swiat::INV_INDEX,   ///< z ktÃ³rego elementu odpowiedÅº
+                                         bool AND_OR=true                   ///< operacja bitowa AND czy OR
+                                                 );
+
+    /// \brief Odpowiada na komunikat
+	/// \note MOÅ»E BYÄ† KOSZTOWNA! Jak nie podano liczby prÃ³b to przeglÄ…da caÅ‚Ä… zawartoÅ›Ä‡ macierzy!!!
 	virtual bool _OdpowiedzNajpodobniejszym(Komunikat* Pyt,unsigned IleProb=-1);
 };
 
-
-//---------------------------------------------------------------------------
-
-/********************************************************************/
-/*			          SPS  version 2011                             */
-/********************************************************************/
-/*           THIS CODE IS DESIGNED & COPYRIGHT  BY:                 */
-/*            W O J C I E C H   B O R K O W S K I                   */
-/*    Instytut Studiow Spolecznych Uniwersytetu Warszawskiego       */
-/*        WWW:  http://wwww.iss.uw.edu.pl/borkowski/                */
-/*                                                                  */
-/*                               (Don't change or remove this note) */
-/********************************************************************/
+/* *******************************************************************/
+/*			            SPS  version 2022                            */
+/* *******************************************************************/
+/*             THIS CODE IS DESIGNED & COPYRIGHT  BY:                */
+/*              W O J C I E C H   B O R K O W S K I                  */
+/*     Instytut StudiÃ³w SpoÅ‚ecznych Uniwersytetu Warszawskiego       */
+/*        RG:https://www.researchgate.net/profile/Wojciech-Borkowski */
+/*        GitHub: https://github.com/borkowsk                        */
+/*                                                                   */
+/*                               (Don't change or remove this note)  */
+/* *******************************************************************/
 #endif

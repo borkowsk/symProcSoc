@@ -1,124 +1,124 @@
 // Transfer technologii 2011 - w³aœciwa implementacja modelu     24-10-2011
-////////////////////////////////////////////////////////////////////////////////
-// Klasy modelu OPI - IMPLEMENTACJA TEGO CO BYÆ W NICH MUSI
-// ze wzglêdu na wymagania interfaców pakietu SPS
-////////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
+// Klasy modelu OPI - IMPLEMENTACJA TEGO CO BY? W NICH MUSI
+// ze wzgl?du na wymagania interfejsów pakietu SPS
+//*//////////////////////////////////////////////////////////////////////////////
 
 #include "opiKlasyWersja.hpp"
-#include "INCLUDE/wb_smartlog.h"
+#include "wb_smartlog.hpp"
 using namespace wbrtm;
 
 // OBIEKTY WIRTUALNYCH KONSTRUKTORÓW DLA KA¯DEJ Z KLAS MODELU
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
 
 // Proces zajmuj¹cy siê produkcj¹ i wysy³¹niem towarów do odbiorcy lub na rynek
 // Wysy³a pod koniec dzia³ania, a potem, jeœli wys³anie siê powiod³o to tworzy
 // swoj¹ kopiê nieco bardziej efektywn¹ (szybsz¹)
-////////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
 ProcesProdukcyjny::KonstruktorElementowModelu<ProcesProdukcyjny> ProcesProdukcyjny::WirtKonstr("ProductProc");
 
 // Proces obci¹¿aj¹cy wêze³ i na koñcu wysy³aj¹cy raport do odbiorcy lub wêz³a
 // nadrzêdnego (linkiem Adm.) i wzawiaj¹cy dzia³anie od poczatku bez nowego procesu
-/////////////////////////////////////////////////////////////////////////////////////
+//*///////////////////////////////////////////////////////////////////////////////////
 ProcesRaportowany::KonstruktorElementowModelu<ProcesRaportowany> ProcesRaportowany::WirtKonstr("ReportProc");
 
 // Proces badawczy produkuje wyniki naukowe do celów publikacji, patentowania,
 // lub na czyjeœ zamówienie, st¹d ma w³aœciwoœæ "ZaplanowanyOdbiorca"
-///////////////////////////////////////////////////////////////////////////////////////////////
+//*/////////////////////////////////////////////////////////////////////////////////////////////
 ProcesBadawczy::KonstruktorElementowModelu<ProcesBadawczy> ProcesBadawczy::WirtKonstr("ResearchProc");
 
 // Proces kreuj¹cy nowe linki - losuje wêz³y i wg. podobieñstwa tworzy link i
 // wysy³a nim zajawkê o sobie, nadaje wagê proporcjonaln¹ do wagi wêz³a (albo...)
 // Jak nie utworzy linku to to wysy³a przypomnienie do jakiegoœ z istniej¹cych
 // powi¹zañ spo³ecznych zawieraj¹ce losowe bity ze swojej dziedziny.
-////////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
 ProcesSpoleczny::KonstruktorElementowModelu<ProcesSpoleczny> ProcesSpoleczny::WirtKonstr("SocialProc");
 
 // Proces poszukuj¹cy pomys³ów na nowe produkty i "odpalajacy" czasem procesy TT
-//////////////////////////////////////////////////////////////////////////////////
+//*////////////////////////////////////////////////////////////////////////////////
 ProcesPoszukiwanTT::KonstruktorElementowModelu<ProcesPoszukiwanTT>
 								ProcesPoszukiwanTT::WirtKonstr("TTSearchProc");
 
 // Proces przygotowuj¹cy nowy produkt - musi skompletowaæ wszystkie sk³adniki
-//////////////////////////////////////////////////////////////////////////////////
+//*////////////////////////////////////////////////////////////////////////////////
 ProcesTransferuTech::KonstruktorElementowModelu<ProcesTransferuTech>
 								ProcesTransferuTech::WirtKonstr("TTransferProc");
 
 // Proces zajmuj¹cy siê dawaniem grantów, dotacji lub po¿yczek na procent
-/////////////////////////////////////////////////////////////////////////////////////
+//*///////////////////////////////////////////////////////////////////////////////////
 ProcesGrantowoPozyczkowy::KonstruktorElementowModelu<ProcesGrantowoPozyczkowy>
 							ProcesGrantowoPozyczkowy::WirtKonstr("FinSourceProc");
 
 //Klasa powi¹zania administracyjnego - przepuszcza w górê raporty,
 // a w dó³ wytyczne oraz pieni¹dze
-////////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
 PodlegloscOrganizacyjna::KonstruktorElementowModelu<PodlegloscOrganizacyjna>
 	PodlegloscOrganizacyjna::WirtKonstr("AdminLink");
 
 // Klasa kooperacji sformalizowanej - przepuszcza w raporty - efekty dzia³añ
 // oraz pieni¹dze
-////////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
 FormalnaKooperacja::KonstruktorElementowModelu<FormalnaKooperacja>
 	FormalnaKooperacja::WirtKonstr("CoopLink");
 
 //Klasa powi¹zania towarzyskiego, zanikaj¹cego powoli gdy nie u¿ywany
 // ASYMETRYCZNA - TAKIE LINKI S¥ POD DWA BO ZAUFANIE I WAGA POWI¥ZANIA
 // ZAZWYCZAJ JEST RÓ¯NA Z PUNKTU WIDZENIA OBU PARTNERÓW!
-////////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
 KontaktTowarzyski::KonstruktorElementowModelu<KontaktTowarzyski>
 	KontaktTowarzyski::WirtKonstr("SocialLink");
 
 //Klasa komunikatu oficjalnego - raporty (w górê), wytyczne w dó³ (podleglosci  adm.)
-////////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
 KomunikacjaTowarzyska::KonstruktorElementowModelu<KomunikacjaTowarzyska>
 	KomunikacjaTowarzyska::WirtKonstr("SocialInfo");
 
 //Klasa komunikatu oficjalnego - raporty (w górê), wytyczne w dó³ (podleglosci  adm.)
-////////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
 KomunikacjaOficjalna::KonstruktorElementowModelu<KomunikacjaOficjalna>
 	KomunikacjaOficjalna::WirtKonstr("OficialInfo");
 
 //Klasa komunikatu-pakietu do przesy³ania realnych produktów z badañ lub fabryk
 // potrzebna g³ówne ze wzglêdu na odróznienie wizualizacyjne
-////////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
 PaczkaProduktow::KonstruktorElementowModelu<PaczkaProduktow>
 	PaczkaProduktow::WirtKonstr("PackInfo");
 
 //Klasa komunikatu finansowego - obietnice finansowe i kredytowe, umowy, proformy, przelewy
-////////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
 KomunikacjaFinansowa::KonstruktorElementowModelu<KomunikacjaFinansowa>
 	KomunikacjaFinansowa::WirtKonstr("FinancInfo");
 
 //Klasa dla œwiata - realizuje odpowiedzi na wolne poszukiwania, zapytania o produkty
 // a tak¿e wymianê gotowych produktów na konkretn¹ kasê (czyli "zbyt")
-////////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
 RynekZbytu::KonstruktorElementowModelu<RynekZbytu>
 	RynekZbytu::WirtKonstr("MarketNode");
 
 //Klasa dla PUBLIKATORA i UPATENTOWEGO - musi przyjmowac tylko komunikaty oficjalne
 // a poza tym zachowuje siê podobnie do klasy bazowej
-///////////////////////////////////////////////////////////////////////////////////
+//*/////////////////////////////////////////////////////////////////////////////////
 SystemInformacyjny::KonstruktorElementowModelu<SystemInformacyjny>
 	SystemInformacyjny::WirtKonstr("InforNode");
 
 //Klasa dla badacza i/lub zespo³u badawczego
-////////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
 JednostkaBadawcza::KonstruktorElementowModelu<JednostkaBadawcza>
 	JednostkaBadawcza::WirtKonstr("ResearchUNode");
 
 //Klasa dla Instytutu, Wydzia³u, Uniwersytetu itp.
-////////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
 AdministracjaNaukowa::KonstruktorElementowModelu<AdministracjaNaukowa>
 	AdministracjaNaukowa::WirtKonstr("ResAdminNode");
 
 //Klasa wykonwacy/producenta ostatecznego produktu
-////////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
 Firma::KonstruktorElementowModelu<Firma>
 	Firma::WirtKonstr("BusinessNode");
 
 //Klasa organizatora wdrozenia innowacji (BOTT i UOTT)
-////////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
 /*
 class OrganizatorWdrozenia:public GenerycznyWezelSieci
 {
@@ -133,8 +133,8 @@ UOTT::KonstruktorElementowModelu<UOTT> UOTT::WirtKonstr("UOTTNode");
 
 
 // Metody na potrzeby wczytywania i zapisywania plików danych
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
 Komunikat* KomunikacjaTowarzyska::Klonuj(){return new KomunikacjaTowarzyska(this);}
 Komunikat* KomunikacjaOficjalna::Klonuj(){return new KomunikacjaOficjalna(this);}
 Komunikat* KomunikacjaFinansowa::Klonuj(){return new KomunikacjaFinansowa(this);}
@@ -292,11 +292,11 @@ bool PodlegloscOrganizacyjna::ZrobWgListy(const std::string* Lista,unsigned Ile,
 }
 bool FormalnaKooperacja::ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad)
 {
-	return PowiazaniePaboliczne::ZrobWgListy(Lista,Ile,Blad);
+	return PowiazanieParaboliczne::ZrobWgListy(Lista, Ile, Blad);
 }
 bool KontaktTowarzyski::ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad)
 {
-	return PowiazaniePaboliczneSkierowane::ZrobWgListy(Lista,Ile,Blad);
+	return PowiazanieParaboliczneSkierowane::ZrobWgListy(Lista, Ile, Blad);
 }
 bool KomunikacjaTowarzyska::ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Blad)
 {
@@ -320,16 +320,16 @@ bool RynekZbytu::ZrobWgListy(const std::string* Lista,unsigned Ile,unsigned& Bla
 }
 
 // DODATKOWE IMPLEMENTACJE WIZUALIZACJI!!!
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
 //Chwilowo tutaj ró¿ne wizualizacje komunikatów zrobione proceduralnie.
 //Na razie SPS tylko to umo¿liwia, ale docelowo powinny byæ obiekty wizualizacyjne
 //u¿ywaj¹ce po prostu obrazków lub animacji - jak ¿ó³wie w Logomocji czy StarLogo
 
-#include "SYMSHELL/symshell.h"
+#include "symshell.h"
 
 double _ZespolRoboczy::R(double KAT_NIEISTOTNY)
-//Promieñ otaczaj¹cego zespól roboczy okrêgu lub elipsy musi byæ bardziej zmyœlnie
+//Promieñ otaczaj¹cego zespól roboczy okr?gu lub elipsy musi byæ bardziej zmyœlnie
 //zalezny od wagi, poniewa¿ te wagi bywaj¹ bardzo du¿e w trakcie symulacji
 {
 	double JakWazny=this->Waznosc();
@@ -348,7 +348,7 @@ double _ZespolRoboczy::R(double KAT_NIEISTOTNY)
 
 void FormalnaKooperacja::Narysuj()
 {
-	PowiazaniePaboliczne::Narysuj();//Przechwycenie rysowania dla debugingu
+	PowiazanieParaboliczne::Narysuj();//Przechwycenie rysowania dla debugingu
 }
 
 void KomunikacjaTowarzyska::RysujKsztalt(float X,float Y,float Rad,unsigned R,unsigned G,unsigned B)

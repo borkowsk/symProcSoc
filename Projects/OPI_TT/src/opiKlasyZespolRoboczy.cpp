@@ -1,16 +1,16 @@
 // Transfer technologii 2011 - w³aœciwa implementacja modelu     25-10-2011
-////////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
 // Implementacja pomocniczych metod
 // z klasy  _ZespolRoboczy
-////////////////////////////////////////////////////////////////////////////////
+//*//////////////////////////////////////////////////////////////////////////////
 
 #include "opiKlasyWersja.hpp"
-#include "INCLUDE/wb_smartlog.h"
+#include "wb_smartlog.hpp"
 using namespace wbrtm;
 
 
-//Klasa wewnêtrzna skupiaj¹ca wspólne w³aœciwoœci wêz³ów z pracownikami (zespo³ów)
-//////////////////////////////////////////////////////////////////////////////////
+// Klasa wewnêtrzna skupiaj¹ca wspólne w³aœciwoœci wêz³ów z pracownikami (zespo³ów)
+//*////////////////////////////////////////////////////////////////////////////////
 /*
 class _ZespolRoboczy:public GenerycznyWezelSieci
 {
@@ -82,16 +82,16 @@ void _ZespolRoboczy::ZmienWage(double mnoznik)
 unsigned _ZespolRoboczy::DajRynek()
 //Do uzycia w ró¿nych sytuacjach
 {
-	static unsigned Index=Swiat::INVINDEX;
+	static unsigned Index=Swiat::INV_INDEX;
 	//Sprawdza czy dawniej znaleziony nadal jest poprawny
-	if(Index!=Swiat::INVINDEX && Swiat::Wezel(Index)!=NULL)
+	if(Index!=Swiat::INV_INDEX && Swiat::Wezel(Index) != NULL)
 	{
 		return Index;
 	}
 	else
 	{  //Znajduje od nowa
 		Index=Swiat::ZnajdzIndeksWezla("RYNEK");
-		if(Index==Swiat::INVINDEX)
+		if(Index==Swiat::INV_INDEX)
 			Index=Swiat::ZnajdzIndeksWezla("MARKET");
 		return Index;
 	}
@@ -100,20 +100,20 @@ unsigned _ZespolRoboczy::DajRynek()
 unsigned _ZespolRoboczy::DajUrzadPatentowy()
 //UPATENTOWY | "URZ¥D PATENTOWY" | patent office  | Patent Office
 {
-	static unsigned Index=Swiat::INVINDEX;
+	static unsigned Index=Swiat::INV_INDEX;
 	//Sprawdza czy dawniej znaleziony nadal jest poprawny
-	if(Index!=Swiat::INVINDEX && Swiat::Wezel(Index)!=NULL)
+	if(Index!=Swiat::INV_INDEX && Swiat::Wezel(Index) != NULL)
 	{
 		return Index;
 	}
 	else
 	{  //Znajduje od nowa
 		Index=Swiat::ZnajdzIndeksWezla("UPATENTOWY");
-		if(Index==Swiat::INVINDEX)
+		if(Index==Swiat::INV_INDEX)
 			Index=Swiat::ZnajdzIndeksWezla("URZ¥D PATENTOWY");
-		if(Index==Swiat::INVINDEX)
+		if(Index==Swiat::INV_INDEX)
 			Index=Swiat::ZnajdzIndeksWezla("patentoffice");
-		if(Index==Swiat::INVINDEX)
+		if(Index==Swiat::INV_INDEX)
 			Index=Swiat::ZnajdzIndeksWezla("Patent Office");
 		return  Index;
 	}
@@ -122,16 +122,16 @@ unsigned _ZespolRoboczy::DajUrzadPatentowy()
 unsigned _ZespolRoboczy::DajPublikator()
 //PUBLIKATOR |  publicator
 {
-	static unsigned Index=Swiat::INVINDEX;
+	static unsigned Index=Swiat::INV_INDEX;
 	//Sprawdza czy dawniej znaleziony nadal jest poprawny
-	if(Index!=Swiat::INVINDEX && Swiat::Wezel(Index)!=NULL)
+	if(Index!=Swiat::INV_INDEX && Swiat::Wezel(Index) != NULL)
 	{
 		return Index;
 	}
 	else
 	{  //Znajduje od nowa
 		Index=Swiat::ZnajdzIndeksWezla("PUBLIKATOR");
-		if(Index==Swiat::INVINDEX)
+		if(Index==Swiat::INV_INDEX)
 			Index=Swiat::ZnajdzIndeksWezla("publicator");
 		return  Index;
 	}
@@ -147,7 +147,7 @@ void     _ZespolRoboczy::_ZarzadcaProcesowLosowy()
 	//Np. na posuniêcie do przodu najpilniejszego z procesów
 	unsigned ile=Swiat::IleProcesow(MojID());
 	unsigned ktory=Swiat::NajpilniejszyProc(MojID(),NULL);
-	if(ktory==Swiat::INVINDEX) //Nie ma nic do roboty
+	if(ktory==Swiat::INV_INDEX) //Nie ma nic do roboty
 			return; //To wychodzimy z pracy :-);
 
 	//Tylko "proces generyczny"	 lub typu potomnego nas tu interesuje
@@ -169,7 +169,7 @@ void     _ZespolRoboczy::_ZarzadcaProcesowLosowy()
 	unsigned ile=Swiat::IleProcesow(MojID());
 	unsigned ktory=Swiat::NajpilniejszyProc(MojID());
 
-	if(ktory==Swiat::INVINDEX) //Nie ma nic do roboty
+	if(ktory==Swiat::INV_INDEX) //Nie ma nic do roboty
 			return; //To wychodzimy z pracy :-)
 
 	double   SilaRobocza=IleEtatow*Efektywnosc*Doswiadczenie*(IleEtatow>2?1-Centralnosc:1); //Ile mocy
@@ -197,7 +197,7 @@ void     _ZespolRoboczy::_ZarzadcaProcesowLosowy()
 	unsigned ile_proc_real; //Ile faktycznie ma procesów do obslu¿enia
 	//Szukanie najpilniejszego przelicza priorytety
 	unsigned ktory=Swiat::NajpilniejszyProc(MojID(),&ile_proc_real);
-	if(ktory==Swiat::INVINDEX) //Nie ma w ogole nic do roboty
+	if(ktory==Swiat::INV_INDEX) //Nie ma w ogole nic do roboty
 			return; //To wychodzimy z pracy :-)
 
 	GenerycznyProces* Roboczy=dynamic_cast<GenerycznyProces*>(Swiat::Proc(ktory,MojID()));
@@ -248,7 +248,7 @@ void 	  _ZespolRoboczy::_ZarzadcaProcesowFinezyjny()
 
 	//Szukanie najpilniejszego przelicza priorytety
 	unsigned najpilniejszy=Swiat::NajpilniejszyProc(NID);
-	if(najpilniejszy==Swiat::INVINDEX)
+	if(najpilniejszy==Swiat::INV_INDEX)
 			return;  //NIC DO ZROBIENIA - SAME "TRUPY" PROCESÓW
 
 	//Teraz trzeba popchn¹æ co siê da zwlaszcza te te bliskie konca

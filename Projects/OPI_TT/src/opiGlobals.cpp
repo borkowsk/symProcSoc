@@ -5,10 +5,10 @@
 
 #include "spsModel.h"
 
-#include "INCLUDE/platform.hpp"
-#include "INCLUDE/compatyb.h"
-#include "INCLUDE/wb_ptr.hpp"
-#include "INCLUDE/wb_smartlog.h" //Bo zmieniamy parametr loglevel
+#include "compatyb.hpp"
+#include "wb_ptr.hpp"
+#include "wb_smartlog.hpp" //Bo zmieniamy parametr loglevel
+#include "lingo.hpp"
 #include <cstring>
 
 //Zdefiniowane w opiKlasyGeneryczne*.cpp
@@ -80,57 +80,57 @@ bool konfiguruj(const char* parametr,const char* wartosc/*=NULL*/)
 
    //Parametry
 
-   if(stricmp("GENERIC.LEAKS",Pom1.get())==0)
+   if(strcmp("GENERIC.LEAKS",Pom1.get())==0)
    {
 	   GENERYCZNY_POZIOM_PRZECIEKOW=atof(Pom2.get());
 	   cout<<_LPL("Parametr","Parameter")<<" "<<Pom1.get()<<"="<<GENERYCZNY_POZIOM_PRZECIEKOW<<endl;
    }
    else
-   if(stricmp("LOG.LEVEL",Pom1.get())==0)
+   if(strcmp("LOG.LEVEL",Pom1.get())==0)
    {
 	//extern int		wbrtm::wb_smartlog::log_level;//=0;   POZIOM LOGOWANIA PLIKU LOG U¯YWANEGO SPS
 	   wbrtm::wb_smartlog::log_level=atoi(Pom2.get());
 	   cout<<_LPL("Parametr","Parameter")<<" "<<Pom1.get()<<"="<<wbrtm::wb_smartlog::log_level<<" "<<endl;
    }
    else
-   if(stricmp("TOLERANT",Pom1.get())==0)
+   if(strcmp("TOLERANT",Pom1.get())==0)
    {
 	   Swiat::ForceTolerant=atoi(Pom2.get());
 	   cout<<_LPL("Parametr","Parameter")<<" "<<Pom1.get()<<"="<<Swiat::ForceTolerant<<" "<<(Swiat::ForceTolerant?"Y E S ! ! !":"NO")<<endl;
    }
    else
    //Parametry wizualizacyjne i logowania danych symulacji
-   if(stricmp("VERBOSE",Pom1.get())==0)
+   if(strcmp("VERBOSE",Pom1.get())==0)
    {
 	   VerboseInput=atoi(Pom2.get());
 	   cout<<_LPL("Parametr","Parameter")<<" "<<Pom1.get()<<"="<<VerboseInput<<endl;
    }
    else
-   if(stricmp("VERTICAL",Pom1.get())==0)
+   if(strcmp("VERTICAL",Pom1.get())==0)
    {
 	   ver=atoi(Pom2.get());
 	   cout<<_LPL("Parametr","Parameter")<<" "<<Pom1.get()<<"="<<ver<<endl;
    }
    else
-   if(stricmp("HORIZONTAL",Pom1.get())==0)
+   if(strcmp("HORIZONTAL",Pom1.get())==0)
    {
 	   hor=atoi(Pom2.get());
 	   cout<<_LPL("Parametr","Parameter")<<" "<<Pom1.get()<<"="<<hor<<endl;
    }
    else
-   if(stricmp("RADIUS",Pom1.get())==0)
+   if(strcmp("RADIUS",Pom1.get())==0)
    {
 	   JakieRwProcWidth=atof(Pom2.get());
 	   cout<<_LPL("Parametr","Parameter")<<" "<<Pom1.get()<<"="<<JakieRwProcWidth<<endl;
    }
    else
-   if(stricmp("LANGUAGE",Pom1.get())==0 || stricmp("LANG",Pom1.get())==0)
+   if(strcmp("LANGUAGE",Pom1.get())==0 || strcmp("LANG",Pom1.get())==0)
    {
 	   wbrtm::_lingo_selector=atoi(Pom2.get());
 	   cout<<_LPL("Jezyk ustawiony na \"","Language is set to \"")<<_LPL("pl","en")<<'"'<<endl;
    }
    else
-   if(stricmp("MAXMESSGAGE",Pom1.get())==0)
+   if(strcmp("MAXMESSGAGE",Pom1.get())==0)
    {
 	   DefMaxLiczbaKomunikatow=atoi(Pom2.get());
 	   cout<<_LPL("Parametr","Parameter")<<" "<<Pom1.get()<<"="<<DefMaxLiczbaKomunikatow<<endl;
