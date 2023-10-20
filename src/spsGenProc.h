@@ -1,6 +1,6 @@
 /// \file
 /// \brief Klasa generycznego procesu realizującego interface Proces
-///        ---------------------------------------------------------
+//         ---------------------------------------------------------
 ///
 /// \details
 ///              G...

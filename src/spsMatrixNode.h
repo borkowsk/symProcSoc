@@ -1,13 +1,13 @@
 /// \file
 /// \brief Klasa matrycowego typu węzła
-///        ----------------------------
+//         ----------------------------
 ///
 /// \details
-///     Definicje matrycowego typu węzła - czyli zawierającego tablicę "dziedzin",
-////    która jest wizualizowana jako obrazek i może być obrazkiem zainicjowana.
+///     Definicje matrycowego typu węzła, czyli zawierającego tablicę "dziedzin",
+///     która jest wizualizowana jako obrazek i może być obrazkiem zainicjowana.
 ///     ## (c)
 ///     Symulator Procesów Sieciowych/Społecznych (c) Instytut Studiów Społecznych
-///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
+///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011, wborkowski@uw.edu.pl
 /// \date
 ///     2022.11.07 (last updated)
 // //////////////////////////////////////////////////////////////////////////////

@@ -1,6 +1,6 @@
 /// \file
 /// \brief Implementacja generycznego procesu realizującego interface Proces
-///        -----------------------------------------------------------------
+//         -----------------------------------------------------------------
 ///
 /// \details
 ///              G...

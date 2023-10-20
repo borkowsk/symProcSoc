@@ -1,12 +1,12 @@
 /// \file
 /// \brief Definicja linku ogólnego, ale rysowanego jako łuk paraboliczny
-///        --------------------------------------------------------------
+//         --------------------------------------------------------------
 ///
 /// \details
 ///              ...
 ///     ## (c)
 ///     Symulator Procesów Sieciowych/Społecznych (c) Instytut Studiów Społecznych
-///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
+///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011, wborkowski@uw.edu.pl
 /// \date
 ///     2022.11.07 (last updated)
 //*////////////////////////////////////////////////////////////////////////////////

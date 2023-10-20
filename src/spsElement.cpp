@@ -1,6 +1,6 @@
 /// \file
 /// \brief Metody klasy bazowa definiującej najbardziej podstawowy interfejs do elementów modelu
-///        --------------------------------------------------------------------------------------
+//         --------------------------------------------------------------------------------------
 ///
 /// \details
 ///              Głównie chodzi o wizualizacje i inicjalizację z pliku

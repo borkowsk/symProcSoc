@@ -1,6 +1,6 @@
 /// \file
 /// \brief Metody klasy bazowej ElementModelu  służące rejestracji wirtualnych konstruktorów
-///        ---------------------------------------------------------------------------------
+//         ---------------------------------------------------------------------------------
 ///
 /// \details
 ///		W sytuacji gdy nie można użyć <map>.  Szuka liniowo po klasycznej liście,

@@ -1,13 +1,13 @@
 /// \file
 /// \brief Definicje danych i funkcji świata
-///        ---------------------------------
+//         ---------------------------------
 ///
 /// \details
 ///      UŻYWAMY LINIOWEJ ORGANIZACJI KONTENERÓW, ALE NIELINIOWO JEJ UŻYWAMY.
 ///      (TODO) MOŻNA BY TO ZASTĄPIĆ JAKĄŚ INNĄ IMPLEMENTACJĄ
 ///     ## (c)
 ///     Symulator Procesów Sieciowych/Społecznych (c) Instytut Studiów Społecznych
-///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
+///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011, wborkowski@uw.edu.pl
 /// \date
 ///     2022.11.09 (last updated)
 //*////////////////////////////////////////////////////////////////////////////////

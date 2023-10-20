@@ -1,6 +1,6 @@
 /// \file
 /// \brief Klasa podstawowego komunikatu realizująca interface Komunikat
-///        -------------------------------------------------------------
+//         -------------------------------------------------------------
 ///
 /// \details
 ///

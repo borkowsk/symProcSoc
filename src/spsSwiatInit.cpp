@@ -1,16 +1,16 @@
 /// \file
 /// \brief Funkcje inicjalizacja struktur danych świata  na podstawie pliku
-///        ----------------------------------------------------------------
+//         ----------------------------------------------------------------
 ///
 /// \details
-///      Wyodrębnione żeby było łatwo znaleźć i rozbudowywać
-////
+///      Wyodrębnione, żeby było łatwo znaleźć i rozbudowywać
+///
 ///      UŻYWAMY LINIOWEJ ORGANIZACJI KONTENERÓW, ALE NIELINIOWO JEJ UŻYWAMY.
 ///      (TODO) MOŻNA BY TO ZASTĄPIĆ JAKĄŚ INNĄ IMPLEMENTACJĄ
 /// \note Cześć modelu może być w innych plikach, jak ten zanadto urośnie!
 ///     ## (c)
 ///     Symulator Procesów Sieciowych/Społecznych (c) Instytut Studiów Społecznych
-///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
+///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011, wborkowski@uw.edu.pl
 /// \date
 ///     2022.11.09 (last updated)
 //*////////////////////////////////////////////////////////////////////////////////

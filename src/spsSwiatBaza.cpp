@@ -1,10 +1,10 @@
 /// \file
 /// \brief Główne definicje danych i funkcji świata
-///        ----------------------------------------
+//         ----------------------------------------
 ///
 /// \details
 ///      Czyli wszystkie te, które nie są w innych plikach jak np. Init-cjalizacja czy Stat-ystyka.
-////
+///
 ///      UŻYWAMY LINIOWEJ ORGANIZACJI KONTENERÓW, ALE NIELINIOWO JEJ UŻYWAMY.
 ///      MOŻNA JĄ ZASTĄPIĆ JAKĄŚ INNĄ, POD WARUNKIEM, ŻE GWARANTUJE NIEZMIENNE UCHWYTY W POSTACI
 ///      LICZB CAŁKOWITYCH.
@@ -12,7 +12,7 @@
 /// \note Cześć modelu może być w innych plikach, jak ten zanadto urośnie!
 ///     ## (c)
 ///     Symulator Procesów Sieciowych/Społecznych (c) Instytut Studiów Społecznych
-///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011 , wborkowski@uw.edu.pl
+///     Uniwersytetu Warszawskiego, ul. Stawki 5/7., 2011, wborkowski@uw.edu.pl
 /// \date
 ///     2022.11.09 (last updated)
 //*////////////////////////////////////////////////////////////////////////////////
