@@ -7,8 +7,8 @@ cmake_minimum_required(VERSION 3.0)
 project(OPI_TT)
 
 set( WBRTM     "/home/borkowsk/SCC/public/symShell2andRTM/RTM/" )
-set( SYMSHELL  "/home/borkowsk/SCC/public/SymShellLight/" )
-set( SPS       "/home/borkowsk/SCC/public/SymProcSoc/src/" )
+set( SYMSHELL  "../../../symShellLight/" )
+set( SPS       "../../src/" )
 
 # Also: -DUSE_X11 -DUSE_WINDOWS -DUSE_CONSOLE_ONLY -DMULTITR -DDEF_MAXTHREADS=16
 add_definitions( -DHAVE_X11 -DUSE_ZENITY )
