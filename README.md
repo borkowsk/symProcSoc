@@ -14,5 +14,6 @@ __EN__: Library is used for modeling social processes occurring in networks with
 
 ## BUY ME A COFFEE ##   
 
-https://www.buymeacoffee.com/wborkowsk
+[☕☕☕ buycoffee.to](https://buycoffee.to/adalbertus)<br>
+[🪙 🪙  PayPal](https://www.paypal.com/paypalme/wborkowsk)
 
