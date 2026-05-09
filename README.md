@@ -1,5 +1,6 @@
 #  SymProcSoc 
-## PL: Symulator Procesów Społecznych/Sieciowych <br> EN: Social Processes Simulator Library
+## PL: Symulator Procesów Społecznych/Sieciowych <br> 
+   EN: Social Processes Simulator Library
 
 ## ABSTR.##
 
@@ -11,6 +12,9 @@ __PL__: Biblioteka służy do modelowania procesów społecznych zachodzących w
 __EN__: Library is used for modeling social processes occurring in networks with 
     arbitraly defined or variable topology and with the use of message exchange.
     There is a sample application in the *. / Projects / OPI_TT / * directory.
+    
+<img src="./docs/historical-artifacts.gif" width="200" title="Historical artifact">
+
 
 ## BUY ME A COFFEE ##   
 
