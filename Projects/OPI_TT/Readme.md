@@ -1,25 +1,38 @@
-Katalog ten zawiera wszystko, co jest niezbêdne do kompilacji modelu aplikacji
+# "NarzÄ™dzie informatycznego modelowania procesÃ³w spoÅ‚eczno-ekonomicznych towarzyszÄ…cych transferowi technologii oraz roli OÅ›rodkÃ³w Transferu Technologii w tym procesie"
+
+Badanie zrealizowane na zlecenie OÅ›rodka Przetwarzania Informacji jako komponent projektu "Wsparcie systemu zarzÄ…dzania badaniami naukowymi oraz ich wynikami", realizowanego w ramach Programu Operacyjnego Innowacyjna Gospodarka 2007-2013, DziaÅ‚anie 1.1, PoddziaÅ‚anie 1.1.3., Sub-projektu â€Analiza dziaÅ‚alnoÅ›ci oÅ›rodkÃ³w transferu technologii (zarzÄ…dzanie oraz komercjalizacja B+R)â€ Projekt wspÃ³Å‚finansowany przez UniÄ™ EuropejskÄ… ze Å›rodkÃ³w Europejskiego Funduszu Rozwoju Regionalnegoâ€
+
+* 2011 - RAPORT CAÅOÅšCIOWY Z BADANIA: https://www.researchgate.net/publication/298069033_Narzedzie_informatycznego_modelowania_procesow_spoleczno-ekonomicznych_towarzyszacych_transferowi_technologii_oraz_roli_Osrodkow_Transferu_Technologii_w_tym_procesie_-_RAPORT_CALOSCIOWY_Z_BADANIA
+* 2012 - Prezentacja konferencja OPI 26-09-12: https://www.researchgate.net/publication/306079099_Modelowanie_roli_instrumentow_polityki_innowacyjnej_panstwa_na_przykladzie_Osrodkow_Transferu_Technologii_-_Prezentacja_konferencja_OPI_26-09-12
+
+
+## ZAWARTOÅšÄ† REPOZYTORIUM
+Katalog ten zawiera wszystko, co jest niezbÄ™dne do kompilacji aplikacji modelujÄ…cej:
 
 	OPITRANSFER - transfer technologii dla OPI.
 
-W katalogu _SRC znajduj¹ siê kody Ÿród³owe modelu, w katalogu SPS znajduj¹ siê kody Ÿród³owe 
-biblioteki wizualizacji dynamiki sieci, a w katalogu WBRTM kody Ÿród³owe biblioteki zapieniaj¹cej 
-ogólne us³ugi dla programu symulacyjnego oraz obs³ugê okna graficznego w œrodowisku 
+W katalogu _SRC znajdujÄ… siÄ™ kody ÅºrÃ³dÅ‚owe modelu, w katalogu SPS znajdujÄ… siÄ™ kody ÅºrÃ³dÅ‚owe 
+biblioteki wizualizacji dynamiki sieci, a w katalogu WBRTM kody ÅºrÃ³dÅ‚owe biblioteki zapieniajÄ…cej 
+ogÃ³lne usÅ‚ugi dla programu symulacyjnego oraz obsÅ‚ugÄ™ okna graficznego w Å›rodowisku 
 WINDOWS. 
-Biblioteki  te stanowi¹ w³asnoœæ  intelektualn¹ autora i zosta³y udostêpnione w tej postaci, w celu 
-umo¿liwienia wygodnego rozwijania modelu OPITRANSFER przez odbiorcê i nie mog¹ byæ u¿ywane 
-do ¿adnego innego celu.
-W katalogach  __DevCpp i __MSVC2008 oraz __RADSTUDIO  znajduj¹ siê predefiniowane projekty 
-dla kompilatorów gcc w wersji DevCpp, Microsoft Visual C++ oraz EMBARCADERO RAD STUDIO . 
-Œcie¿ki tych projektów s¹  ustawione tak, jakby ca³a zawartoœæ katalogu Ÿróde³ by³a dyskiem  o 
+Biblioteki  te stanowiÄ… wÅ‚asnoÅ›Ä‡  intelektualnÄ… autora i zostaÅ‚y udostÄ™pnione w tej postaci, w celu 
+umoÅ¼liwienia wygodnego rozwijania modelu OPITRANSFER przez odbiorcÄ™ i nie mogÄ… byÄ‡ uÅ¼ywane 
+do Å¼adnego innego celu.
+
+Pierwotnie w katalogach  `__DevCpp` i `__MSVC2008` oraz `__RADSTUDIO`  znajdowaÅ‚y siÄ™ predefiniowane projekty 
+dla kompilatorÃ³w __gcc__ w wersji __DevCpp__, __Microsoft Visual C++__ oraz __EMBARCADERO RAD STUDIO__ . 
+ÅšcieÅ¼ki tych projektÃ³w byÅ‚y ustawione tak, jakby caÅ‚a zawartoÅ›Ä‡ katalogu ÅºrÃ³deÅ‚ byÅ‚a dyskiem  o 
 literze Z. 
-¯eby uzyskaæ tak¹ konfiguracje mo¿na pos³u¿yæ siê plikiem
 
-_subst_z.bat
+Å»eby uzyskaÄ‡ takÄ… konfiguracje na __Windows__ moÅ¼na byÅ‚o posÅ‚uÅ¼yÄ‡ siÄ™ plikiem
 
-Który u¿ywa polecenia SUBST. Mo¿e to jednak byæ w konflikcie
-z przypisaniami sieciowymi, jeœli u¿ywaj¹ one tak¿e litery Z.
+	_subst_z.bat
 
-										04.11.2011
-										W.Borkowski
+KtÃ³ry uÅ¼ywa polecenia SUBST. MoÅ¼e to jednak byÄ‡ w konflikcie
+z przypisaniami sieciowymi, jeÅ›li uÅ¼ywajÄ… one takÅ¼e litery Z.
+
+Obecnie projekt jest przygotowany do kompilacji za pomocÄ… __cmake__.
+
+04.11.2011-19.11.2026
+W.Borkowski
 
