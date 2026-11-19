@@ -1,0 +1,19 @@
+#1	#2	#3	#4	#5	#6	#7	#8	#9	#10	#11	#12	#13	#14	#15	#16	#17
+# typ wezla	Nazwa	Wizualizacja	Waga	Kolor 	X	Y	Z	Pole1	Pole2	Pole3	Pole4	Pole5	Pole6	Pole7	Pole8	itd. Czyli komentarz
+gennode	Badacz A	6	0.5	rgb(200,10,255)	150	20	3	tra	la	la	la	la	tra	tra	ma	takie sobie przyklady
+gennode	Badacz B	6	0.7	rgb(100,100,55)	80	40	3									
+gennode	Badacz C	6	0.9	rgb(255,10,100)	50	100	2									
+gennode	Wydzia³	8	1	0x10FFFF	150	110	1									
+gennode	Uniwerek	12	2	B000000001011001111111111	200	200	1									
+#																
+# typ linku	Zrodlo	Cel	Waga	Kolor 	Z	Pole1	Pole2	Pole3	Pole4	Pole5	Pole6	Pole7	Pole8	Pole9	Pole10	itd. Czyli komentarz
+genlink	Badacz A	Wydzia³	0.8	b000000000000000000000000	1											
+genlink	Badacz B	Wydzia³	0.9	0	1											
+genlink	Badacz C	Wydzia³	0.75	0	1											
+genlink	Wydzia³	Uniwerek	1.0	0	1											
+genlink	Badacz A	Badacz B	0.3	xFFAA55	2											
+genlink	Badacz A	Badacz C	0.6	xFFAA55	2											
+genlink	Badacz B	Badacz C	0.9	XFFAA55	2	fi	fi	ry	fi 	mi 	fi	ki	fi	bum	ta 	takie sobie przyklady
+#																
+#typ infor.	…															
+#geninfo	…															???

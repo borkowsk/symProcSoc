@@ -1,0 +1,69 @@
+#MODEL	Transfer	Technology	(with OPI)	ver	0	1	1						
+#config	Vertical	500											
+#config	Horizontal	500											
+#config	Radius	7											
+#1	#2	#3	#4	#5	#6	#7	#8	#9	#10	#11	#12	#13	#14
+#WÊZ£Y	Nazwa	Wyœwietlanie	Waga	Dziedzina	X	Y	Z						
+#NODES	NAME	Visual	Weight	Domain	X	Y	Z	Attr1	Attr2	Attr3	Attr4	Attr5	Attr6
+MarketNode	MARKET	16	7	0xffffff	250	40	4	50	10	3			
+ResearchUNode	Res.Team1	5	0.7	0x0FA100	30	250	1						
+ResearchUNode	Res.Team2	7	0.8	0x007708	120	250	1						
+ResearchUNode	Res.Team3	6	0.9	0x0000A1	400	250	1						
+ResAdminNode	Dept.ofBiol	Domek	1	0x00FF00	75	380	2						
+ResAdminNode	Dept.ofChem.	Domek	1	0x0000FF	400	380	2						
+ResAdminNode	University	Domek	2	0x00FFFF	250	400	3						
+BusinessNode	Firm1	Kwadrat	2	0xF0FF00	50	130	2						
+BusinessNode	Firm2	Kwadrat	2	0xF000FF	450	130	2						
+TransferNode	TTDept	ludzik1	1	0x00FFFF	250	200	1						
+TransferNode	TTFirm	ludzik0	1	0xF0F0F0	350	200	2						
+#													
+#PO£¥CZENIA	Pocz¹tek	Koniec	Waga	Filtr dziedziny	Z	Parametr							
+#LINKS	Source	Target	Weight	Filter	Z	P							
+GenLink	TTDept	MARKET	0.15	0x0FAAAA	3								
+GenLink	TTFirm	MARKET	0.5	0xFF00FF	3								
+GenLink	Firm1	MARKET	0.5	0xF0FF00	3								
+GenLink	Firm2	MARKET	0.5	0xF000FF	3								
+AdminLink	Res.Team1	Dept.ofBiol	0.5	0	3								
+AdminLink	Res.Team2	Dept.ofBiol	0.5	0	3								
+AdminLink	Res.Team3	Dept.ofChem.	0.5	0	3								
+AdminLink	Dept.ofBiol	University	0.5	0	3								
+AdminLink	Dept.ofChem.	University	0.5	0	3								
+AdminLink	TTDept	University	0.5	0	3								
+SocialLink	Res.Team1	Res.Team2	0.2	0x007700	3	0.5							
+SocialLink	Res.Team2	Res.Team1	0.3	0x057300	3	0.5							
+SocialLink	Res.Team2	Res.Team3	0.1	0x00000F	3	0.05							
+SocialLink	Res.Team3	Res.Team2	0.1	0x00000F	3	0.3							
+SocialLink	Res.Team3	TTFirm	0.33	0x000080	3	0.5							
+SocialLink	Res.Team3	TTFirm	0.33	0x000080	3	0.5							
+SocialLink	TTFirm	Firm2	0.33	0xF0F0F0	3	0.5							
+SocialLink	Firm2	TTFirm	0.33	0xF0F0F0	3	0.5							
+SocialLink	Firm2	Res.Team3	0.1	0x000080	3	0.5							
+SocialLink	TTDept	Res.Team3	0.1	0x0000FF	3	-0.5							
+SocialLink	Res.Team2	Firm1	0.1	0x808000	3	-0.5							
+#													
+# Komunikaty	i projekty 	to tylko 	stan 	poczatkowy	albo	aktualny							
+#KOMUNIKATY	Start kana³u lub *	Koniec kana³u lub jego numer	Prêdkoœæ	Dziedzina	Stan zaawansowania								
+#MESSG	Canal source or * 	Canal target or link index	Vel	Subject	State								
+geninfo	*LINK*NR*	7	0.1	xFFFFFF	0.01								
+geninfo	*LINK*NR*	8	0.1	xFFFFFF	0.01								
+geninfo	*LINK*NR*	9	0.1	xFFFFFF	0.01								
+geninfo	*LINK*NR*	10	0.1	xFFFFFF	0.01								
+#FinancInfo	: jeszcze nie	zdefiniowane											
+#OficialInfo	: jeszcze nie	zdefiniowane											
+#PROJEKTY	Nazwa	Wêze³ realizuj¹cy	Priorytet	Dziedzina	Zaawansowanie	Ile potrzeba							
+#PROJECTS	NAME	Procesor node	Priority	Subject	Advancement	ForFinishig							
+genproc	BST	Res.Team1	3	0xFFFFFF	10	100							
+genproc	Didact	Res.Team1	1	0xFFFFFF	50	100							
+genproc	BW	Res.Team1	2	0xFFFFFF	75	300							
+genproc	GRANT	Res.Team1	3	0xFFFFFF	5	1000							
+genproc	BST	Res.Team2	3	0xFFFFFF	10	100							
+genproc	Didact	Res.Team2	1	0xFFFFFF	50	100							
+genproc	BW	Res.Team2	2	0xFFFFFF	75	300							
+genproc	GRANT	Res.Team2	3	0xFFFFFF	5	1000							
+genproc	BST	Res.Team3	3	0xFFFFFF	10	100							
+genproc	Didact	Res.Team3	1	0xFFFFFF	50	100							
+genproc	BW	Res.Team3	2	0xFFFFFF	75	300							
+genproc	FIRM2	Res.Team3	3	0x000080	5	1000							
+genproc	PRODUCT1	Firm1	3	0xF0F000	10	1000							
+genproc	PRODUCT1	Firm2	3	0x00000F	50	1000							
+genproc	PRODUCT2	Firm2	3	0x100080	50	1000							

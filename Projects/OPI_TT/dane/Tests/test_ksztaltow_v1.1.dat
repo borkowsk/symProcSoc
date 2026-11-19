@@ -1,0 +1,32 @@
+#MODEL	Transfer	Technology	(with OPI)	ver	0	1	1	
+#config	Vertical	500						
+#config	Horizontal	600						
+#config	Radius	7						
+#1	#2	#3	#4	#5	#6	#7	#8	#17
+# typ wezla	Nazwa	Wizualizacja	Waga	Kolor 	X	Y	Z	uwagi
+gennode	trojkat	3	1	rgb(30,10,255)	25	25	1	uwagi
+gennode	czworokat	4	1	rgb(40,10,255)	100	25	1	uwagi
+gennode	pieciokat	5	1	rgb(50,10,255)	175	25	1	uwagi
+gennode	szeœciok¹t	6	1	rgb(60,10,255)	250	25	1	uwagi
+gennode	siedmiok¹t	7	1	rgb(70,10,255)	325	25	1	uwagi
+gennode	oœmiok¹t	8	1	rgb(80,10,255)	400	25	1	uwagi
+gennode	szesnastok¹t	16	1	rgb(160,10,255)	475	25	1	uwagi
+gennode	32kat	32	1	rgb(255,10,255)	550	25	1	uwagi
+gennode	romb	diamond	1	rgb(200,10,255)	425	100	1	uwagi
+gennode	namiot	tent	1	rgb(200,10,255)	475	100	1	uwagi
+gennode	kwadrat	square	1	rgb(200,10,255)	25	100	1	uwagi
+gennode	domek	house	1	rgb(200,10,255)	100	100	1	uwagi
+gennode	ufo	ufo	1	rgb(200,10,255)	150	100	1	uwagi
+gennode	pies	dog	1	rgb(200,10,255)	225	100	1	uwagi
+gennode	ludzik0	human0	1	rgb(100,10,55)	175	175	1	uwagi
+gennode	ludzik1	human1	1	rgb(100,10,55)	225	175	1	uwagi
+gennode	ludzik2	human2	1	rgb(100,10,55)	275	175	1	uwagi
+gennode	mê¿czyzna1	man1	1	rgb(100,10,55)	325	175	1	uwagi
+gennode	mê¿czyzna2	man2	1	rgb(100,10,55)	375	175	1	uwagi
+gennode	kobieta1	woman1	1	rgb(100,10,55)	425	175	1	uwagi
+gennode	kobieta2	woman2	1	rgb(100,10,55)	475	175	1	uwagi
+gennode	pojazd0	vehicle0	1	rgb(200,10,255)	25	250	1	uwagi
+gennode	pojazd1	vehicle1	1	rgb(200,10,255)	125	250	1	uwagi
+gennode	pojazd2	vehicle2	1	rgb(200,10,255)	225	250	1	uwagi
+gennode	pojazd3	vehicle3	1	rgb(200,10,255)	325	250	1	uwagi
+gennode	pojazd4	vehicle4	1	rgb(200,10,255)	425	250	1	uwagi
