@@ -2,8 +2,8 @@
 
 Badanie zrealizowane na zlecenie Ośrodka Przetwarzania Informacji jako komponent projektu "Wsparcie systemu zarządzania badaniami naukowymi oraz ich wynikami", realizowanego w ramach Programu Operacyjnego Innowacyjna Gospodarka 2007-2013, Działanie 1.1, Poddziałanie 1.1.3., Sub-projektu „Analiza działalności ośrodków transferu technologii (zarządzanie oraz komercjalizacja B+R)” Projekt współfinansowany przez Unię Europejską ze środków Europejskiego Funduszu Rozwoju Regionalnego”
 
-* 2011 - RAPORT CAŁOŚCIOWY Z BADANIA: https://www.researchgate.net/publication/298069033_Narzedzie_informatycznego_modelowania_procesow_spoleczno-ekonomicznych_towarzyszacych_transferowi_technologii_oraz_roli_Osrodkow_Transferu_Technologii_w_tym_procesie_-_RAPORT_CALOSCIOWY_Z_BADANIA
-* 2012 - Prezentacja konferencja OPI 26-09-12: https://www.researchgate.net/publication/306079099_Modelowanie_roli_instrumentow_polityki_innowacyjnej_panstwa_na_przykladzie_Osrodkow_Transferu_Technologii_-_Prezentacja_konferencja_OPI_26-09-12
+* 2011 - [RAPORT CAŁOŚCIOWY Z BADANIA:](https://www.researchgate.net/publication/298069033_Narzedzie_informatycznego_modelowania_procesow_spoleczno-ekonomicznych_towarzyszacych_transferowi_technologii_oraz_roli_Osrodkow_Transferu_Technologii_w_tym_procesie_-_RAPORT_CALOSCIOWY_Z_BADANIA)
+* 2012 - [Prezentacja konferencja OPI 26-09-12:](https://www.researchgate.net/publication/306079099_Modelowanie_roli_instrumentow_polityki_innowacyjnej_panstwa_na_przykladzie_Osrodkow_Transferu_Technologii_-_Prezentacja_konferencja_OPI_26-09-12)
 
 
 ## ZAWARTOŚĆ REPOZYTORIUM
@@ -34,5 +34,6 @@ z przypisaniami sieciowymi, jeśli używają one także litery Z.
 Obecnie projekt jest przygotowany do kompilacji za pomocą __cmake__.
 
 04.11.2011-19.11.2026
-W.Borkowski
+[W.Borkowski](https://www.researchgate.net/profile/Wojciech-Borkowski?ev=hdr_xprf)
+
 
